@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Website</title>
+    
+    <!-- CSS -->
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: lightblue;
+      }
+    </style>
+    
+    
+  </head>
+  <body>
+  
+    <h1>Website</h1>
+    
+    <select id="background-color-selector">
+      <option value="lightblue">lightblue</option>
+      <option value="green">green</option> 
+      <option value="yellow">yellow</option>  
+    </select>
+  
+    <!-- JS -->
+    <script type="text/javascript">
+  
+      async function saveFile(data) {
+
+        // create a new handle
+        const newHandle = await window.showSaveFilePicker();
+
+        // create a FileSystemWritableFileStream to write to
+        const writableStream = await newHandle.createWritable();
+
+        // write our file
+        await writableStream.write(data);
+
+        // close the file and write the contents to disk.
+        await writableStream.close();
+      }
+
+      var s = document.getElementById("background-color-selector");
+      s.addEventListener("change", function(event) {
+        document.body.style.backgroundColor = event.target.value;
+      var d = `<html lang="en">${document.head.innerHTML}${document.body.innerHTML}</html>`
+        saveFile(d);
+      })
+    </script>
+  </body>
+</html>
