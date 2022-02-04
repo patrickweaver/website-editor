@@ -10,7 +10,8 @@
     <style>
       body {
         font-family: "Arial", sans-serif;
-        background-color: lightblue;
+        background-color: plum;
+        margin: 2rem;
       }
     </style>
     
@@ -19,20 +20,78 @@
   <body>
   
     <h1>Website</h1>
-    
-    <select id="background-color-selector">
-      <option value="lightblue">lightblue</option>
-      <option value="green">green</option> 
-      <option value="yellow">yellow</option>  
-    </select>
+
+    <h2>About Me</h2>
+
+    <p>I can update this website in my browser.</p>
+
+    <!-- Local Controls -->
+    <div id="local-controls">
+      <button id="save-changes">Save Changes</button>
+    </div>
   
     <!-- JS -->
     <script type="text/javascript">
-  
-      async function saveFile(data) {
 
+      // Text
+      document
+        .querySelectorAll("h1, h2, h3, h4, h5, h6, p")
+        .forEach(function(node) {
+          node
+            .addEventListener("click", function(event) {
+              const node = event.target;
+              const content = node.innerHTML;
+              let inputNode = document.createElement("input");
+              inputNode.type = "text";
+              inputNode.value = content;
+              node.parentElement.insertBefore(inputNode, node);
+              let buttonNode = document.createElement("button");
+              buttonNode.innerHTML = "Save";
+              node.parentElement.insertBefore(buttonNode, node);
+              const originalDisplay = node.style.display;
+              node.style.display = "none";
+              buttonNode
+                .addEventListener("click", function(event) {
+                  node.innerHTML = inputNode.value;
+                  inputNode.remove();
+                  buttonNode.remove();
+                  node.style.display = originalDisplay;
+                })
+            })
+        })
+
+
+      /*
+       * Save Changes
+       */
+      
+      document
+        .getElementById("save-changes")
+        .addEventListener("click", function(event) {
+          console.log("click")
+          const htmlSourceCode = `
+            <html lang="en">
+              ${document.head.innerHTML}
+              ${document.body.innerHTML}
+            </html>
+          `
+          saveFile(htmlSourceCode)
+        })
+
+      // Chromium only
+      // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/write
+      async function saveFile(data) {
         // create a new handle
-        const newHandle = await window.showSaveFilePicker();
+        const newHandle = await window.showSaveFilePicker({
+          startIn: "desktop",
+          suggestedName: "index.html",
+          types: [{
+            description: 'HTML',
+            accept: {
+              "text/markdown": [".html"],
+            }
+          }]
+        });
 
         // create a FileSystemWritableFileStream to write to
         const writableStream = await newHandle.createWritable();
@@ -44,12 +103,6 @@
         await writableStream.close();
       }
 
-      var s = document.getElementById("background-color-selector");
-      s.addEventListener("change", function(event) {
-        document.body.style.backgroundColor = event.target.value;
-      var d = `<html lang="en">${document.head.innerHTML}${document.body.innerHTML}</html>`
-        saveFile(d);
-      })
     </script>
   </body>
 </html>
