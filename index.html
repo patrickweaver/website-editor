@@ -26,7 +26,7 @@
     <p>I can update this website in my browser.</p>
 
     <!-- Local Controls -->
-    <div id="local-controls">
+    <div id="local-controls" style="display: none">
       <button id="save-changes">Save Changes</button>
     </div>
   
@@ -59,6 +59,16 @@
                 })
             })
         })
+
+      /*
+       * Show Local Controls Locally
+       */
+
+      const protocol = window.location.protocol;
+      if (protocol === "file:") {
+        document.getElementById("local-controls")
+          .style.display = "block";
+      }
 
 
       /*
