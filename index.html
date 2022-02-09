@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Website</title>
-    
+
     <!-- CSS -->
     <style>
       body {
@@ -14,11 +14,8 @@
         margin: 2rem;
       }
     </style>
-    
-    
   </head>
   <body>
-  
     <h1>Website</h1>
 
     <h2>About Me</h2>
@@ -29,36 +26,51 @@
     <div id="local-controls" style="display: none">
       <button id="save-changes">Save Changes</button>
     </div>
-  
+
     <!-- JS -->
     <script type="text/javascript">
-
       // Text
       document
         .querySelectorAll("h1, h2, h3, h4, h5, h6, p")
-        .forEach(function(node) {
-          node
-            .addEventListener("click", function(event) {
-              const node = event.target;
-              const content = node.innerHTML;
-              let inputNode = document.createElement("input");
-              inputNode.type = "text";
-              inputNode.value = content;
-              node.parentElement.insertBefore(inputNode, node);
+        .forEach(function (node) {
+          node.addEventListener("click", function (event) {
+            const node = event.target;
+            const content = node.innerHTML;
+            let inputNode = document.createElement("input");
+            inputNode.type = "text";
+            inputNode.value = content;
+            node.parentElement.insertBefore(inputNode, node);
+
+            const controls = [
+              {
+                label: "Done",
+                getNewContent: (node) => node.value,
+              },
+              {
+                label: "Cancel",
+                getNewContent: (_) => content,
+              },
+            ];
+
+            const originalDisplay = node.style.display;
+            node.style.display = "none";
+            let buttonNodes = [];
+            controls.forEach((i) => {
               let buttonNode = document.createElement("button");
-              buttonNode.innerHTML = "Save";
+              buttonNode.innerHTML = i.label;
+              buttonNodes.push(buttonNode);
               node.parentElement.insertBefore(buttonNode, node);
-              const originalDisplay = node.style.display;
-              node.style.display = "none";
-              buttonNode
-                .addEventListener("click", function(event) {
-                  node.innerHTML = inputNode.value;
-                  inputNode.remove();
-                  buttonNode.remove();
-                  node.style.display = originalDisplay;
-                })
-            })
-        })
+              buttonNode.addEventListener("click", function (event) {
+                node.innerHTML = i.getNewContent(inputNode);
+                inputNode.remove();
+                buttonNodes.forEach((j) => {
+                  j.remove();
+                });
+                node.style.display = originalDisplay;
+              });
+            });
+          });
+        });
 
       /*
        * Show Local Controls Locally
@@ -66,27 +78,25 @@
 
       const protocol = window.location.protocol;
       if (protocol === "file:") {
-        document.getElementById("local-controls")
-          .style.display = "block";
+        document.getElementById("local-controls").style.display = "block";
       }
-
 
       /*
        * Save Changes
        */
-      
+
       document
         .getElementById("save-changes")
-        .addEventListener("click", function(event) {
-          console.log("click")
+        .addEventListener("click", function (event) {
+          console.log("click");
           const htmlSourceCode = `
             <html lang="en">
               ${document.head.innerHTML}
               ${document.body.innerHTML}
             </html>
-          `
-          saveFile(htmlSourceCode)
-        })
+          `;
+          saveFile(htmlSourceCode);
+        });
 
       // Chromium only
       // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/write
@@ -95,12 +105,14 @@
         const newHandle = await window.showSaveFilePicker({
           startIn: "desktop",
           suggestedName: "index.html",
-          types: [{
-            description: 'HTML',
-            accept: {
-              "text/markdown": [".html"],
-            }
-          }]
+          types: [
+            {
+              description: "HTML",
+              accept: {
+                "text/markdown": [".html"],
+              },
+            },
+          ],
         });
 
         // create a FileSystemWritableFileStream to write to
@@ -112,7 +124,6 @@
         // close the file and write the contents to disk.
         await writableStream.close();
       }
-
     </script>
   </body>
 </html>
