@@ -107,62 +107,74 @@
 
     <!-- JS -->
     <script type="text/javascript" id="js">
-      // Text
-      document
-        .querySelectorAll("h1, h2, h3, h4, h5, h6, p")
-        .forEach(function (node) {
-          node.addEventListener("click", function (event) {
-            const node = event.target;
-            const content = node.innerHTML;
-            let editNode = document.createElement("textarea");
-            editNode.classList.add("edit");
-            editNode.innerHTML = content;
-            node.parentElement.insertBefore(editNode, node);
-
-            const controls = [
-              {
-                label: "Update",
-                getNewContent: (node) => node.value,
-              },
-              {
-                label: "Cancel",
-                getNewContent: (_) => content,
-              },
-            ];
-
-            const originalDisplay = node.style.display;
-            node.style.display = "none";
-            let buttonNodes = [];
-            let buttonsContainerNode = document.createElement("div");
-            buttonsContainerNode.classList.add("editButtons");
-            node.parentElement.insertBefore(buttonsContainerNode, node);
-            controls.forEach((i) => {
-              let buttonNode = document.createElement("button");
-              buttonNode.innerHTML = i.label;
-              buttonNodes.push(buttonNode);
-              buttonsContainerNode.insertAdjacentElement(
-                "afterBegin",
-                buttonNode
-              );
-              buttonNode.addEventListener("click", function (event) {
-                node.innerHTML = i.getNewContent(editNode);
-                editNode.remove();
-                buttonsContainerNode.remove();
-                /*buttonNodes.forEach((j) => {
-                  j.remove();
-                });*/
-                node.style.display = originalDisplay;
-              });
-            });
-          });
-        });
-
       /*
-       * Show Local Controls Locally
+       *   Check for local file:
        */
 
       const protocol = window.location.protocol;
       if (protocol === "file:") {
+        localEditingMode();
+      }
+
+      /*
+       *   Editng JavaScript only runs locally:
+       */
+
+      function localEditingMode() {
+        // Text
+        document
+          .querySelectorAll("h1, h2, h3, h4, h5, h6, p")
+          .forEach(function (node) {
+            node.addEventListener("click", function (event) {
+              const node = event.target;
+              const content = node.innerHTML;
+              let editNode = document.createElement("textarea");
+              editNode.classList.add("edit");
+              editNode.innerHTML = content;
+              node.parentElement.insertBefore(editNode, node);
+
+              const controls = [
+                {
+                  label: "Update",
+                  getNewContent: (node) => node.value,
+                },
+                {
+                  label: "Cancel",
+                  getNewContent: (_) => content,
+                },
+              ];
+
+              const originalDisplay = node.style.display;
+              node.style.display = "none";
+              let buttonNodes = [];
+              let buttonsContainerNode = document.createElement("div");
+              buttonsContainerNode.classList.add("editButtons");
+              node.parentElement.insertBefore(buttonsContainerNode, node);
+              controls.forEach((i) => {
+                let buttonNode = document.createElement("button");
+                buttonNode.innerHTML = i.label;
+                buttonNodes.push(buttonNode);
+                buttonsContainerNode.insertAdjacentElement(
+                  "afterBegin",
+                  buttonNode
+                );
+                buttonNode.addEventListener("click", function (event) {
+                  node.innerHTML = i.getNewContent(editNode);
+                  editNode.remove();
+                  buttonsContainerNode.remove();
+                  /*buttonNodes.forEach((j) => {
+                  j.remove();
+                });*/
+                  node.style.display = originalDisplay;
+                });
+              });
+            });
+          });
+
+        /*
+         * Page Controls:
+         */
+
         let localControls = document.createElement("div");
         localControls.innerHTML = `
           <div id="local-controls">
