@@ -2,9 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="A website that edits itself"
+      id="page-description"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Website</title>
+    <title id="page-title">Website</title>
 
     <!-- https://emojicon.dev/ -->
     <link
@@ -20,12 +25,16 @@
         margin: 2rem;
       }
 
-      textarea.edit {
-        width: 100%;
-        min-height: 6rem;
-        padding: 0.5rem;
+      input,
+      textarea {
         font-size: 1rem;
         line-height: 1.2rem;
+        padding: 0.5rem;
+      }
+
+      textarea {
+        width: Calc(100% - 1rem);
+        min-height: 6rem;
         font-family: "Arial", sans-serif;
       }
 
@@ -42,8 +51,30 @@
 
       #local-controls {
         background-color: #ddd;
-        margin: 1rem 0;
-        padding: 1rem;
+        margin: 4rem 0 1rem;
+        padding: 0.5rem 1rem;
+      }
+
+      .controls-section {
+        width: 100%;
+        margin: 0.5em 0;
+      }
+
+      .controls-section label,
+      .controls-section input,
+      .controls-section textarea,
+      .controls-section button {
+        display: block;
+      }
+
+      .controls-section input,
+      .controls-section textarea,
+      .controls-section button {
+        margin: 0.25rem 0 1rem;
+      }
+
+      .controls-section label {
+        margin: 0.25rem 0;
       }
     </style>
 
@@ -51,23 +82,17 @@
     <meta property="og:title" content="Website" id="meta-title" />
     <meta
       property="og:description"
-      content="A website that edits itself."
-      id="meta-content"
+      content="A website that edits itself"
+      id="meta-description"
     />
     <meta property="og:image" content="" id="meta-image" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary" id="twitter-card" />
-    <meta name="twitter:site" content="@patrickweave_r" id="twitter-site" />
-    <meta
-      name="twitter:creator"
-      content="@patrickweave_r"
-      id="twitter-creator"
-    />
     <meta name="twitter:title" content="Website" id="twitter-title" />
     <meta
       name="twitter:description"
-      content="A website that edits itself."
+      content="A website that edits itself"
       id="twitter-description"
     />
     <meta name="twitter:image" content="" id="twitter-image" />
@@ -144,7 +169,19 @@
             <h2>Local Controls</h2>
             <p>This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on your computer.
             <hr/>
-            <button id="save-changes">Save Changes</button>
+
+            <div class="controls-section">
+              <h3>Social Media Metadata</h3>
+              <label for="edit-page-title">Page Title: </label>
+              <input type="text" id="edit-page-title" />
+              <label for="edit-page-description">Page Description</label>
+              <textarea id="edit-page-description" style="min-height: 2rem"></textarea>
+            </div>
+
+            <div class="controls-section">
+              <h3>Save Changes</h3>
+              <button id="save-changes">Save All Changes to Local File</button>
+            </div>
           </div>
         `;
 
@@ -154,13 +191,48 @@
       }
 
       /*
-       * Save Changes
+       *   Page Metadata
+       */
+
+      function metaDataEditor(
+        editElementId,
+        mainElementId,
+        secondaryElementIdArray,
+        mainProperty = "content",
+        secondaryProperty = "content"
+      ) {
+        const editElement = document.getElementById(editElementId);
+        const mainElement = document.getElementById(mainElementId);
+        editElement.value = mainElement[mainProperty];
+
+        editElement.addEventListener("input", (event) => {
+          const newValue = editElement.value;
+          mainElement[mainProperty] = newValue;
+          secondaryElementIdArray.forEach((element) => {
+            document.getElementById(element)[secondaryProperty] = newValue;
+          });
+        });
+      }
+
+      metaDataEditor(
+        "edit-page-title",
+        "page-title",
+        ["meta-title", "twitter-title"],
+        "innerHTML"
+      );
+
+      metaDataEditor("edit-page-description", "page-description", [
+        "meta-description",
+        "twitter-description",
+      ]);
+
+      /*
+       *   Save Changes
        */
 
       document
         .getElementById("save-changes")
         .addEventListener("click", function (event) {
-          console.log("click");
           const htmlSourceCode = `
             <html lang="en">
               ${document.head.innerHTML}
