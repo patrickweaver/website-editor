@@ -19,6 +19,32 @@
         background-color: plum;
         margin: 2rem;
       }
+
+      textarea.edit {
+        width: 100%;
+        min-height: 6rem;
+        padding: 0.5rem;
+        font-size: 1rem;
+        line-height: 1.2rem;
+        font-family: "Arial", sans-serif;
+      }
+
+      .editButtons {
+        background-color: #ddd;
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+        display: inline-block;
+      }
+
+      .editButtons button {
+        margin: 0 0.25rem;
+      }
+
+      #local-controls {
+        background-color: #ddd;
+        margin: 1rem 0;
+        padding: 1rem;
+      }
     </style>
   </head>
   <body>
@@ -26,15 +52,10 @@
 
     <h2>About Me</h2>
 
-    <p>I can update this website in my browser.</p>
-
-    <!-- Local Controls -->
-    <div id="local-controls" style="display: none">
-      <button id="save-changes">Save Changes</button>
-    </div>
+    <p>I can update this website locally in my browser.</p>
 
     <!-- JS -->
-    <script type="text/javascript">
+    <script type="text/javascript" id="js">
       // Text
       document
         .querySelectorAll("h1, h2, h3, h4, h5, h6, p")
@@ -42,14 +63,14 @@
           node.addEventListener("click", function (event) {
             const node = event.target;
             const content = node.innerHTML;
-            let inputNode = document.createElement("input");
-            inputNode.type = "text";
-            inputNode.value = content;
-            node.parentElement.insertBefore(inputNode, node);
+            let editNode = document.createElement("textarea");
+            editNode.classList.add("edit");
+            editNode.innerHTML = content;
+            node.parentElement.insertBefore(editNode, node);
 
             const controls = [
               {
-                label: "Done",
+                label: "Update",
                 getNewContent: (node) => node.value,
               },
               {
@@ -61,17 +82,24 @@
             const originalDisplay = node.style.display;
             node.style.display = "none";
             let buttonNodes = [];
+            let buttonsContainerNode = document.createElement("div");
+            buttonsContainerNode.classList.add("editButtons");
+            node.parentElement.insertBefore(buttonsContainerNode, node);
             controls.forEach((i) => {
               let buttonNode = document.createElement("button");
               buttonNode.innerHTML = i.label;
               buttonNodes.push(buttonNode);
-              node.parentElement.insertBefore(buttonNode, node);
+              buttonsContainerNode.insertAdjacentElement(
+                "afterBegin",
+                buttonNode
+              );
               buttonNode.addEventListener("click", function (event) {
-                node.innerHTML = i.getNewContent(inputNode);
-                inputNode.remove();
-                buttonNodes.forEach((j) => {
+                node.innerHTML = i.getNewContent(editNode);
+                editNode.remove();
+                buttonsContainerNode.remove();
+                /*buttonNodes.forEach((j) => {
                   j.remove();
-                });
+                });*/
                 node.style.display = originalDisplay;
               });
             });
@@ -84,7 +112,19 @@
 
       const protocol = window.location.protocol;
       if (protocol === "file:") {
-        document.getElementById("local-controls").style.display = "block";
+        let localControls = document.createElement("div");
+        localControls.innerHTML = `
+          <div id="local-controls">
+            <h2>Local Controls</h2>
+            <p>This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on your computer.
+            <hr/>
+            <button id="save-changes">Save Changes</button>
+          </div>
+        `;
+
+        document
+          .getElementById("js")
+          .insertAdjacentElement("beforeBegin", localControls);
       }
 
       /*
