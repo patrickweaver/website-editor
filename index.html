@@ -57,7 +57,7 @@
 
       .controls-section {
         width: 100%;
-        margin: 0.5em 0;
+        margin: 0.5em 0 2rem;
       }
 
       .controls-section label,
@@ -75,6 +75,26 @@
 
       .controls-section label {
         margin: 0.25rem 0;
+      }
+
+      #new-content-modal-wrapper {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background-color: hsla(0, 20%, 20%, 80%);
+      }
+
+      #new-content-modal {
+        margin: 5rem 10% 0;
+        background-color: #fff;
+        padding: 1rem 2rem;
+        width: Calc(80% - 2rem - 2rem); /* 2rem is body margin */
+      }
+
+      #new-content-modal li {
+        margin: 0.5rem;
       }
     </style>
 
@@ -183,6 +203,11 @@
             <hr/>
 
             <div class="controls-section">
+              <h3>Add Content<h3>
+              <button id="add-item" onClick="addItem()">Add Item</button>
+            </div>
+
+            <div class="controls-section">
               <h3>Social Media Metadata</h3>
               <label for="edit-page-title">Page Title: </label>
               <input type="text" id="edit-page-title" />
@@ -200,6 +225,28 @@
         document
           .getElementById("js")
           .insertAdjacentElement("beforeBegin", localControls);
+      }
+
+      /*
+       *   Add Content
+       */
+
+      function addItem() {
+        let newContentModal = document.createElement("div");
+        newContentModal.id = "new-content-modal-wrapper";
+        newContentModal.innerHTML = `
+          <div id="new-content-modal">
+            <h2>Add New Content</h2>
+            <ul>
+              <li><button>Heading</button></li>
+              <li><button>Text</button></li>
+              <li><button>Image</button></li>
+            </ul>
+            <button>Cancel</button>
+          </div>
+        `;
+
+        document.body.insertAdjacentElement("beforeEnd", newContentModal);
       }
 
       /*
