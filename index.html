@@ -125,6 +125,8 @@
 
     <p>I can update this website locally in my browser.</p>
 
+    <hr id="end-of-document" style="display: none" />
+
     <!-- JS -->
     <script type="text/javascript" id="js">
       /*
@@ -141,54 +143,62 @@
        */
 
       function localEditingMode() {
+        // Constants
+        const LOCAL_CONTROLS_ID = "local-controls";
+        const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
+
+        function makeElementListener(node) {
+          return (event) => {
+            const node = event.target;
+            const content = node.innerHTML;
+            let editNode = document.createElement("textarea");
+            editNode.classList.add("edit");
+            editNode.innerHTML = content;
+            node.parentElement.insertBefore(editNode, node);
+
+            const controls = [
+              {
+                label: "Update",
+                getNewContent: (node) => node.value,
+              },
+              {
+                label: "Cancel",
+                getNewContent: (_) => content,
+              },
+            ];
+
+            const originalDisplay = node.style.display;
+            node.style.display = "none";
+            let buttonNodes = [];
+            let buttonsContainerNode = document.createElement("div");
+            buttonsContainerNode.classList.add("editButtons");
+            node.parentElement.insertBefore(buttonsContainerNode, node);
+            controls.forEach((i) => {
+              let buttonNode = document.createElement("button");
+              buttonNode.innerHTML = i.label;
+              buttonNodes.push(buttonNode);
+              buttonsContainerNode.insertAdjacentElement(
+                "afterBegin",
+                buttonNode
+              );
+              buttonNode.addEventListener("click", function (event) {
+                node.innerHTML = i.getNewContent(editNode);
+                editNode.remove();
+                buttonsContainerNode.remove();
+                /*buttonNodes.forEach((j) => {
+                  j.remove();
+                });*/
+                node.style.display = originalDisplay;
+              });
+            });
+          };
+        }
+
         // Text
         document
           .querySelectorAll("h1, h2, h3, h4, h5, h6, p")
           .forEach(function (node) {
-            node.addEventListener("click", function (event) {
-              const node = event.target;
-              const content = node.innerHTML;
-              let editNode = document.createElement("textarea");
-              editNode.classList.add("edit");
-              editNode.innerHTML = content;
-              node.parentElement.insertBefore(editNode, node);
-
-              const controls = [
-                {
-                  label: "Update",
-                  getNewContent: (node) => node.value,
-                },
-                {
-                  label: "Cancel",
-                  getNewContent: (_) => content,
-                },
-              ];
-
-              const originalDisplay = node.style.display;
-              node.style.display = "none";
-              let buttonNodes = [];
-              let buttonsContainerNode = document.createElement("div");
-              buttonsContainerNode.classList.add("editButtons");
-              node.parentElement.insertBefore(buttonsContainerNode, node);
-              controls.forEach((i) => {
-                let buttonNode = document.createElement("button");
-                buttonNode.innerHTML = i.label;
-                buttonNodes.push(buttonNode);
-                buttonsContainerNode.insertAdjacentElement(
-                  "afterBegin",
-                  buttonNode
-                );
-                buttonNode.addEventListener("click", function (event) {
-                  node.innerHTML = i.getNewContent(editNode);
-                  editNode.remove();
-                  buttonsContainerNode.remove();
-                  /*buttonNodes.forEach((j) => {
-                  j.remove();
-                });*/
-                  node.style.display = originalDisplay;
-                });
-              });
-            });
+            node.addEventListener("click", makeElementListener(node));
           });
 
         /*
@@ -196,136 +206,188 @@
          */
 
         let localControls = document.createElement("div");
+        localControls.id = LOCAL_CONTROLS_ID;
         localControls.innerHTML = `
-          <div id="local-controls">
-            <h2>Local Controls</h2>
-            <p>This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on your computer.
-            <hr/>
+          <h2>Local Controls</h2>
+          <p>This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on your computer.
+          <hr/>
 
-            <div class="controls-section">
-              <h3>Add Content<h3>
-              <button id="add-item" onClick="addItem()">Add Item</button>
-            </div>
+          <div class="controls-section">
+            <h3>Add Content<h3>
+            <button id="add-item">Add Item</button>
+          </div>
 
-            <div class="controls-section">
-              <h3>Social Media Metadata</h3>
-              <label for="edit-page-title">Page Title: </label>
-              <input type="text" id="edit-page-title" />
-              <label for="edit-page-description">Page Description</label>
-              <textarea id="edit-page-description" style="min-height: 2rem"></textarea>
-            </div>
+          <div class="controls-section">
+            <h3>Social Media Metadata</h3>
+            <label for="edit-page-title">Page Title: </label>
+            <input type="text" id="edit-page-title" />
+            <label for="edit-page-description">Page Description</label>
+            <textarea id="edit-page-description" style="min-height: 2rem"></textarea>
+          </div>
 
-            <div class="controls-section">
-              <h3>Save Changes</h3>
-              <button id="save-changes">Save All Changes to Local File</button>
-            </div>
+          <div class="controls-section">
+            <h3>Save Changes</h3>
+            <button id="save-changes">Save All Changes to Local File</button>
           </div>
         `;
 
         document
           .getElementById("js")
           .insertAdjacentElement("beforeBegin", localControls);
-      }
 
-      /*
-       *   Add Content
-       */
+        document
+          .getElementById("add-item")
+          .addEventListener("click", preAddItem);
 
-      function addItem() {
-        let newContentModal = document.createElement("div");
-        newContentModal.id = "new-content-modal-wrapper";
-        newContentModal.innerHTML = `
+        /*
+         *   Add Content
+         */
+
+        function preAddItem() {
+          let newContentModal = document.createElement("div");
+          newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
+          newContentModal.innerHTML = `
           <div id="new-content-modal">
             <h2>Add New Content</h2>
             <ul>
-              <li><button>Heading</button></li>
-              <li><button>Text</button></li>
-              <li><button>Image</button></li>
+              <li><button id="add-item-heading">Heading</button></li>
+              <li><button id="add-item-paragraph">Text</button></li>
+              <li><button id="add-item-image">Image</button></li>
             </ul>
             <button>Cancel</button>
           </div>
         `;
 
-        document.body.insertAdjacentElement("beforeEnd", newContentModal);
-      }
+          document.body.insertAdjacentElement("beforeEnd", newContentModal);
 
-      /*
-       *   Page Metadata
-       */
+          const addItemButtonIds = [
+            "add-item-heading",
+            "add-item-paragraph",
+            "add-item-image",
+          ];
 
-      function metaDataEditor(
-        editElementId,
-        mainElementId,
-        secondaryElementIdArray,
-        mainProperty = "content",
-        secondaryProperty = "content"
-      ) {
-        const editElement = document.getElementById(editElementId);
-        const mainElement = document.getElementById(mainElementId);
-        editElement.value = mainElement[mainProperty];
-
-        editElement.addEventListener("input", (event) => {
-          const newValue = editElement.value;
-          mainElement[mainProperty] = newValue;
-          secondaryElementIdArray.forEach((element) => {
-            document.getElementById(element)[secondaryProperty] = newValue;
+          addItemButtonIds.forEach((buttonId) => {
+            document
+              .getElementById(buttonId)
+              .addEventListener("click", (event) => {
+                addItem(
+                  event.target.id.slice(
+                    "add-item-".length,
+                    event.target.id.length
+                  )
+                );
+              });
           });
-        });
-      }
+        }
 
-      metaDataEditor(
-        "edit-page-title",
-        "page-title",
-        ["meta-title", "twitter-title"],
-        "innerHTML"
-      );
+        function addItem(type) {
+          let elementType;
+          if (type === "heading") {
+            elementType = "h2";
+          } else if (type === "paragraph") {
+            elementType = "p";
+          } else if (type === "image") {
+            elementType = "img";
+          }
 
-      metaDataEditor("edit-page-description", "page-description", [
-        "meta-description",
-        "twitter-description",
-      ]);
+          const newElement = document.createElement(elementType);
 
-      /*
-       *   Save Changes
-       */
+          if (type === "heading" || type === "paragraph") {
+            newElement.innerHTML = "Your text here";
+          }
 
-      document
-        .getElementById("save-changes")
-        .addEventListener("click", function (event) {
-          const htmlSourceCode = `
+          document
+            .getElementById("end-of-document")
+            .insertAdjacentElement("beforeBegin", newElement);
+
+          newElement.addEventListener("click", makeElementListener(newElement));
+
+          document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
+        }
+
+        /*
+         *   Page Metadata
+         */
+
+        function metaDataEditor(
+          editElementId,
+          mainElementId,
+          secondaryElementIdArray,
+          mainProperty = "content",
+          secondaryProperty = "content"
+        ) {
+          const editElement = document.getElementById(editElementId);
+          const mainElement = document.getElementById(mainElementId);
+          editElement.value = mainElement[mainProperty];
+
+          editElement.addEventListener("input", (event) => {
+            const newValue = editElement.value;
+            mainElement[mainProperty] = newValue;
+            secondaryElementIdArray.forEach((element) => {
+              document.getElementById(element)[secondaryProperty] = newValue;
+            });
+          });
+        }
+
+        metaDataEditor(
+          "edit-page-title",
+          "page-title",
+          ["meta-title", "twitter-title"],
+          "innerHTML"
+        );
+
+        metaDataEditor("edit-page-description", "page-description", [
+          "meta-description",
+          "twitter-description",
+        ]);
+
+        /*
+         *   Save Changes
+         */
+
+        document
+          .getElementById("save-changes")
+          .addEventListener("click", function (event) {
+            const htmlSourceCode = `
+            <!DOCTYPE html>
             <html lang="en">
-              ${document.head.innerHTML}
-              ${document.body.innerHTML}
+              <head>
+                ${document.head.innerHTML}
+              </head>
+              <body>
+                ${document.body.innerHTML}
+              </body>
             </html>
           `;
-          saveFile(htmlSourceCode);
-        });
+            saveFile(htmlSourceCode);
+          });
 
-      // Chromium only
-      // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/write
-      async function saveFile(data) {
-        // create a new handle
-        const newHandle = await window.showSaveFilePicker({
-          startIn: "desktop",
-          suggestedName: "index.html",
-          types: [
-            {
-              description: "HTML",
-              accept: {
-                "text/markdown": [".html"],
+        // Chromium only
+        // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/write
+        async function saveFile(data) {
+          // create a new handle
+          const newHandle = await window.showSaveFilePicker({
+            startIn: "desktop",
+            suggestedName: "index.html",
+            types: [
+              {
+                description: "HTML",
+                accept: {
+                  "text/markdown": [".html"],
+                },
               },
-            },
-          ],
-        });
+            ],
+          });
 
-        // create a FileSystemWritableFileStream to write to
-        const writableStream = await newHandle.createWritable();
+          // create a FileSystemWritableFileStream to write to
+          const writableStream = await newHandle.createWritable();
 
-        // write our file
-        await writableStream.write(data);
+          // write our file
+          await writableStream.write(data);
 
-        // close the file and write the contents to disk.
-        await writableStream.close();
+          // close the file and write the contents to disk.
+          await writableStream.close();
+        }
       }
     </script>
   </body>
