@@ -125,10 +125,37 @@
 
     <p>I can update this website locally in my browser.</p>
 
+    <input type="file" id="file-picker" />
+
     <hr id="end-of-document" style="display: none" />
 
     <!-- JS -->
     <script type="text/javascript" id="js">
+      // Proof of concept for image upload:
+      document
+        .getElementById("file-picker")
+        .addEventListener("change", imageProcess);
+
+      function imageProcess(event) {
+        const file = this.files[0];
+        if (!file.type.startsWith("image/")) {
+          return;
+        }
+
+        const img = document.createElement("img");
+        img.file = file;
+        document
+          .getElementById("end-of-document")
+          .insertAdjacentElement("beforebegin", img);
+        const reader = new FileReader();
+        reader.onload = (function (aImg) {
+          return function (e) {
+            aImg.src = e.target.result;
+          };
+        })(img);
+        reader.readAsDataURL(file);
+      }
+
       /*
        *   Check for local file:
        */
