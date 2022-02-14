@@ -146,6 +146,7 @@
         // Constants
         const LOCAL_CONTROLS_ID = "local-controls";
         const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
+        const END_OF_DOC_ID = "end-of-document";
 
         function makeElementListener(node) {
           return (event) => {
@@ -178,7 +179,7 @@
               buttonNode.innerHTML = i.label;
               buttonNodes.push(buttonNode);
               buttonsContainerNode.insertAdjacentElement(
-                "afterBegin",
+                "afterbegin",
                 buttonNode
               );
               buttonNode.addEventListener("click", function (event) {
@@ -231,13 +232,17 @@
           </div>
         `;
 
-        document
-          .getElementById("js")
-          .insertAdjacentElement("beforeBegin", localControls);
+        function addLocalControls() {
+          document
+            .getElementById(END_OF_DOC_ID)
+            .insertAdjacentElement("afterend", localControls);
 
-        document
-          .getElementById("add-item")
-          .addEventListener("click", preAddItem);
+          document
+            .getElementById("add-item")
+            .addEventListener("click", preAddItem);
+        }
+
+        addLocalControls();
 
         /*
          *   Add Content
@@ -258,7 +263,7 @@
           </div>
         `;
 
-          document.body.insertAdjacentElement("beforeEnd", newContentModal);
+          document.body.insertAdjacentElement("beforeend", newContentModal);
 
           const addItemButtonIds = [
             "add-item-heading",
@@ -297,8 +302,8 @@
           }
 
           document
-            .getElementById("end-of-document")
-            .insertAdjacentElement("beforeBegin", newElement);
+            .getElementById(END_OF_DOC_ID)
+            .insertAdjacentElement("beforebegin", newElement);
 
           newElement.addEventListener("click", makeElementListener(newElement));
 
@@ -348,6 +353,9 @@
         document
           .getElementById("save-changes")
           .addEventListener("click", function (event) {
+            // Remove local controls:
+            localControls.remove();
+
             const htmlSourceCode = `
             <!DOCTYPE html>
             <html lang="en">
@@ -360,6 +368,9 @@
             </html>
           `;
             saveFile(htmlSourceCode);
+
+            // Re-add local controls
+            addLocalControls();
           });
 
         // Chromium only
