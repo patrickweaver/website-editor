@@ -25,6 +25,10 @@
         margin: 2rem;
       }
 
+      .image-container {
+        width: 100%;
+      }
+
       input,
       textarea {
         font-size: 1rem;
@@ -36,6 +40,11 @@
         width: Calc(100% - 1rem);
         min-height: 6rem;
         font-family: "Arial", sans-serif;
+      }
+
+      label.edit,
+      input.edit {
+        width: 100%;
       }
 
       .editButtons {
@@ -125,37 +134,10 @@
 
     <p>I can update this website locally in my browser.</p>
 
-    <input type="file" id="file-picker" />
-
     <hr id="end-of-document" style="display: none" />
 
     <!-- JS -->
     <script type="text/javascript" id="js">
-      // Proof of concept for image upload:
-      document
-        .getElementById("file-picker")
-        .addEventListener("change", imageProcess);
-
-      function imageProcess(event) {
-        const file = this.files[0];
-        if (!file.type.startsWith("image/")) {
-          return;
-        }
-
-        const img = document.createElement("img");
-        img.file = file;
-        document
-          .getElementById("end-of-document")
-          .insertAdjacentElement("beforebegin", img);
-        const reader = new FileReader();
-        reader.onload = (function (aImg) {
-          return function (e) {
-            aImg.src = e.target.result;
-          };
-        })(img);
-        reader.readAsDataURL(file);
-      }
-
       /*
        *   Check for local file:
        */
@@ -175,19 +157,81 @@
         const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
         const END_OF_DOC_ID = "end-of-document";
 
-        function makeElementListener(node) {
+        function makeImageElementListener(element) {
           return (event) => {
-            const node = event.target;
-            const content = node.innerHTML;
-            let editNode = document.createElement("textarea");
-            editNode.classList.add("edit");
-            editNode.innerHTML = content;
-            node.parentElement.insertBefore(editNode, node);
+            const element = event.target;
+            const originalDisplay = element.style.display;
+            // // Parent element is .image-container div
+            // const content = element.parentElement.innerHTML;
+            const imagePickerIdUnique = `${Math.random()}`;
+            const imagePickerId = `image-picker-${imagePickerIdUnique}`;
+            let imagePicker = document.createElement("input");
+            imagePicker.type = "file";
+            imagePicker.id = imagePickerId;
+            imagePicker.classList.add("edit");
+            let imagePickerLabel = document.createElement("label");
+            imagePickerLabel.innerHTML = "Choose a new image";
+            imagePickerLabel.for = imagePickerId;
+            imagePickerLabel.classList.add("edit");
+            element.insertAdjacentElement("beforebegin", imagePickerLabel);
+            element.insertAdjacentElement("beforebegin", imagePicker);
+
+            element.style.display = "none";
+
+            const controls = [
+              {
+                label: "Cancel",
+                getNewContent: (_) => content,
+              },
+            ];
+
+            let buttonElements = [];
+            let buttonsContainerElement = document.createElement("div");
+            buttonsContainerElement.classList.add("editButtons");
+            element.parentElement.insertBefore(
+              buttonsContainerElement,
+              element
+            );
+            controls.forEach((i) => {
+              let buttonElement = document.createElement("button");
+              buttonElement.innerHTML = i.label;
+              buttonElements.push(buttonElement);
+              buttonsContainerElement.insertAdjacentElement(
+                "afterbegin",
+                buttonElement
+              );
+              buttonElement.addEventListener("click", function (event) {
+                imagePickerLabel.remove();
+                imagePicker.remove();
+                buttonsContainerElement.remove();
+                /*buttonElements.forEach((j) => {
+                  j.remove();
+                });*/
+                element.style.display = originalDisplay;
+              });
+            });
+
+            document
+              .getElementById(imagePickerId)
+              .addEventListener("change", () => addImage(imagePickerId));
+          };
+        }
+
+        function makeTextElementListener(element) {
+          return (event) => {
+            const element = event.target;
+            const content = element.innerHTML;
+            let editElement = document.createElement("textarea");
+            editElement.classList.add("edit");
+            editElement.innerHTML = content;
+            element.parentElement.insertBefore(editElement, element);
+            const originalDisplay = element.style.display;
+            element.style.display = "none";
 
             const controls = [
               {
                 label: "Update",
-                getNewContent: (node) => node.value,
+                getNewContent: (element) => element.value,
               },
               {
                 label: "Cancel",
@@ -195,28 +239,29 @@
               },
             ];
 
-            const originalDisplay = node.style.display;
-            node.style.display = "none";
-            let buttonNodes = [];
-            let buttonsContainerNode = document.createElement("div");
-            buttonsContainerNode.classList.add("editButtons");
-            node.parentElement.insertBefore(buttonsContainerNode, node);
+            let buttonElements = [];
+            let buttonsContainerElement = document.createElement("div");
+            buttonsContainerElement.classList.add("editButtons");
+            element.parentElement.insertBefore(
+              buttonsContainerElement,
+              element
+            );
             controls.forEach((i) => {
-              let buttonNode = document.createElement("button");
-              buttonNode.innerHTML = i.label;
-              buttonNodes.push(buttonNode);
-              buttonsContainerNode.insertAdjacentElement(
+              let buttonElement = document.createElement("button");
+              buttonElement.innerHTML = i.label;
+              buttonElements.push(buttonElement);
+              buttonsContainerElement.insertAdjacentElement(
                 "afterbegin",
-                buttonNode
+                buttonElement
               );
-              buttonNode.addEventListener("click", function (event) {
-                node.innerHTML = i.getNewContent(editNode);
-                editNode.remove();
-                buttonsContainerNode.remove();
-                /*buttonNodes.forEach((j) => {
+              buttonElement.addEventListener("click", function (event) {
+                element.innerHTML = i.getNewContent(editElement);
+                editElement.remove();
+                buttonsContainerElement.remove();
+                /*buttonElements.forEach((j) => {
                   j.remove();
                 });*/
-                node.style.display = originalDisplay;
+                element.style.display = originalDisplay;
               });
             });
           };
@@ -225,8 +270,8 @@
         // Text
         document
           .querySelectorAll("h1, h2, h3, h4, h5, h6, p")
-          .forEach(function (node) {
-            node.addEventListener("click", makeElementListener(node));
+          .forEach(function (element) {
+            element.addEventListener("click", makeTextElementListener(element));
           });
 
         /*
@@ -284,7 +329,7 @@
             <ul>
               <li><button id="add-item-heading">Heading</button></li>
               <li><button id="add-item-paragraph">Text</button></li>
-              <li><button id="add-item-image">Image</button></li>
+              <li><button><label class="label-button" for="add-item-image">Image</label><input type="file" id="add-item-image" style="display: none" /></button></li>
             </ul>
             <button>Cancel</button>
           </div>
@@ -292,11 +337,7 @@
 
           document.body.insertAdjacentElement("beforeend", newContentModal);
 
-          const addItemButtonIds = [
-            "add-item-heading",
-            "add-item-paragraph",
-            "add-item-image",
-          ];
+          const addItemButtonIds = ["add-item-heading", "add-item-paragraph"];
 
           addItemButtonIds.forEach((buttonId) => {
             document
@@ -310,6 +351,43 @@
                 );
               });
           });
+
+          document
+            .getElementById("add-item-image")
+            .addEventListener("change", () => addImage("add-item-image"));
+        }
+
+        function addImage(filePickerId, update = false) {
+          const filePicker = document.getElementById(filePickerId);
+          const file = filePicker.files[0];
+          if (!file.type.startsWith("image/")) {
+            return;
+          }
+          const imageContianer = document.createElement("div");
+          imageContianer.classList.add("image-container");
+          const newElement = document.createElement("img");
+          newElement.file = file;
+          document
+            .getElementById(END_OF_DOC_ID)
+            .insertAdjacentElement("beforebegin", imageContianer);
+          imageContianer.insertAdjacentElement("afterbegin", newElement);
+          const reader = new FileReader();
+          reader.onload = ((aImg) => {
+            return (e) => {
+              aImg.src = e.target.result;
+            };
+          })(newElement);
+          reader.readAsDataURL(file);
+          if (!update) {
+            document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
+          } else {
+            // Deal with old image
+          }
+
+          newElement.addEventListener(
+            "click",
+            makeImageElementListener(newElement)
+          );
         }
 
         function addItem(type) {
@@ -318,23 +396,24 @@
             elementType = "h2";
           } else if (type === "paragraph") {
             elementType = "p";
-          } else if (type === "image") {
-            elementType = "img";
           }
 
           const newElement = document.createElement(elementType);
 
           if (type === "heading" || type === "paragraph") {
             newElement.innerHTML = "Your text here";
+
+            document
+              .getElementById(END_OF_DOC_ID)
+              .insertAdjacentElement("beforebegin", newElement);
+
+            newElement.addEventListener(
+              "click",
+              makeTextElementListener(newElement)
+            );
+
+            document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
           }
-
-          document
-            .getElementById(END_OF_DOC_ID)
-            .insertAdjacentElement("beforebegin", newElement);
-
-          newElement.addEventListener("click", makeElementListener(newElement));
-
-          document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
         }
 
         /*
