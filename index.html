@@ -151,11 +151,74 @@
        *   Editng JavaScript only runs locally:
        */
 
+      function uniqueId(readableString) {
+        return `${readableString}-${Math.random()}`;
+      }
+
       function localEditingMode() {
         // Constants
+        const ADD_ITEM_ID = "add-item";
+        const ADD_ITEM_HEADING_ID = "add-item-heading";
+        const ADD_ITEM_IMAGE_ID = "add-item-image";
+        const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
+        const IMAGE_CONTAINER_CLASS = "image-container";
+        const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
+        const END_OF_DOC_ID = "end-of-document";
         const LOCAL_CONTROLS_ID = "local-controls";
         const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
-        const END_OF_DOC_ID = "end-of-document";
+        const EDITABLE_TEXT_ELEMENTS = [
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "h5",
+          "h6",
+          "p",
+        ].join(", ");
+
+        const STRINGS = {
+          BUTTON_CANCEL: "Cancel",
+          BUTTON_UPDATE: "Update",
+          ERROR_IMAGE_ONLY: "Error: Please choose an image file",
+          LABEL_IMAGE_PICKER: "Choose a new image",
+          PLACEHOLDER_TEXT: "Your text here",
+        };
+
+        const NEW_CONTENT_MODAL_HTML = `
+          <div id="new-content-modal">
+            <h2>Add New Content</h2>
+            <ul>
+              <li><button id="${ADD_ITEM_HEADING_ID}">Heading</button></li>
+              <li><button id="${ADD_ITEM_PARAGRAPH_ID}">Text</button></li>
+              <li><button><label class="label-button" for="${ADD_ITEM_IMAGE_ID}">Image</label><input type="file" id="${ADD_ITEM_IMAGE_ID}" style="display: none" /></button></li>
+            </ul>
+            <button>Cancel</button>
+          </div>
+        `;
+
+        const LOCAL_CONTROLS_HTML = `
+          <h2>Local Controls</h2>
+          <p>This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on a computer.
+          <hr/>
+
+          <div class="controls-section">
+            <h3>Add Content<h3>
+            <button id="${ADD_ITEM_ID}">Add Item</button>
+          </div>
+
+          <div class="controls-section">
+            <h3>Social Media Metadata</h3>
+            <label for="edit-page-title">Page Title: </label>
+            <input type="text" id="edit-page-title" />
+            <label for="edit-page-description">Page Description</label>
+            <textarea id="edit-page-description" style="min-height: 2rem"></textarea>
+          </div>
+
+          <div class="controls-section">
+            <h3>Save Changes</h3>
+            <button id="save-changes">Save All Changes to Local File</button>
+          </div>
+        `;
 
         function makeImageElementListener(element) {
           return (event) => {
@@ -163,14 +226,16 @@
             const originalDisplay = element.style.display;
             // // Parent element is .image-container div
             // const content = element.parentElement.innerHTML;
-            const imagePickerIdUnique = `${Math.random()}`;
-            const imagePickerId = `image-picker-${imagePickerIdUnique}`;
+            const imagePickerId = uniqueId(IMAGE_PICKER_ID_READABLE_STRING);
+            let removeAfter = [];
             let imagePicker = document.createElement("input");
+            removeAfter.push(imagePicker);
             imagePicker.type = "file";
             imagePicker.id = imagePickerId;
             imagePicker.classList.add("edit");
             let imagePickerLabel = document.createElement("label");
-            imagePickerLabel.innerHTML = "Choose a new image";
+            removeAfter.push(imagePickerLabel);
+            imagePickerLabel.innerHTML = STRINGS.LABEL_IMAGE_PICKER;
             imagePickerLabel.for = imagePickerId;
             imagePickerLabel.classList.add("edit");
             element.insertAdjacentElement("beforebegin", imagePickerLabel);
@@ -180,7 +245,7 @@
 
             const controls = [
               {
-                label: "Cancel",
+                label: STRINGS.BUTTON_CANCEL,
                 getNewContent: (_) => content,
               },
             ];
@@ -230,11 +295,11 @@
 
             const controls = [
               {
-                label: "Update",
+                label: STRINGS.BUTTON_UPDATE,
                 getNewContent: (element) => element.value,
               },
               {
-                label: "Cancel",
+                label: STRINGS.BUTTON_CANCEL,
                 getNewContent: (_) => content,
               },
             ];
@@ -269,7 +334,7 @@
 
         // Text
         document
-          .querySelectorAll("h1, h2, h3, h4, h5, h6, p")
+          .querySelectorAll(EDITABLE_TEXT_ELEMENTS)
           .forEach(function (element) {
             element.addEventListener("click", makeTextElementListener(element));
           });
@@ -280,29 +345,7 @@
 
         let localControls = document.createElement("div");
         localControls.id = LOCAL_CONTROLS_ID;
-        localControls.innerHTML = `
-          <h2>Local Controls</h2>
-          <p>This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on your computer.
-          <hr/>
-
-          <div class="controls-section">
-            <h3>Add Content<h3>
-            <button id="add-item">Add Item</button>
-          </div>
-
-          <div class="controls-section">
-            <h3>Social Media Metadata</h3>
-            <label for="edit-page-title">Page Title: </label>
-            <input type="text" id="edit-page-title" />
-            <label for="edit-page-description">Page Description</label>
-            <textarea id="edit-page-description" style="min-height: 2rem"></textarea>
-          </div>
-
-          <div class="controls-section">
-            <h3>Save Changes</h3>
-            <button id="save-changes">Save All Changes to Local File</button>
-          </div>
-        `;
+        localControls.innerHTML = LOCAL_CONTROLS_HTML;
 
         function addLocalControls() {
           document
@@ -310,7 +353,7 @@
             .insertAdjacentElement("afterend", localControls);
 
           document
-            .getElementById("add-item")
+            .getElementById(ADD_ITEM_ID)
             .addEventListener("click", preAddItem);
         }
 
@@ -323,28 +366,19 @@
         function preAddItem() {
           let newContentModal = document.createElement("div");
           newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
-          newContentModal.innerHTML = `
-          <div id="new-content-modal">
-            <h2>Add New Content</h2>
-            <ul>
-              <li><button id="add-item-heading">Heading</button></li>
-              <li><button id="add-item-paragraph">Text</button></li>
-              <li><button><label class="label-button" for="add-item-image">Image</label><input type="file" id="add-item-image" style="display: none" /></button></li>
-            </ul>
-            <button>Cancel</button>
-          </div>
-        `;
+          newContentModal.innerHTML = NEW_CONTENT_MODAL_HTML;
 
           document.body.insertAdjacentElement("beforeend", newContentModal);
 
-          const addItemButtonIds = ["add-item-heading", "add-item-paragraph"];
+          const addItemButtonIds = [ADD_ITEM_HEADING_ID, ADD_ITEM_PARAGRAPH_ID];
 
           addItemButtonIds.forEach((buttonId) => {
             document
               .getElementById(buttonId)
               .addEventListener("click", (event) => {
-                addItem(
+                addTextItem(
                   event.target.id.slice(
+                    // 🚸 This is fragile with the strings coming from the constants above.
                     "add-item-".length,
                     event.target.id.length
                   )
@@ -353,24 +387,28 @@
           });
 
           document
-            .getElementById("add-item-image")
-            .addEventListener("change", () => addImage("add-item-image"));
+            .getElementById(ADD_ITEM_IMAGE_ID)
+            .addEventListener("change", () => addImage(ADD_ITEM_IMAGE_ID));
         }
 
         function addImage(filePickerId, update = false) {
           const filePicker = document.getElementById(filePickerId);
           const file = filePicker.files[0];
           if (!file.type.startsWith("image/")) {
+            alert(STRINGS.ERROR_IMAGE_ONLY);
             return;
           }
-          const imageContianer = document.createElement("div");
-          imageContianer.classList.add("image-container");
+          const imageContainer = document.createElement("div");
+          imageContainer.classList.add(IMAGE_CONTAINER_CLASS);
           const newElement = document.createElement("img");
           newElement.file = file;
+          // Add imageContainer to end of current document
           document
             .getElementById(END_OF_DOC_ID)
-            .insertAdjacentElement("beforebegin", imageContianer);
-          imageContianer.insertAdjacentElement("afterbegin", newElement);
+            .insertAdjacentElement("beforebegin", imageContainer);
+          // Add img element inside imageContainer
+          imageContainer.insertAdjacentElement("afterbegin", newElement);
+          // Set img src to file contents as Data URL
           const reader = new FileReader();
           reader.onload = ((aImg) => {
             return (e) => {
@@ -378,6 +416,7 @@
             };
           })(newElement);
           reader.readAsDataURL(file);
+          // Remove new
           if (!update) {
             document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
           } else {
@@ -390,7 +429,7 @@
           );
         }
 
-        function addItem(type) {
+        function addTextItem(type) {
           let elementType;
           if (type === "heading") {
             elementType = "h2";
@@ -401,7 +440,7 @@
           const newElement = document.createElement(elementType);
 
           if (type === "heading" || type === "paragraph") {
-            newElement.innerHTML = "Your text here";
+            newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
 
             document
               .getElementById(END_OF_DOC_ID)
