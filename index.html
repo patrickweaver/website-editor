@@ -257,6 +257,13 @@
               buttonsContainerElement,
               element
             );
+
+            function clearUpdateImageUI() {
+              imagePickerLabel.remove();
+              imagePicker.remove();
+              buttonsContainerElement.remove();
+            }
+
             controls.forEach((i) => {
               let buttonElement = document.createElement("button");
               buttonElement.innerHTML = i.label;
@@ -266,19 +273,18 @@
                 buttonElement
               );
               buttonElement.addEventListener("click", function (event) {
-                imagePickerLabel.remove();
-                imagePicker.remove();
-                buttonsContainerElement.remove();
-                /*buttonElements.forEach((j) => {
-                  j.remove();
-                });*/
+                clearUpdateImageUI();
                 element.style.display = originalDisplay;
               });
             });
 
             document
               .getElementById(imagePickerId)
-              .addEventListener("change", () => addImage(imagePickerId));
+              .addEventListener("change", () => {
+                element.remove();
+                addImage({ filePickerId: imagePickerId, update: true });
+                clearUpdateImageUI();
+              });
           };
         }
 
@@ -388,10 +394,12 @@
 
           document
             .getElementById(ADD_ITEM_IMAGE_ID)
-            .addEventListener("change", () => addImage(ADD_ITEM_IMAGE_ID));
+            .addEventListener("change", () =>
+              addImage({ filePickerId: ADD_ITEM_IMAGE_ID })
+            );
         }
 
-        function addImage(filePickerId, update = false) {
+        function addImage({ filePickerId, update = false }) {
           const filePicker = document.getElementById(filePickerId);
           const file = filePicker.files[0];
           if (!file.type.startsWith("image/")) {
@@ -419,8 +427,6 @@
           // Remove new
           if (!update) {
             document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
-          } else {
-            // Deal with old image
           }
 
           newElement.addEventListener(
