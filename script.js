@@ -84,10 +84,7 @@ function localEditingMode() {
       const element = event.target;
       const originalDisplay = element.style.display;
       const imagePickerId = uniqueId(IMAGE_PICKER_ID_READABLE_STRING);
-      let [imagePicker, imagePickerLabel] =
-        createEditImageElements(imagePickerId);
-      element.insertAdjacentElement("beforebegin", imagePickerLabel);
-      element.insertAdjacentElement("beforebegin", imagePicker);
+      let newElements = createEditImageElements(imagePickerId);
 
       element.style.display = "none";
 
@@ -101,11 +98,10 @@ function localEditingMode() {
       let buttonElements = [];
       let buttonsContainerElement = document.createElement("div");
       buttonsContainerElement.classList.add("editButtons");
-      element.parentElement.insertBefore(buttonsContainerElement, element);
+      insertElements(element, [...newElements, buttonsContainerElement]);
 
       function clearUpdateImageUI() {
-        imagePickerLabel.remove();
-        imagePicker.remove();
+        newElements.forEach((element) => element.remove());
         buttonsContainerElement.remove();
       }
 
@@ -376,6 +372,13 @@ function localEditingMode() {
     // close the file and write the contents to disk.
     await writableStream.close();
   }
+
+  function insertElements(elementBelow, elementsArray) {
+    elementsArray.forEach((element) => {
+      elementBelow.insertAdjacentElement("beforebegin", element);
+    });
+  }
+
   function createEditTextElement(content) {
     // 🚸 editTextElement should also have a label
     let editElement = document.createElement("textarea");
