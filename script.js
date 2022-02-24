@@ -95,33 +95,16 @@ function localEditingMode() {
         },
       ];
 
-      let buttonElements = [];
       let buttonsContainerElement = document.createElement("div");
       buttonsContainerElement.classList.add("editButtons");
       insertElements(element, [...newElements, buttonsContainerElement]);
 
-      function clearUpdateImageUI() {
-        newElements.forEach((element) => element.remove());
-        buttonsContainerElement.remove();
-      }
-
-      controls.forEach((i) => {
-        let buttonElement = document.createElement("button");
-        buttonElement.innerHTML = i.label;
-        buttonElements.push(buttonElement);
-        buttonsContainerElement.insertAdjacentElement(
-          "afterbegin",
-          buttonElement
-        );
-        buttonElement.addEventListener("click", function (event) {
-          clearUpdateImageUI();
-          element.style.display = originalDisplay;
-        });
-      });
+      insertEditorControls(buttonsContainerElement, controls, newElements);
 
       document.getElementById(imagePickerId).addEventListener("change", () => {
         element.remove();
         addImage({ filePickerId: imagePickerId, update: true });
+        // 🚸 Currently broken because I moved the function.
         clearUpdateImageUI();
       });
     };
@@ -147,14 +130,12 @@ function localEditingMode() {
         },
       ];
 
-      let buttonElements = [];
       let buttonsContainerElement = document.createElement("div");
       buttonsContainerElement.classList.add("editButtons");
       element.parentElement.insertBefore(buttonsContainerElement, element);
       controls.forEach((i) => {
         let buttonElement = document.createElement("button");
         buttonElement.innerHTML = i.label;
-        buttonElements.push(buttonElement);
         buttonsContainerElement.insertAdjacentElement(
           "afterbegin",
           buttonElement
@@ -163,9 +144,6 @@ function localEditingMode() {
           element.innerHTML = i.getNewContent(editElement);
           editElement.remove();
           buttonsContainerElement.remove();
-          /*buttonElements.forEach((j) => {
-                  j.remove();
-                });*/
           element.style.display = originalDisplay;
         });
       });
@@ -376,6 +354,23 @@ function localEditingMode() {
   function insertElements(elementBelow, elementsArray) {
     elementsArray.forEach((element) => {
       elementBelow.insertAdjacentElement("beforebegin", element);
+    });
+  }
+
+  function insertEditorControls(containerElement, controls, newElements) {
+    function clearUpdateImageUI() {
+      newElements.forEach((element) => element.remove());
+      containerElement.remove();
+    }
+
+    controls.forEach((i) => {
+      let buttonElement = document.createElement("button");
+      buttonElement.innerHTML = i.label;
+      containerElement.insertAdjacentElement("afterbegin", buttonElement);
+      buttonElement.addEventListener("click", function (event) {
+        clearUpdateImageUI();
+        element.style.display = originalDisplay;
+      });
     });
   }
 
