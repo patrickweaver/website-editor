@@ -99,14 +99,13 @@ function localEditingMode() {
       buttonsContainerElement.classList.add("editButtons");
       insertElements(element, [...newElements, buttonsContainerElement]);
 
-      insertEditorControls(buttonsContainerElement, controls, newElements);
-
-      document.getElementById(imagePickerId).addEventListener("change", () => {
-        element.remove();
-        addImage({ filePickerId: imagePickerId, update: true });
-        // 🚸 Currently broken because I moved the function.
-        clearUpdateImageUI();
-      });
+      insertEditorControls(
+        element,
+        originalDisplay,
+        buttonsContainerElement,
+        controls,
+        newElements
+      );
     };
   }
 
@@ -357,7 +356,13 @@ function localEditingMode() {
     });
   }
 
-  function insertEditorControls(containerElement, controls, newElements) {
+  function insertEditorControls(
+    imageElement,
+    originalDisplay,
+    containerElement,
+    controls,
+    newElements
+  ) {
     function clearUpdateImageUI() {
       newElements.forEach((element) => element.remove());
       containerElement.remove();
@@ -369,8 +374,15 @@ function localEditingMode() {
       containerElement.insertAdjacentElement("afterbegin", buttonElement);
       buttonElement.addEventListener("click", function (event) {
         clearUpdateImageUI();
-        element.style.display = originalDisplay;
+        imageElement.style.display = originalDisplay;
       });
+    });
+
+    const imagePicker = newElements[0];
+    imagePicker.addEventListener("change", () => {
+      imageElement.remove();
+      addImage({ filePickerId: imagePicker.id, update: true });
+      clearUpdateImageUI();
     });
   }
 
