@@ -18,6 +18,9 @@ function localEditingMode() {
   const ADD_ITEM_IMAGE_ID = "add-item-image";
   const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
   const EDIT_CLASS = "edit";
+  const EDIT_CONTAINER_CLASS = "edit-container";
+  const EDIT_BUTTONS_CLASS = "edit-buttons";
+  const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
   const IMAGE_CONTAINER_CLASS = "image-container";
   const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
   const END_OF_DOC_ID = "end-of-document";
@@ -26,6 +29,11 @@ function localEditingMode() {
   const EDITABLE_TEXT_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "p"].join(
     ", "
   );
+
+  const EDITOR_TYPES = {
+    TEXT: "text",
+    IMAGE: "image",
+  };
 
   const STRINGS = {
     BUTTON_CANCEL: "Cancel",
@@ -71,87 +79,105 @@ function localEditingMode() {
           </div>
         `;
 
-  function makeElementEventListener(type) {
+  function makeElementEventListener(editorType) {
     return function (event) {
       const element = event.target;
+
       const originalDisplay = element.style.display;
       const originalContent = element.innerHTML;
-    };
-  }
 
-  function makeImageElementListener(element) {
-    return (event) => {
-      const element = event.target;
-      const originalDisplay = element.style.display;
-      const imagePickerId = uniqueId(IMAGE_PICKER_ID_READABLE_STRING);
-      let newElements = createEditImageElements(imagePickerId);
+      const cancelButton = {
+        label: STRINGS.BUTTON_CANCEL,
+        getNewContent: (_) => originalContent,
+      };
 
-      element.style.display = "none";
+      const updateButton = {
+        label: STRINGS.BUTTON_UPDATE,
+        getNewContent: (element) => element.value,
+      };
 
-      const controls = [
-        {
-          label: STRINGS.BUTTON_CANCEL,
-          getNewContent: (_) => content,
+      const types = {
+        text: {
+          idReadableString: TEXT_EDITOR_ID_READABLE_STRING,
+          controls: [updateButton, cancelButton],
+          createEditor: createEditTextElement,
         },
-      ];
+        image: {
+          idReadableString: IMAGE_PICKER_ID_READABLE_STRING,
+          controls: [cancelButton],
+          createEditor: createEditImageElements,
+        },
+      };
+      const type = types[editorType];
 
-      let buttonsContainerElement = document.createElement("div");
-      buttonsContainerElement.classList.add("editButtons");
-      insertElements(element, [...newElements, buttonsContainerElement]);
+      const editorId = uniqueId(type.idReadableString);
 
-      insertEditorControls(
-        element,
-        originalDisplay,
-        buttonsContainerElement,
-        controls,
-        newElements
-      );
-    };
-  }
-
-  function makeTextElementListener(element) {
-    return (event) => {
-      const element = event.target;
-      const content = element.innerHTML;
-      const editElement = createEditTextElement(content);
+      const editElement = type.createEditor(editorId, originalContent);
       element.parentElement.insertBefore(editElement, element);
-      const originalDisplay = element.style.display;
+
       element.style.display = "none";
-
-      const controls = [
-        {
-          label: STRINGS.BUTTON_UPDATE,
-          getNewContent: (element) => element.value,
-        },
-        {
-          label: STRINGS.BUTTON_CANCEL,
-          getNewContent: (_) => content,
-        },
-      ];
-
       let buttonsContainerElement = document.createElement("div");
-      buttonsContainerElement.classList.add("editButtons");
-      element.parentElement.insertBefore(buttonsContainerElement, element);
-      controls.forEach((i) => {
+      buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
+
+      type.controls.forEach((i) => {
         let buttonElement = document.createElement("button");
         buttonElement.innerHTML = i.label;
         buttonsContainerElement.insertAdjacentElement(
           "afterbegin",
           buttonElement
         );
-        buttonElement.addEventListener("click", function (event) {
+        buttonElement.addEventListener("click", function (_event) {
           element.innerHTML = i.getNewContent(editElement);
           editElement.remove();
           buttonsContainerElement.remove();
           element.style.display = originalDisplay;
         });
       });
+      element.parentElement.insertBefore(buttonsContainerElement, element);
     };
+  }
+
+  function imageElementListener(event) {
+    const element = event.target;
+    const originalDisplay = element.style.display;
+    const imagePickerId = uniqueId(IMAGE_PICKER_ID_READABLE_STRING);
+    let newElements = createEditImageElements(imagePickerId);
+
+    element.style.display = "none";
+
+    const controls = [
+      {
+        label: STRINGS.BUTTON_CANCEL,
+        getNewContent: (_) => content,
+      },
+    ];
+
+    let buttonsContainerElement = document.createElement("div");
+    buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
+    insertElements(element, [...newElements, buttonsContainerElement]);
+
+    insertEditorControls(
+      element,
+      originalDisplay,
+      buttonsContainerElement,
+      controls,
+      newElements
+    );
+    containerElement.parentElement.classList.add(EDIT_CONTAINER_CLASS);
   }
 
   // Text
   document.querySelectorAll(EDITABLE_TEXT_ELEMENTS).forEach(function (element) {
-    element.addEventListener("click", makeTextElementListener(element));
+    //element.addEventListener("click", textElementListener);
+    element.addEventListener(
+      "click",
+      makeElementEventListener(EDITOR_TYPES.TEXT)
+    );
+  });
+
+  // Image
+  document.querySelectorAll("img").forEach(function (element) {
+    element.addEventListener("click", imageElementListener);
   });
 
   /*
@@ -234,7 +260,7 @@ function localEditingMode() {
       document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
     }
 
-    newElement.addEventListener("click", makeImageElementListener(newElement));
+    newElement.addEventListener("click", imageElementListener);
   }
 
   function addTextItem(type) {
@@ -254,7 +280,11 @@ function localEditingMode() {
         .getElementById(END_OF_DOC_ID)
         .insertAdjacentElement("beforebegin", newElement);
 
-      newElement.addEventListener("click", makeTextElementListener(newElement));
+      //newElement.addEventListener("click", textElementListener);
+      newElement.addEventListener(
+        "click",
+        makeElementEventListener(EDITOR_TYPES.TEXT)
+      );
 
       document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
     }
@@ -364,8 +394,7 @@ function localEditingMode() {
     newElements
   ) {
     function clearUpdateImageUI() {
-      newElements.forEach((element) => element.remove());
-      containerElement.remove();
+      containerElement.parentElement.remove();
     }
 
     controls.forEach((i) => {
@@ -378,7 +407,7 @@ function localEditingMode() {
       });
     });
 
-    const imagePicker = newElements[0];
+    const imagePicker = newElements[1];
     imagePicker.addEventListener("change", () => {
       imageElement.remove();
       addImage({ filePickerId: imagePicker.id, update: true });
@@ -386,7 +415,7 @@ function localEditingMode() {
     });
   }
 
-  function createEditTextElement(content) {
+  function createEditTextElement(_id, content) {
     // 🚸 editTextElement should also have a label
     let editElement = document.createElement("textarea");
     editElement.classList.add(EDIT_CLASS);
@@ -394,7 +423,7 @@ function localEditingMode() {
     return editElement;
   }
 
-  function createEditImageElements(imagePickerId) {
+  function createEditImageElements(imagePickerId, _content) {
     const imagePicker = document.createElement("input");
     imagePicker.type = "file";
     imagePicker.id = imagePickerId;
@@ -403,7 +432,7 @@ function localEditingMode() {
     imagePickerLabel.innerHTML = STRINGS.LABEL_IMAGE_PICKER;
     imagePickerLabel.for = imagePickerId;
     imagePickerLabel.classList.add(EDIT_CLASS);
-    return [imagePicker, imagePickerLabel];
+    return [imagePickerLabel, imagePicker];
   }
 
   function uniqueId(readableString) {
