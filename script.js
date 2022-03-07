@@ -112,8 +112,10 @@ function localEditingMode() {
 
       const editorId = uniqueId(type.idReadableString);
 
-      const editElement = type.createEditor(editorId, originalContent);
-      element.parentElement.insertBefore(editElement, element);
+      const editElements = type.createEditor(editorId, originalContent);
+      editElements.forEach((editElement) => {
+        element.parentElement.insertBefore(editElement, element);
+      });
 
       element.style.display = "none";
       let buttonsContainerElement = document.createElement("div");
@@ -127,8 +129,10 @@ function localEditingMode() {
           buttonElement
         );
         buttonElement.addEventListener("click", function (_event) {
-          element.innerHTML = i.getNewContent(editElement);
-          editElement.remove();
+          element.innerHTML = i.getNewContent(editElements[0]);
+          editElements.forEach((element) => {
+            element.remove();
+          });
           buttonsContainerElement.remove();
           element.style.display = originalDisplay;
         });
@@ -420,7 +424,7 @@ function localEditingMode() {
     let editElement = document.createElement("textarea");
     editElement.classList.add(EDIT_CLASS);
     editElement.innerHTML = content;
-    return editElement;
+    return [editElement];
   }
 
   function createEditImageElements(imagePickerId, _content) {
