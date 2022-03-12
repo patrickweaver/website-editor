@@ -488,6 +488,6 @@ function localEditingMode() {
   }
 
   function createElement(type) {
-    return createElement(type);
+    return document.createElement(type);
   }
 }
