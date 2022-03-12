@@ -25,10 +25,6 @@
         margin: 2rem;
       }
 
-      .image-container {
-        width: 100%;
-      }
-
       input,
       textarea {
         font-size: 1rem;
@@ -42,19 +38,30 @@
         font-family: "Arial", sans-serif;
       }
 
+      img {
+        display: block;
+      }
+
+      .edit-container {
+        border: 2px solid yellow;
+        border-radius: 3px;
+        margin: 1rem 0;
+        padding: 5px;
+      }
+
       label.edit,
       input.edit {
         width: 100%;
       }
 
-      .editButtons {
+      .edit-buttons {
         background-color: #ddd;
         padding: 0.5rem;
         margin: 0.5rem 0;
         display: inline-block;
       }
 
-      .editButtons button {
+      .edit-buttons button {
         margin: 0 0.25rem;
       }
 
@@ -134,6 +141,10 @@
 
     <p>I can update this website locally in my browser.</p>
 
+    <img
+      src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='100' height='100'><text y='0.9em' font-size='90'>📓</text></svg>"
+    />
+
     <hr id="end-of-document" style="display: none" />
 
     <!-- JS -->
@@ -151,36 +162,39 @@
        *   Editng JavaScript only runs locally:
        */
 
-      function uniqueId(readableString) {
-        return `${readableString}-${Math.random()}`;
-      }
-
       function localEditingMode() {
         // Constants
         const ADD_ITEM_ID = "add-item";
         const ADD_ITEM_HEADING_ID = "add-item-heading";
         const ADD_ITEM_IMAGE_ID = "add-item-image";
         const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
-        const IMAGE_CONTAINER_CLASS = "image-container";
+        const EDIT_CLASS = "edit";
+        const EDIT_CONTAINER_CLASS = "edit-container";
+        const EDIT_BUTTONS_CLASS = "edit-buttons";
+        const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
         const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
         const END_OF_DOC_ID = "end-of-document";
         const LOCAL_CONTROLS_ID = "local-controls";
         const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
-        const EDITABLE_TEXT_ELEMENTS = [
-          "h1",
-          "h2",
-          "h3",
-          "h4",
-          "h5",
-          "h6",
-          "p",
-        ].join(", ");
+        const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
+        const PARAGRAPH_ELEMENT = "p";
+
+        const EDITOR_TYPES = {
+          TEXT: "text",
+          HEADING: "heading",
+          PARAGRAPH: "paragraph",
+          IMAGE: "image",
+        };
 
         const STRINGS = {
           BUTTON_CANCEL: "Cancel",
           BUTTON_UPDATE: "Update",
           ERROR_IMAGE_ONLY: "Error: Please choose an image file",
-          LABEL_IMAGE_PICKER: "Choose a new image",
+          EDITOR_LABELS: {
+            [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph",
+            [EDITOR_TYPES.HEADING]: "Edit heading",
+            [EDITOR_TYPES.IMAGE]: "Select an image",
+          },
           PLACEHOLDER_TEXT: "Your text here",
         };
 
@@ -220,136 +234,124 @@
           </div>
         `;
 
-        function makeImageElementListener(element) {
-          return (event) => {
+        function makeElementEventListener(editorType) {
+          return function (event) {
             const element = event.target;
+
             const originalDisplay = element.style.display;
-            // // Parent element is .image-container div
-            // const content = element.parentElement.innerHTML;
-            const imagePickerId = uniqueId(IMAGE_PICKER_ID_READABLE_STRING);
-            let removeAfter = [];
-            let imagePicker = document.createElement("input");
-            removeAfter.push(imagePicker);
-            imagePicker.type = "file";
-            imagePicker.id = imagePickerId;
-            imagePicker.classList.add("edit");
-            let imagePickerLabel = document.createElement("label");
-            removeAfter.push(imagePickerLabel);
-            imagePickerLabel.innerHTML = STRINGS.LABEL_IMAGE_PICKER;
-            imagePickerLabel.for = imagePickerId;
-            imagePickerLabel.classList.add("edit");
-            element.insertAdjacentElement("beforebegin", imagePickerLabel);
-            element.insertAdjacentElement("beforebegin", imagePicker);
-
             element.style.display = "none";
+            const originalContent = element.innerHTML;
 
-            const controls = [
-              {
-                label: STRINGS.BUTTON_CANCEL,
-                getNewContent: (_) => content,
+            const cancelButton = {
+              label: STRINGS.BUTTON_CANCEL,
+              getNewContent: (_) => null,
+            };
+
+            const updateTextButton = {
+              label: STRINGS.BUTTON_UPDATE,
+              getNewContent: (editorElement, originalElement) => {
+                originalElement.innerHTML = editorElement.value;
               },
-            ];
+            };
 
-            let buttonElements = [];
-            let buttonsContainerElement = document.createElement("div");
-            buttonsContainerElement.classList.add("editButtons");
-            element.parentElement.insertBefore(
-              buttonsContainerElement,
-              element
-            );
-
-            function clearUpdateImageUI() {
-              imagePickerLabel.remove();
-              imagePicker.remove();
-              buttonsContainerElement.remove();
-            }
-
-            controls.forEach((i) => {
-              let buttonElement = document.createElement("button");
-              buttonElement.innerHTML = i.label;
-              buttonElements.push(buttonElement);
-              buttonsContainerElement.insertAdjacentElement(
-                "afterbegin",
-                buttonElement
-              );
-              buttonElement.addEventListener("click", function (event) {
-                clearUpdateImageUI();
-                element.style.display = originalDisplay;
-              });
-            });
-
-            document
-              .getElementById(imagePickerId)
-              .addEventListener("change", () => {
+            const upateImageButton = {
+              label: STRINGS.BUTTON_UPDATE,
+              getNewContent: (imagePicker, originalElement) => {
+                addImage({ filePickerId: imagePicker.id, update: true });
                 element.remove();
-                addImage({ filePickerId: imagePickerId, update: true });
-                clearUpdateImageUI();
-              });
-          };
-        }
-
-        function makeTextElementListener(element) {
-          return (event) => {
-            const element = event.target;
-            const content = element.innerHTML;
-            let editElement = document.createElement("textarea");
-            editElement.classList.add("edit");
-            editElement.innerHTML = content;
-            element.parentElement.insertBefore(editElement, element);
-            const originalDisplay = element.style.display;
-            element.style.display = "none";
-
-            const controls = [
-              {
-                label: STRINGS.BUTTON_UPDATE,
-                getNewContent: (element) => element.value,
               },
-              {
-                label: STRINGS.BUTTON_CANCEL,
-                getNewContent: (_) => content,
-              },
-            ];
+            };
 
-            let buttonElements = [];
-            let buttonsContainerElement = document.createElement("div");
-            buttonsContainerElement.classList.add("editButtons");
-            element.parentElement.insertBefore(
-              buttonsContainerElement,
-              element
+            let types = {
+              text: {
+                idReadableString: TEXT_EDITOR_ID_READABLE_STRING,
+                controls: [cancelButton, updateTextButton],
+                createEditor: createTextEditor,
+              },
+              [EDITOR_TYPES.IMAGE]: {
+                idReadableString: IMAGE_PICKER_ID_READABLE_STRING,
+                controls: [cancelButton, upateImageButton],
+                createEditor: createImageEditor,
+              },
+            };
+            types[EDITOR_TYPES.HEADING] = types.text;
+            types[EDITOR_TYPES.PARAGRAPH] = types.text;
+            const type = types[editorType];
+
+            const editorId = uniqueId(type.idReadableString);
+
+            const editElements = type.createEditor(
+              editorId,
+              editorType,
+              originalContent
             );
-            controls.forEach((i) => {
-              let buttonElement = document.createElement("button");
+
+            let buttonsContainerElement = createElement("div");
+            buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
+
+            let editorContainerElement = createElement("div");
+            editorContainerElement.classList.add(EDIT_CONTAINER_CLASS);
+
+            type.controls.forEach((i) => {
+              let buttonElement = createElement("button");
               buttonElement.innerHTML = i.label;
-              buttonElements.push(buttonElement);
               buttonsContainerElement.insertAdjacentElement(
-                "afterbegin",
+                "beforeend",
                 buttonElement
               );
-              buttonElement.addEventListener("click", function (event) {
-                element.innerHTML = i.getNewContent(editElement);
-                editElement.remove();
-                buttonsContainerElement.remove();
-                /*buttonElements.forEach((j) => {
-                  j.remove();
-                });*/
+              buttonElement.addEventListener("click", function (_event) {
+                i.getNewContent(editElements[1], element);
+                editorContainerElement.remove();
                 element.style.display = originalDisplay;
               });
             });
+
+            element.insertAdjacentElement(
+              "beforebegin",
+              editorContainerElement
+            );
+            [...editElements, buttonsContainerElement].forEach(
+              (editorElement) => {
+                editorContainerElement.insertAdjacentElement(
+                  "beforeend",
+                  editorElement
+                );
+              }
+            );
           };
         }
 
-        // Text
+        // Headings
         document
-          .querySelectorAll(EDITABLE_TEXT_ELEMENTS)
-          .forEach(function (element) {
-            element.addEventListener("click", makeTextElementListener(element));
+          .querySelectorAll(HEADING_ELEMENTS.join(", "))
+          .forEach((element) => {
+            element.addEventListener(
+              "click",
+              makeElementEventListener(EDITOR_TYPES.HEADING)
+            );
           });
+
+        // Paragraph
+        document.querySelectorAll(PARAGRAPH_ELEMENT).forEach((element) => {
+          element.addEventListener(
+            "click",
+            makeElementEventListener(EDITOR_TYPES.PARAGRAPH)
+          );
+        });
+
+        // Image
+        document.querySelectorAll("img").forEach((element) => {
+          element.addEventListener(
+            "click",
+            makeElementEventListener(EDITOR_TYPES.IMAGE)
+          );
+        });
 
         /*
          * Page Controls:
          */
 
-        let localControls = document.createElement("div");
+        let localControls = createElement("div");
         localControls.id = LOCAL_CONTROLS_ID;
         localControls.innerHTML = LOCAL_CONTROLS_HTML;
 
@@ -370,7 +372,7 @@
          */
 
         function preAddItem() {
-          let newContentModal = document.createElement("div");
+          let newContentModal = createElement("div");
           newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
           newContentModal.innerHTML = NEW_CONTENT_MODAL_HTML;
 
@@ -389,14 +391,16 @@
                     event.target.id.length
                   )
                 );
+                document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
               });
           });
 
           document
             .getElementById(ADD_ITEM_IMAGE_ID)
-            .addEventListener("change", () =>
-              addImage({ filePickerId: ADD_ITEM_IMAGE_ID })
-            );
+            .addEventListener("change", () => {
+              addImage({ filePickerId: ADD_ITEM_IMAGE_ID });
+              document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
+            });
         }
 
         function addImage({ filePickerId, update = false }) {
@@ -406,16 +410,21 @@
             alert(STRINGS.ERROR_IMAGE_ONLY);
             return;
           }
-          const imageContainer = document.createElement("div");
-          imageContainer.classList.add(IMAGE_CONTAINER_CLASS);
-          const newElement = document.createElement("img");
+          const newElement = createElement("img");
           newElement.file = file;
-          // Add imageContainer to end of current document
-          document
-            .getElementById(END_OF_DOC_ID)
-            .insertAdjacentElement("beforebegin", imageContainer);
-          // Add img element inside imageContainer
-          imageContainer.insertAdjacentElement("afterbegin", newElement);
+          if (update) {
+            // Add image above current image
+            filePicker.parentElement.insertAdjacentElement(
+              "afterend",
+              newElement
+            );
+          } else {
+            // Add image at the end of the document
+            document
+              .getElementById(END_OF_DOC_ID)
+              .insertAdjacentElement("beforebegin", newElement);
+          }
+
           // Set img src to file contents as Data URL
           const reader = new FileReader();
           reader.onload = ((aImg) => {
@@ -424,28 +433,27 @@
             };
           })(newElement);
           reader.readAsDataURL(file);
-          // Remove new
-          if (!update) {
-            document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
-          }
 
           newElement.addEventListener(
             "click",
-            makeImageElementListener(newElement)
+            makeElementEventListener(EDITOR_TYPES.IMAGE)
           );
         }
 
         function addTextItem(type) {
           let elementType;
-          if (type === "heading") {
-            elementType = "h2";
-          } else if (type === "paragraph") {
-            elementType = "p";
+          if (type === EDITOR_TYPES.HEADING) {
+            elementType = HEADING_ELEMENTS[1];
+          } else if (type === EDITOR_TYPES.PARAGRAPH) {
+            elementType = PARAGRAPH_ELEMENT;
           }
 
-          const newElement = document.createElement(elementType);
+          const newElement = createElement(elementType);
 
-          if (type === "heading" || type === "paragraph") {
+          if (
+            type === EDITOR_TYPES.HEADING ||
+            type === EDITOR_TYPES.PARAGRAPH
+          ) {
             newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
 
             document
@@ -454,10 +462,8 @@
 
             newElement.addEventListener(
               "click",
-              makeTextElementListener(newElement)
+              makeElementEventListener(type)
             );
-
-            document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
           }
         }
 
@@ -503,7 +509,7 @@
 
         document
           .getElementById("save-changes")
-          .addEventListener("click", function (event) {
+          .addEventListener("click", function (_event) {
             // Remove local controls:
             localControls.remove();
 
@@ -549,6 +555,40 @@
 
           // close the file and write the contents to disk.
           await writableStream.close();
+        }
+
+        function createTextEditor(id, type, content) {
+          let editElement = createElement("textarea");
+          editElement.id = id;
+          editElement.classList.add(EDIT_CLASS);
+          editElement.innerHTML = content;
+          const editElementLabel = createEditorLabel(id, type);
+          return [editElementLabel, editElement];
+        }
+
+        function createImageEditor(id, type, _content) {
+          const imagePicker = createElement("input");
+          imagePicker.type = "file";
+          imagePicker.id = id;
+          imagePicker.classList.add(EDIT_CLASS);
+          const imagePickerLabel = createEditorLabel(id, type);
+          return [imagePickerLabel, imagePicker];
+        }
+
+        function createEditorLabel(editorId, type) {
+          let editElementLabel = createElement("label");
+          editElementLabel.innerHTML = STRINGS.EDITOR_LABELS[type];
+          editElementLabel.htmlFor = editorId;
+          editElementLabel.classList.add(EDIT_CLASS);
+          return editElementLabel;
+        }
+
+        function uniqueId(readableString) {
+          return `${readableString}-${Math.random()}`;
+        }
+
+        function createElement(type) {
+          return document.createElement(type);
         }
       }
     </script>
