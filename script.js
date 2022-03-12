@@ -21,15 +21,12 @@ function localEditingMode() {
   const EDIT_CONTAINER_CLASS = "edit-container";
   const EDIT_BUTTONS_CLASS = "edit-buttons";
   const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
-  const IMAGE_CONTAINER_CLASS = "image-container";
   const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
   const END_OF_DOC_ID = "end-of-document";
   const LOCAL_CONTROLS_ID = "local-controls";
   const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
-  const EDITABLE_HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"].join(
-    ", "
-  );
-  const EDITABLE_PARAGRAPH_ELEMENT = "p";
+  const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
+  const PARAGRAPH_ELEMENT = "p";
 
   const EDITOR_TYPES = {
     TEXT: "text",
@@ -96,24 +93,34 @@ function localEditingMode() {
 
       const cancelButton = {
         label: STRINGS.BUTTON_CANCEL,
-        getNewContent: (_) => originalContent,
+        getNewContent: (_) => null,
       };
 
-      const updateButton = {
+      const updateTextButton = {
         label: STRINGS.BUTTON_UPDATE,
-        getNewContent: (element) => element.value,
+        getNewContent: (editorElement, originalElement) => {
+          originalElement.innerHTML = editorElement.value;
+        },
+      };
+
+      const upateImageButton = {
+        label: STRINGS.BUTTON_UPDATE,
+        getNewContent: (imagePicker, originalElement) => {
+          addImage({ filePickerId: imagePicker.id, update: true });
+          element.remove();
+        },
       };
 
       let types = {
         text: {
           idReadableString: TEXT_EDITOR_ID_READABLE_STRING,
-          controls: [updateButton, cancelButton],
-          createEditor: createEditTextElement,
+          controls: [cancelButton, updateTextButton],
+          createEditor: createTextEditor,
         },
         [EDITOR_TYPES.IMAGE]: {
           idReadableString: IMAGE_PICKER_ID_READABLE_STRING,
-          controls: [cancelButton],
-          createEditor: createEditImageElements,
+          controls: [cancelButton, upateImageButton],
+          createEditor: createImageEditor,
         },
       };
       types[EDITOR_TYPES.HEADING] = types.text;
@@ -134,24 +141,22 @@ function localEditingMode() {
       let editorContainerElement = createElement("div");
       editorContainerElement.classList.add(EDIT_CONTAINER_CLASS);
 
-      type.controls.forEach(function (i) {
+      type.controls.forEach((i) => {
         let buttonElement = createElement("button");
         buttonElement.innerHTML = i.label;
         buttonsContainerElement.insertAdjacentElement(
-          "afterbegin",
+          "beforeend",
           buttonElement
         );
         buttonElement.addEventListener("click", function (_event) {
-          element.innerHTML = i.getNewContent(editElements[1]);
+          i.getNewContent(editElements[1], element);
           editorContainerElement.remove();
           element.style.display = originalDisplay;
         });
       });
 
       element.insertAdjacentElement("beforebegin", editorContainerElement);
-      [...editElements, buttonsContainerElement].forEach(function (
-        editorElement
-      ) {
+      [...editElements, buttonsContainerElement].forEach((editorElement) => {
         editorContainerElement.insertAdjacentElement(
           "beforeend",
           editorElement
@@ -160,43 +165,8 @@ function localEditingMode() {
     };
   }
 
-  function imageElementListener(event) {
-    const element = event.target;
-    const originalDisplay = element.style.display;
-    const originalContent = element.innerHTML;
-    const imagePickerId = uniqueId(IMAGE_PICKER_ID_READABLE_STRING);
-    let newElements = createEditImageElements(imagePickerId);
-
-    element.style.display = "none";
-
-    const controls = [
-      {
-        label: STRINGS.BUTTON_CANCEL,
-        getNewContent: (_) => {
-          return originalContent;
-        },
-      },
-    ];
-
-    let buttonsContainerElement = createElement("div");
-    buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
-    [...newElements, buttonsContainerElement].forEach((element) => {
-      buttonsContainerElement.insertBefore(element);
-    });
-    insertElementsAbove(element, [buttonsContainerElement]);
-
-    insertEditorControls(
-      element,
-      originalDisplay,
-      buttonsContainerElement,
-      controls,
-      newElements
-    );
-    element.parentElement.classList.add(EDIT_CONTAINER_CLASS);
-  }
-
   // Headings
-  document.querySelectorAll(EDITABLE_HEADING_ELEMENTS).forEach((element) => {
+  document.querySelectorAll(HEADING_ELEMENTS.join(", ")).forEach((element) => {
     element.addEventListener(
       "click",
       makeElementEventListener(EDITOR_TYPES.HEADING)
@@ -204,15 +174,12 @@ function localEditingMode() {
   });
 
   // Paragraph
-  document
-    // TODO Don't actually need querySelectorAll here.
-    .querySelectorAll(EDITABLE_PARAGRAPH_ELEMENT)
-    .forEach((element) => {
-      element.addEventListener(
-        "click",
-        makeElementEventListener(EDITOR_TYPES.PARAGRAPH)
-      );
-    });
+  document.querySelectorAll(PARAGRAPH_ELEMENT).forEach((element) => {
+    element.addEventListener(
+      "click",
+      makeElementEventListener(EDITOR_TYPES.PARAGRAPH)
+    );
+  });
 
   // Image
   document.querySelectorAll("img").forEach((element) => {
@@ -262,14 +229,16 @@ function localEditingMode() {
             event.target.id.length
           )
         );
+        document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
       });
     });
 
     document
       .getElementById(ADD_ITEM_IMAGE_ID)
-      .addEventListener("change", () =>
-        addImage({ filePickerId: ADD_ITEM_IMAGE_ID })
-      );
+      .addEventListener("change", () => {
+        addImage({ filePickerId: ADD_ITEM_IMAGE_ID });
+        document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
+      });
   }
 
   function addImage({ filePickerId, update = false }) {
@@ -279,16 +248,18 @@ function localEditingMode() {
       alert(STRINGS.ERROR_IMAGE_ONLY);
       return;
     }
-    const imageContainer = createElement("div");
-    imageContainer.classList.add(IMAGE_CONTAINER_CLASS);
     const newElement = createElement("img");
     newElement.file = file;
-    // Add imageContainer to end of current document
-    document
-      .getElementById(END_OF_DOC_ID)
-      .insertAdjacentElement("beforebegin", imageContainer);
-    // Add img element inside imageContainer
-    imageContainer.insertAdjacentElement("afterbegin", newElement);
+    if (update) {
+      // Add image above current image
+      filePicker.parentElement.insertAdjacentElement("afterend", newElement);
+    } else {
+      // Add image at the end of the document
+      document
+        .getElementById(END_OF_DOC_ID)
+        .insertAdjacentElement("beforebegin", newElement);
+    }
+
     // Set img src to file contents as Data URL
     const reader = new FileReader();
     reader.onload = ((aImg) => {
@@ -297,10 +268,6 @@ function localEditingMode() {
       };
     })(newElement);
     reader.readAsDataURL(file);
-    // Remove new
-    if (!update) {
-      document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
-    }
 
     newElement.addEventListener(
       "click",
@@ -311,9 +278,9 @@ function localEditingMode() {
   function addTextItem(type) {
     let elementType;
     if (type === EDITOR_TYPES.HEADING) {
-      elementType = "h2";
+      elementType = HEADING_ELEMENTS[1];
     } else if (type === EDITOR_TYPES.PARAGRAPH) {
-      elementType = "p";
+      elementType = PARAGRAPH_ELEMENT;
     }
 
     const newElement = createElement(elementType);
@@ -326,8 +293,6 @@ function localEditingMode() {
         .insertAdjacentElement("beforebegin", newElement);
 
       newElement.addEventListener("click", makeElementEventListener(type));
-
-      document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
     }
   }
 
@@ -421,43 +386,7 @@ function localEditingMode() {
     await writableStream.close();
   }
 
-  // TODO remove?
-  function insertElementsAbove(elementBelow, elementsArray) {
-    elementsArray.forEach((element) => {
-      elementBelow.insertAdjacentElement("beforebegin", element);
-    });
-  }
-
-  function insertEditorControls(
-    imageElement,
-    originalDisplay,
-    containerElement,
-    controls,
-    newElements
-  ) {
-    function clearUpdateImageUI() {
-      containerElement.parentElement.remove();
-    }
-
-    controls.forEach((i) => {
-      let buttonElement = createElement("button");
-      buttonElement.innerHTML = i.label;
-      containerElement.insertAdjacentElement("afterbegin", buttonElement);
-      buttonElement.addEventListener("click", function (_event) {
-        clearUpdateImageUI();
-        imageElement.style.display = originalDisplay;
-      });
-    });
-
-    const imagePicker = newElements[1];
-    imagePicker.addEventListener("change", () => {
-      imageElement.remove();
-      addImage({ filePickerId: imagePicker.id, update: true });
-      clearUpdateImageUI();
-    });
-  }
-
-  function createEditTextElement(id, type, content) {
+  function createTextEditor(id, type, content) {
     let editElement = createElement("textarea");
     editElement.id = id;
     editElement.classList.add(EDIT_CLASS);
@@ -466,7 +395,7 @@ function localEditingMode() {
     return [editElementLabel, editElement];
   }
 
-  function createEditImageElements(id, type, _content) {
+  function createImageEditor(id, type, _content) {
     const imagePicker = createElement("input");
     imagePicker.type = "file";
     imagePicker.id = id;
