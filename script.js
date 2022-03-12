@@ -91,6 +91,7 @@ function localEditingMode() {
       const element = event.target;
 
       const originalDisplay = element.style.display;
+      element.style.display = "none";
       const originalContent = element.innerHTML;
 
       const cancelButton = {
@@ -109,7 +110,7 @@ function localEditingMode() {
           controls: [updateButton, cancelButton],
           createEditor: createEditTextElement,
         },
-        image: {
+        [EDITOR_TYPES.IMAGE]: {
           idReadableString: IMAGE_PICKER_ID_READABLE_STRING,
           controls: [cancelButton],
           createEditor: createEditImageElements,
@@ -127,15 +128,14 @@ function localEditingMode() {
         originalContent
       );
 
-      element.style.display = "none";
-      let buttonsContainerElement = document.createElement("div");
+      let buttonsContainerElement = createElement("div");
       buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
 
-      let editorContainerElement = document.createElement("div");
+      let editorContainerElement = createElement("div");
       editorContainerElement.classList.add(EDIT_CONTAINER_CLASS);
 
       type.controls.forEach(function (i) {
-        let buttonElement = document.createElement("button");
+        let buttonElement = createElement("button");
         buttonElement.innerHTML = i.label;
         buttonsContainerElement.insertAdjacentElement(
           "afterbegin",
@@ -178,7 +178,7 @@ function localEditingMode() {
       },
     ];
 
-    let buttonsContainerElement = document.createElement("div");
+    let buttonsContainerElement = createElement("div");
     buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
     [...newElements, buttonsContainerElement].forEach((element) => {
       buttonsContainerElement.insertBefore(element);
@@ -226,7 +226,7 @@ function localEditingMode() {
    * Page Controls:
    */
 
-  let localControls = document.createElement("div");
+  let localControls = createElement("div");
   localControls.id = LOCAL_CONTROLS_ID;
   localControls.innerHTML = LOCAL_CONTROLS_HTML;
 
@@ -245,7 +245,7 @@ function localEditingMode() {
    */
 
   function preAddItem() {
-    let newContentModal = document.createElement("div");
+    let newContentModal = createElement("div");
     newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
     newContentModal.innerHTML = NEW_CONTENT_MODAL_HTML;
 
@@ -279,9 +279,9 @@ function localEditingMode() {
       alert(STRINGS.ERROR_IMAGE_ONLY);
       return;
     }
-    const imageContainer = document.createElement("div");
+    const imageContainer = createElement("div");
     imageContainer.classList.add(IMAGE_CONTAINER_CLASS);
-    const newElement = document.createElement("img");
+    const newElement = createElement("img");
     newElement.file = file;
     // Add imageContainer to end of current document
     document
@@ -310,25 +310,22 @@ function localEditingMode() {
 
   function addTextItem(type) {
     let elementType;
-    if (type === "heading") {
+    if (type === EDITOR_TYPES.HEADING) {
       elementType = "h2";
-    } else if (type === "paragraph") {
+    } else if (type === EDITOR_TYPES.PARAGRAPH) {
       elementType = "p";
     }
 
-    const newElement = document.createElement(elementType);
+    const newElement = createElement(elementType);
 
-    if (type === "heading" || type === "paragraph") {
+    if (type === EDITOR_TYPES.HEADING || type === EDITOR_TYPES.PARAGRAPH) {
       newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
 
       document
         .getElementById(END_OF_DOC_ID)
         .insertAdjacentElement("beforebegin", newElement);
 
-      newElement.addEventListener(
-        "click",
-        makeElementEventListener(EDITOR_TYPES.TEXT)
-      );
+      newElement.addEventListener("click", makeElementEventListener(type));
 
       document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
     }
@@ -443,7 +440,7 @@ function localEditingMode() {
     }
 
     controls.forEach((i) => {
-      let buttonElement = document.createElement("button");
+      let buttonElement = createElement("button");
       buttonElement.innerHTML = i.label;
       containerElement.insertAdjacentElement("afterbegin", buttonElement);
       buttonElement.addEventListener("click", function (_event) {
@@ -461,7 +458,7 @@ function localEditingMode() {
   }
 
   function createEditTextElement(id, type, content) {
-    let editElement = document.createElement("textarea");
+    let editElement = createElement("textarea");
     editElement.id = id;
     editElement.classList.add(EDIT_CLASS);
     editElement.innerHTML = content;
@@ -470,7 +467,7 @@ function localEditingMode() {
   }
 
   function createEditImageElements(id, type, _content) {
-    const imagePicker = document.createElement("input");
+    const imagePicker = createElement("input");
     imagePicker.type = "file";
     imagePicker.id = id;
     imagePicker.classList.add(EDIT_CLASS);
@@ -479,7 +476,7 @@ function localEditingMode() {
   }
 
   function createEditorLabel(editorId, type) {
-    let editElementLabel = document.createElement("label");
+    let editElementLabel = createElement("label");
     editElementLabel.innerHTML = STRINGS.EDITOR_LABELS[type];
     editElementLabel.htmlFor = editorId;
     editElementLabel.classList.add(EDIT_CLASS);
@@ -488,5 +485,9 @@ function localEditingMode() {
 
   function uniqueId(readableString) {
     return `${readableString}-${Math.random()}`;
+  }
+
+  function createElement(type) {
+    return createElement(type);
   }
 }
