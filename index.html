@@ -18,12 +18,101 @@
     />
 
     <!-- CSS -->
-    <!--
     <style>
-      
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: plum;
+        margin: 2rem;
+      }
+
+      input,
+      textarea {
+        font-size: 1rem;
+        line-height: 1.2rem;
+        padding: 0.5rem;
+      }
+
+      textarea {
+        width: Calc(100% - 1rem);
+        min-height: 6rem;
+        font-family: "Arial", sans-serif;
+      }
+
+      img {
+        display: block;
+      }
+
+      .edit-container {
+        border: 2px solid yellow;
+        border-radius: 3px;
+        margin: 1rem 0;
+        padding: 5px;
+      }
+
+      label.edit,
+      input.edit {
+        width: 100%;
+      }
+
+      .edit-buttons {
+        background-color: #ddd;
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+        display: inline-block;
+      }
+
+      .edit-buttons button {
+        margin: 0 0.25rem;
+      }
+
+      #local-controls {
+        background-color: #ddd;
+        margin: 4rem 0 1rem;
+        padding: 0.5rem 1rem;
+      }
+
+      .controls-section {
+        width: 100%;
+        margin: 0.5em 0 2rem;
+      }
+
+      .controls-section label,
+      .controls-section input,
+      .controls-section textarea,
+      .controls-section button {
+        display: block;
+      }
+
+      .controls-section input,
+      .controls-section textarea,
+      .controls-section button {
+        margin: 0.25rem 0 1rem;
+      }
+
+      .controls-section label {
+        margin: 0.25rem 0;
+      }
+
+      #new-content-modal-wrapper {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background-color: hsla(0, 20%, 20%, 80%);
+      }
+
+      #new-content-modal {
+        margin: 5rem 10% 0;
+        background-color: #fff;
+        padding: 1rem 2rem;
+        width: Calc(80% - 2rem - 2rem); /* 2rem is body margin */
+      }
+
+      #new-content-modal li {
+        margin: 0.5rem;
+      }
     </style>
-    -->
-    <link rel="stylesheet" href="style.css" />
 
     <!-- Social -->
     <meta property="og:title" content="Website" id="meta-title" />
@@ -59,11 +148,450 @@
     <hr id="end-of-document" style="display: none" />
 
     <!-- JS -->
-    <!--
     <script type="text/javascript" id="js">
-      
+      /*
+       *   Check for local file:
+       */
+
+      const protocol = window.location.protocol;
+      if (protocol === "file:") {
+        localEditingMode();
+      }
+
+      /*
+       *   Editng JavaScript only runs locally:
+       */
+
+      function localEditingMode() {
+        // Constants
+        const ADD_ITEM_ID = "add-item";
+        const ADD_ITEM_HEADING_ID = "add-item-heading";
+        const ADD_ITEM_IMAGE_ID = "add-item-image";
+        const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
+        const EDIT_CLASS = "edit";
+        const EDIT_CONTAINER_CLASS = "edit-container";
+        const EDIT_BUTTONS_CLASS = "edit-buttons";
+        const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
+        const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
+        const END_OF_DOC_ID = "end-of-document";
+        const LOCAL_CONTROLS_ID = "local-controls";
+        const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
+        const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
+        const PARAGRAPH_ELEMENT = "p";
+
+        const EDITOR_TYPES = {
+          TEXT: "text",
+          HEADING: "heading",
+          PARAGRAPH: "paragraph",
+          IMAGE: "image",
+        };
+
+        const STRINGS = {
+          BUTTON_CANCEL: "Cancel",
+          BUTTON_UPDATE: "Update",
+          ERROR_IMAGE_ONLY: "Error: Please choose an image file",
+          EDITOR_LABELS: {
+            [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph",
+            [EDITOR_TYPES.HEADING]: "Edit heading",
+            [EDITOR_TYPES.IMAGE]: "Select an image",
+          },
+          PLACEHOLDER_TEXT: "Your text here",
+        };
+
+        const NEW_CONTENT_MODAL_HTML = `
+          <div id="new-content-modal">
+            <h2>Add New Content</h2>
+            <ul>
+              <li><button id="${ADD_ITEM_HEADING_ID}">Heading</button></li>
+              <li><button id="${ADD_ITEM_PARAGRAPH_ID}">Text</button></li>
+              <li><button><label class="label-button" for="${ADD_ITEM_IMAGE_ID}">Image</label><input type="file" id="${ADD_ITEM_IMAGE_ID}" style="display: none" /></button></li>
+            </ul>
+            <button>Cancel</button>
+          </div>
+        `;
+
+        const LOCAL_CONTROLS_HTML = `
+          <h2>Local Controls</h2>
+          <p>This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on a computer.
+          <hr/>
+
+          <div class="controls-section">
+            <h3>Add Content<h3>
+            <button id="${ADD_ITEM_ID}">Add Item</button>
+          </div>
+
+          <div class="controls-section">
+            <h3>Social Media Metadata</h3>
+            <label for="edit-page-title">Page Title: </label>
+            <input type="text" id="edit-page-title" />
+            <label for="edit-page-description">Page Description</label>
+            <textarea id="edit-page-description" style="min-height: 2rem"></textarea>
+          </div>
+
+          <div class="controls-section">
+            <h3>Save Changes</h3>
+            <button id="save-changes">Save All Changes to Local File</button>
+          </div>
+        `;
+
+        function makeElementEventListener(editorType) {
+          return function (event) {
+            const element = event.target;
+
+            const originalDisplay = element.style.display;
+            element.style.display = "none";
+            const originalContent = element.innerHTML;
+
+            const cancelButton = {
+              label: STRINGS.BUTTON_CANCEL,
+              getNewContent: (_) => null,
+            };
+
+            const updateTextButton = {
+              label: STRINGS.BUTTON_UPDATE,
+              getNewContent: (editorElement, originalElement) => {
+                originalElement.innerHTML = editorElement.value;
+              },
+            };
+
+            const upateImageButton = {
+              label: STRINGS.BUTTON_UPDATE,
+              getNewContent: (imagePicker, originalElement) => {
+                addImage({ filePickerId: imagePicker.id, update: true });
+                element.remove();
+              },
+            };
+
+            let types = {
+              text: {
+                idReadableString: TEXT_EDITOR_ID_READABLE_STRING,
+                controls: [cancelButton, updateTextButton],
+                createEditor: createTextEditor,
+              },
+              [EDITOR_TYPES.IMAGE]: {
+                idReadableString: IMAGE_PICKER_ID_READABLE_STRING,
+                controls: [cancelButton, upateImageButton],
+                createEditor: createImageEditor,
+              },
+            };
+            types[EDITOR_TYPES.HEADING] = types.text;
+            types[EDITOR_TYPES.PARAGRAPH] = types.text;
+            const type = types[editorType];
+
+            const editorId = uniqueId(type.idReadableString);
+
+            const editElements = type.createEditor(
+              editorId,
+              editorType,
+              originalContent
+            );
+
+            let buttonsContainerElement = createElement("div");
+            buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
+
+            let editorContainerElement = createElement("div");
+            editorContainerElement.classList.add(EDIT_CONTAINER_CLASS);
+
+            type.controls.forEach((i) => {
+              let buttonElement = createElement("button");
+              buttonElement.innerHTML = i.label;
+              buttonsContainerElement.insertAdjacentElement(
+                "beforeend",
+                buttonElement
+              );
+              buttonElement.addEventListener("click", function (_event) {
+                i.getNewContent(editElements[1], element);
+                editorContainerElement.remove();
+                element.style.display = originalDisplay;
+              });
+            });
+
+            element.insertAdjacentElement(
+              "beforebegin",
+              editorContainerElement
+            );
+            [...editElements, buttonsContainerElement].forEach(
+              (editorElement) => {
+                editorContainerElement.insertAdjacentElement(
+                  "beforeend",
+                  editorElement
+                );
+              }
+            );
+          };
+        }
+
+        // Headings
+        document
+          .querySelectorAll(HEADING_ELEMENTS.join(", "))
+          .forEach((element) => {
+            element.addEventListener(
+              "click",
+              makeElementEventListener(EDITOR_TYPES.HEADING)
+            );
+          });
+
+        // Paragraph
+        document.querySelectorAll(PARAGRAPH_ELEMENT).forEach((element) => {
+          element.addEventListener(
+            "click",
+            makeElementEventListener(EDITOR_TYPES.PARAGRAPH)
+          );
+        });
+
+        // Image
+        document.querySelectorAll("img").forEach((element) => {
+          element.addEventListener(
+            "click",
+            makeElementEventListener(EDITOR_TYPES.IMAGE)
+          );
+        });
+
+        /*
+         * Page Controls:
+         */
+
+        let localControls = createElement("div");
+        localControls.id = LOCAL_CONTROLS_ID;
+        localControls.innerHTML = LOCAL_CONTROLS_HTML;
+
+        function addLocalControls() {
+          document
+            .getElementById(END_OF_DOC_ID)
+            .insertAdjacentElement("afterend", localControls);
+
+          document
+            .getElementById(ADD_ITEM_ID)
+            .addEventListener("click", preAddItem);
+        }
+
+        addLocalControls();
+
+        /*
+         *   Add Content
+         */
+
+        function preAddItem() {
+          let newContentModal = createElement("div");
+          newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
+          newContentModal.innerHTML = NEW_CONTENT_MODAL_HTML;
+
+          document.body.insertAdjacentElement("beforeend", newContentModal);
+
+          const addItemButtonIds = [ADD_ITEM_HEADING_ID, ADD_ITEM_PARAGRAPH_ID];
+
+          addItemButtonIds.forEach((buttonId) => {
+            document
+              .getElementById(buttonId)
+              .addEventListener("click", (event) => {
+                addTextItem(
+                  event.target.id.slice(
+                    // 🚸 This is fragile with the strings coming from the constants above.
+                    "add-item-".length,
+                    event.target.id.length
+                  )
+                );
+                document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
+              });
+          });
+
+          document
+            .getElementById(ADD_ITEM_IMAGE_ID)
+            .addEventListener("change", () => {
+              addImage({ filePickerId: ADD_ITEM_IMAGE_ID });
+              document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
+            });
+        }
+
+        function addImage({ filePickerId, update = false }) {
+          const filePicker = document.getElementById(filePickerId);
+          const file = filePicker.files[0];
+          if (!file.type.startsWith("image/")) {
+            alert(STRINGS.ERROR_IMAGE_ONLY);
+            return;
+          }
+          const newElement = createElement("img");
+          newElement.file = file;
+          if (update) {
+            // Add image above current image
+            filePicker.parentElement.insertAdjacentElement(
+              "afterend",
+              newElement
+            );
+          } else {
+            // Add image at the end of the document
+            document
+              .getElementById(END_OF_DOC_ID)
+              .insertAdjacentElement("beforebegin", newElement);
+          }
+
+          // Set img src to file contents as Data URL
+          const reader = new FileReader();
+          reader.onload = ((aImg) => {
+            return (e) => {
+              aImg.src = e.target.result;
+            };
+          })(newElement);
+          reader.readAsDataURL(file);
+
+          newElement.addEventListener(
+            "click",
+            makeElementEventListener(EDITOR_TYPES.IMAGE)
+          );
+        }
+
+        function addTextItem(type) {
+          let elementType;
+          if (type === EDITOR_TYPES.HEADING) {
+            elementType = HEADING_ELEMENTS[1];
+          } else if (type === EDITOR_TYPES.PARAGRAPH) {
+            elementType = PARAGRAPH_ELEMENT;
+          }
+
+          const newElement = createElement(elementType);
+
+          if (
+            type === EDITOR_TYPES.HEADING ||
+            type === EDITOR_TYPES.PARAGRAPH
+          ) {
+            newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
+
+            document
+              .getElementById(END_OF_DOC_ID)
+              .insertAdjacentElement("beforebegin", newElement);
+
+            newElement.addEventListener(
+              "click",
+              makeElementEventListener(type)
+            );
+          }
+        }
+
+        /*
+         *   Page Metadata
+         */
+
+        function metaDataEditor(
+          editElementId,
+          mainElementId,
+          secondaryElementIdArray,
+          mainProperty = "content",
+          secondaryProperty = "content"
+        ) {
+          const editElement = document.getElementById(editElementId);
+          const mainElement = document.getElementById(mainElementId);
+          editElement.value = mainElement[mainProperty];
+
+          editElement.addEventListener("input", (event) => {
+            const newValue = editElement.value;
+            mainElement[mainProperty] = newValue;
+            secondaryElementIdArray.forEach((element) => {
+              document.getElementById(element)[secondaryProperty] = newValue;
+            });
+          });
+        }
+
+        metaDataEditor(
+          "edit-page-title",
+          "page-title",
+          ["meta-title", "twitter-title"],
+          "innerHTML"
+        );
+
+        metaDataEditor("edit-page-description", "page-description", [
+          "meta-description",
+          "twitter-description",
+        ]);
+
+        /*
+         *   Save Changes
+         */
+
+        document
+          .getElementById("save-changes")
+          .addEventListener("click", function (_event) {
+            // Remove local controls:
+            localControls.remove();
+
+            const htmlSourceCode = `
+            <!DOCTYPE html>
+            <html lang="en">
+              <head>
+                ${document.head.innerHTML}
+              </head>
+              <body>
+                ${document.body.innerHTML}
+              </body>
+            </html>
+          `;
+            saveFile(htmlSourceCode);
+
+            // Re-add local controls
+            addLocalControls();
+          });
+
+        // Chromium only
+        // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/write
+        async function saveFile(data) {
+          // create a new handle
+          const newHandle = await window.showSaveFilePicker({
+            startIn: "desktop",
+            suggestedName: "index.html",
+            types: [
+              {
+                description: "HTML",
+                accept: {
+                  "text/markdown": [".html"],
+                },
+              },
+            ],
+          });
+
+          // create a FileSystemWritableFileStream to write to
+          const writableStream = await newHandle.createWritable();
+
+          // write our file
+          await writableStream.write(data);
+
+          // close the file and write the contents to disk.
+          await writableStream.close();
+        }
+
+        function createTextEditor(id, type, content) {
+          let editElement = createElement("textarea");
+          editElement.id = id;
+          editElement.classList.add(EDIT_CLASS);
+          editElement.innerHTML = content;
+          const editElementLabel = createEditorLabel(id, type);
+          return [editElementLabel, editElement];
+        }
+
+        function createImageEditor(id, type, _content) {
+          const imagePicker = createElement("input");
+          imagePicker.type = "file";
+          imagePicker.id = id;
+          imagePicker.classList.add(EDIT_CLASS);
+          const imagePickerLabel = createEditorLabel(id, type);
+          return [imagePickerLabel, imagePicker];
+        }
+
+        function createEditorLabel(editorId, type) {
+          let editElementLabel = createElement("label");
+          editElementLabel.innerHTML = STRINGS.EDITOR_LABELS[type];
+          editElementLabel.htmlFor = editorId;
+          editElementLabel.classList.add(EDIT_CLASS);
+          return editElementLabel;
+        }
+
+        function uniqueId(readableString) {
+          return `${readableString}-${Math.random()}`;
+        }
+
+        function createElement(type) {
+          return document.createElement(type);
+        }
+      }
     </script>
-    -->
     <script src="script.js"></script>
   </body>
 </html>
