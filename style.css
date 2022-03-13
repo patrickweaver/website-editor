@@ -21,6 +21,21 @@ img {
   display: block;
 }
 
+#favicon-preview {
+  margin: 0 0 1rem;
+}
+
+#favicon-preview figcaption,
+#favicon-preview img {
+  display: inline;
+}
+
+#favicon-preview img {
+  width: 16px;
+  position: relative;
+  top: 3px;
+}
+
 .edit-container {
   border: 2px solid yellow;
   border-radius: 3px;

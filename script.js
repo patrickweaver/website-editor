@@ -17,6 +17,8 @@ function localEditingMode() {
   const ADD_ITEM_HEADING_ID = "add-item-heading";
   const ADD_ITEM_IMAGE_ID = "add-item-image";
   const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
+  const CURRENT_FAVICON_PREVIEW_ID = "current-favicon-preview";
+  const UPDATE_FAVICON_ID = "update-favicon";
   const EDIT_CLASS = "edit";
   const EDIT_CONTAINER_CLASS = "edit-container";
   const EDIT_BUTTONS_CLASS = "edit-buttons";
@@ -69,8 +71,21 @@ function localEditingMode() {
             <button id="${ADD_ITEM_ID}">Add Item</button>
           </div>
 
+          <h3>Metadata</h3>
           <div class="controls-section">
-            <h3>Social Media Metadata</h3>
+            <h4>Favicon</h4>
+            <figure id="favicon-preview">
+              <figcaption>Current Favicon:</figcaption>  
+              <img id="${CURRENT_FAVICON_PREVIEW_ID}" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📓</text></svg>"
+              alt="The current favicon">
+            </figure>
+            <label for="${UPDATE_FAVICON_ID}">Update Favicon</label>
+            <input id="${UPDATE_FAVICON_ID}" type="file" />
+
+          </div>
+
+          <div class="controls-section">
+            <h4>Social Media Metadata</h4>
             <label for="edit-page-title">Page Title: </label>
             <input type="text" id="edit-page-title" />
             <label for="edit-page-description">Page Description</label>
@@ -225,6 +240,40 @@ function localEditingMode() {
   }
 
   addLocalControls();
+
+  /*
+   * Activate Controls
+   */
+
+  document
+    .getElementById(UPDATE_FAVICON_ID)
+    .addEventListener("change", (event) => {
+      let oldLink = document.querySelector("link[rel~='icon']");
+      oldLink.remove();
+      let link = document.createElement("link");
+      link.rel = "icon";
+
+      const file = event.target.files[0];
+      if (!isImageFile(file)) {
+        alert(STRINGS.ERROR_IMAGE_ONLY);
+        return null;
+      }
+
+      link.file = file;
+
+      // Set img src to file contents as Data URL
+      const reader = new FileReader();
+      reader.onload = ((aLink) => {
+        return (e) => {
+          aLink.href = e.target.result;
+          document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src =
+            e.target.result;
+        };
+      })(link);
+      reader.readAsDataURL(file);
+
+      document.getElementsByTagName("head")[0].appendChild(link);
+    });
 
   /*
    *   Add Content
@@ -447,6 +496,10 @@ function localEditingMode() {
     editElementLabel.htmlFor = editorId;
     editElementLabel.classList.add(EDIT_CLASS);
     return editElementLabel;
+  }
+
+  function onUpdateFavicon(event) {
+    console.log(event.target.type);
   }
 
   function uniqueId(readableString) {
