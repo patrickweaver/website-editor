@@ -93,21 +93,32 @@ function localEditingMode() {
 
       const cancelButton = {
         label: STRINGS.BUTTON_CANCEL,
-        getNewContent: (_) => null,
+        initiallyDisabled: false,
+        updateElement: (_) => true,
       };
 
       const updateTextButton = {
         label: STRINGS.BUTTON_UPDATE,
-        getNewContent: (editorElement, originalElement) => {
+        initiallyDisabled: false,
+        updateElement: (editorElement, originalElement) => {
+          const newContent = editorElement.value;
+          if (!newContent) return false;
           originalElement.innerHTML = editorElement.value;
+          return true;
         },
       };
 
       const upateImageButton = {
         label: STRINGS.BUTTON_UPDATE,
-        getNewContent: (imagePicker, originalElement) => {
-          addImage({ filePickerId: imagePicker.id, update: true });
+        initiallyDisabled: true,
+        updateElement: (imagePicker, originalElement) => {
+          const newImage = addImage({
+            filePickerId: imagePicker.id,
+            update: true,
+          });
+          if (!newImage) return false;
           element.remove();
+          return true;
         },
       };
 
@@ -143,15 +154,19 @@ function localEditingMode() {
 
       type.controls.forEach((i) => {
         let buttonElement = createElement("button");
+        buttonElement.id = getButtonId(i.label, editorId);
+        buttonElement.disabled = i.initiallyDisabled;
         buttonElement.innerHTML = i.label;
         buttonsContainerElement.insertAdjacentElement(
           "beforeend",
           buttonElement
         );
         buttonElement.addEventListener("click", function (_event) {
-          i.getNewContent(editElements[1], element);
-          editorContainerElement.remove();
-          element.style.display = originalDisplay;
+          const success = i.updateElement(editElements[1], element);
+          if (success) {
+            editorContainerElement.remove();
+            element.style.display = originalDisplay;
+          }
         });
       });
 
@@ -164,6 +179,10 @@ function localEditingMode() {
       });
     };
   }
+
+  /*
+   * Activate existing elements for editing
+   */
 
   // Headings
   document.querySelectorAll(HEADING_ELEMENTS.join(", ")).forEach((element) => {
@@ -244,9 +263,11 @@ function localEditingMode() {
   function addImage({ filePickerId, update = false }) {
     const filePicker = document.getElementById(filePickerId);
     const file = filePicker.files[0];
-    if (!file.type.startsWith("image/")) {
+    // This won't happen because button is disabled
+    // unless file is an image
+    if (!isImageFile(file)) {
       alert(STRINGS.ERROR_IMAGE_ONLY);
-      return;
+      return null;
     }
     const newElement = createElement("img");
     newElement.file = file;
@@ -273,6 +294,7 @@ function localEditingMode() {
       "click",
       makeElementEventListener(EDITOR_TYPES.IMAGE)
     );
+    return newElement;
   }
 
   function addTextItem(type) {
@@ -391,6 +413,7 @@ function localEditingMode() {
     editElement.id = id;
     editElement.classList.add(EDIT_CLASS);
     editElement.innerHTML = content;
+    editElement.addEventListener("input", makeUpdateButtonListener(id));
     const editElementLabel = createEditorLabel(id, type);
     return [editElementLabel, editElement];
   }
@@ -400,8 +423,22 @@ function localEditingMode() {
     imagePicker.type = "file";
     imagePicker.id = id;
     imagePicker.classList.add(EDIT_CLASS);
+    imagePicker.addEventListener("change", makeUpdateButtonListener(id));
     const imagePickerLabel = createEditorLabel(id, type);
     return [imagePickerLabel, imagePicker];
+  }
+
+  function makeUpdateButtonListener(id) {
+    return function (event) {
+      const updateButtonId = getButtonId(STRINGS.BUTTON_UPDATE, id);
+      const updateButton = document.getElementById(updateButtonId);
+      const { tagName, type, files } = event.target;
+      if (tagName === "TEXTAREA") {
+        updateButton.disabled = !event.target.value;
+      } else if (tagName === "INPUT" && type === "file") {
+        updateButton.disabled = !isImageFile(files[0]);
+      }
+    };
   }
 
   function createEditorLabel(editorId, type) {
@@ -418,5 +455,20 @@ function localEditingMode() {
 
   function createElement(type) {
     return document.createElement(type);
+  }
+
+  function slugify(string) {
+    return string.split(" ").join("-").toLowerCase();
+  }
+
+  function getButtonId(label, editorId) {
+    return `${slugify(label)}-${editorId}`;
+  }
+
+  function isImageFile(file) {
+    if (!file.type.startsWith("image/")) {
+      return false;
+    }
+    return true;
   }
 }
