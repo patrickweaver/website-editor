@@ -17,6 +17,10 @@ function localEditingMode() {
   const ADD_ITEM_HEADING_ID = "add-item-heading";
   const ADD_ITEM_IMAGE_ID = "add-item-image";
   const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
+  const CURRENT_FAVICON_PREVIEW_ID = "current-favicon-preview";
+  const UPDATE_FAVICON_ID = "update-favicon";
+  const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
+  const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
   const EDIT_CLASS = "edit";
   const EDIT_CONTAINER_CLASS = "edit-container";
   const EDIT_BUTTONS_CLASS = "edit-buttons";
@@ -69,8 +73,25 @@ function localEditingMode() {
             <button id="${ADD_ITEM_ID}">Add Item</button>
           </div>
 
+          <h3>Metadata</h3>
           <div class="controls-section">
-            <h3>Social Media Metadata</h3>
+            <h4>Favicon</h4>
+            <figure id="favicon-preview">
+              <figcaption>Current Favicon:</figcaption>  
+              <img id="${CURRENT_FAVICON_PREVIEW_ID}" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📓</text></svg>"
+              alt="The current favicon">
+            </figure>
+            <label for="${UPDATE_FAVICON_ID}">Update Favicon</label>
+            <input id="${UPDATE_FAVICON_ID}" type="file" />
+            <div class="${EDIT_BUTTONS_CLASS}">
+              <button id="${CANCEL_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_CANCEL}</button>
+              <button id="${CONFIRM_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_UPDATE}</button>
+            </div>
+
+          </div>
+
+          <div class="controls-section">
+            <h4>Social Media Metadata</h4>
             <label for="edit-page-title">Page Title: </label>
             <input type="text" id="edit-page-title" />
             <label for="edit-page-description">Page Description</label>
@@ -225,6 +246,14 @@ function localEditingMode() {
   }
 
   addLocalControls();
+
+  /*
+   * Activate Controls
+   */
+
+  document
+    .getElementById(UPDATE_FAVICON_ID)
+    .addEventListener("change", onUpdateFaviconPicker);
 
   /*
    *   Add Content
@@ -447,6 +476,71 @@ function localEditingMode() {
     editElementLabel.htmlFor = editorId;
     editElementLabel.classList.add(EDIT_CLASS);
     return editElementLabel;
+  }
+
+  function onUpdateFaviconPicker(changeEvent) {
+    const file = changeEvent.target.files[0];
+    const validFile = isImageFile(file);
+
+    const UPDATE_METHODS = {
+      REMOVE: "removeEventListener",
+      ADD: "addEventListener",
+    };
+
+    const faviconUpdateButtons = [
+      {
+        id: CANCEL_FAVICON_UPDATE_ID,
+        onClick: (clickEvent) => {
+          updateFaviconUpdateButtons(true, UPDATE_METHODS.REMOVE);
+        },
+      },
+      {
+        id: CONFIRM_FAVICON_UPDATE_ID,
+        onClick: (clickEvent) => {
+          updateFaviconUpdateButtons(true, UPDATE_METHODS.REMOVE);
+          onConfirmUpdateFavicon(file);
+        },
+      },
+    ];
+
+    function updateFaviconUpdateButtons(disabled, method) {
+      if (disabled) {
+        changeEvent.target.value = "";
+      }
+      faviconUpdateButtons.forEach((i) => {
+        const button = document.getElementById(i.id);
+        button.disabled = disabled;
+        button[method]("click", i.onClick);
+      });
+    }
+
+    updateFaviconUpdateButtons(!validFile, UPDATE_METHODS.ADD);
+
+    if (!validFile) {
+      alert(STRINGS.ERROR_IMAGE_ONLY);
+      return null;
+    }
+  }
+
+  function onConfirmUpdateFavicon(file) {
+    let oldLink = document.querySelector("link[rel~='icon']");
+    oldLink.remove();
+    let link = document.createElement("link");
+    link.rel = "icon";
+    link.file = file;
+
+    // Set img src to file contents as Data URL
+    const reader = new FileReader();
+    reader.onload = ((aLink) => {
+      return (e) => {
+        aLink.href = e.target.result;
+        document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src =
+          e.target.result;
+      };
+    })(link);
+    reader.readAsDataURL(file);
+
+    document.getElementsByTagName("head")[0].appendChild(link);
   }
 
   function uniqueId(readableString) {
