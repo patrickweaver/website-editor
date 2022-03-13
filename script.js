@@ -19,6 +19,8 @@ function localEditingMode() {
   const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
   const CURRENT_FAVICON_PREVIEW_ID = "current-favicon-preview";
   const UPDATE_FAVICON_ID = "update-favicon";
+  const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
+  const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
   const EDIT_CLASS = "edit";
   const EDIT_CONTAINER_CLASS = "edit-container";
   const EDIT_BUTTONS_CLASS = "edit-buttons";
@@ -81,6 +83,10 @@ function localEditingMode() {
             </figure>
             <label for="${UPDATE_FAVICON_ID}">Update Favicon</label>
             <input id="${UPDATE_FAVICON_ID}" type="file" />
+            <div class="${EDIT_BUTTONS_CLASS}">
+              <button id="${CANCEL_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_CANCEL}</button>
+              <button id="${CONFIRM_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_UPDATE}</button>
+            </div>
 
           </div>
 
@@ -247,7 +253,7 @@ function localEditingMode() {
 
   document
     .getElementById(UPDATE_FAVICON_ID)
-    .addEventListener("change", onUpdateFavicon);
+    .addEventListener("change", onUpdateFaviconPicker);
 
   /*
    *   Add Content
@@ -472,18 +478,55 @@ function localEditingMode() {
     return editElementLabel;
   }
 
-  function onUpdateFavicon(event) {
+  function onUpdateFaviconPicker(changeEvent) {
+    const file = changeEvent.target.files[0];
+    const validFile = isImageFile(file);
+
+    const UPDATE_METHODS = {
+      REMOVE: "removeEventListener",
+      ADD: "addEventListener",
+    };
+
+    const faviconUpdateButtons = [
+      {
+        id: CANCEL_FAVICON_UPDATE_ID,
+        onClick: (clickEvent) => {
+          updateFaviconUpdateButtons(true, UPDATE_METHODS.REMOVE);
+        },
+      },
+      {
+        id: CONFIRM_FAVICON_UPDATE_ID,
+        onClick: (clickEvent) => {
+          updateFaviconUpdateButtons(true, UPDATE_METHODS.REMOVE);
+          onConfirmUpdateFavicon(file);
+        },
+      },
+    ];
+
+    function updateFaviconUpdateButtons(disabled, method) {
+      if (disabled) {
+        changeEvent.target.value = "";
+      }
+      faviconUpdateButtons.forEach((i) => {
+        const button = document.getElementById(i.id);
+        button.disabled = disabled;
+        button[method]("click", i.onClick);
+      });
+    }
+
+    updateFaviconUpdateButtons(!validFile, UPDATE_METHODS.ADD);
+
+    if (!validFile) {
+      alert(STRINGS.ERROR_IMAGE_ONLY);
+      return null;
+    }
+  }
+
+  function onConfirmUpdateFavicon(file) {
     let oldLink = document.querySelector("link[rel~='icon']");
     oldLink.remove();
     let link = document.createElement("link");
     link.rel = "icon";
-
-    const file = event.target.files[0];
-    if (!isImageFile(file)) {
-      alert(STRINGS.ERROR_IMAGE_ONLY);
-      return null;
-    }
-
     link.file = file;
 
     // Set img src to file contents as Data URL

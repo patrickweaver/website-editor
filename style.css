@@ -48,17 +48,6 @@ input.edit {
   width: 100%;
 }
 
-.edit-buttons {
-  background-color: #ddd;
-  padding: 0.5rem;
-  margin: 0.5rem 0;
-  display: inline-block;
-}
-
-.edit-buttons button {
-  margin: 0 0.25rem;
-}
-
 #local-controls {
   background-color: #ddd;
   margin: 4rem 0 1rem;
@@ -81,6 +70,22 @@ input.edit {
 .controls-section textarea,
 .controls-section button {
   margin: 0.25rem 0 1rem;
+}
+
+#update-favicon {
+  margin-bottom: 0.25rem;
+}
+
+.edit-buttons {
+  background-color: #ddd;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  display: inline-block;
+}
+
+.edit-buttons button {
+  margin: 0 0.25rem;
+  display: inline-block;
 }
 
 .controls-section label {
