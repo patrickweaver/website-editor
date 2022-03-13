@@ -247,33 +247,7 @@ function localEditingMode() {
 
   document
     .getElementById(UPDATE_FAVICON_ID)
-    .addEventListener("change", (event) => {
-      let oldLink = document.querySelector("link[rel~='icon']");
-      oldLink.remove();
-      let link = document.createElement("link");
-      link.rel = "icon";
-
-      const file = event.target.files[0];
-      if (!isImageFile(file)) {
-        alert(STRINGS.ERROR_IMAGE_ONLY);
-        return null;
-      }
-
-      link.file = file;
-
-      // Set img src to file contents as Data URL
-      const reader = new FileReader();
-      reader.onload = ((aLink) => {
-        return (e) => {
-          aLink.href = e.target.result;
-          document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src =
-            e.target.result;
-        };
-      })(link);
-      reader.readAsDataURL(file);
-
-      document.getElementsByTagName("head")[0].appendChild(link);
-    });
+    .addEventListener("change", onUpdateFavicon);
 
   /*
    *   Add Content
@@ -499,7 +473,31 @@ function localEditingMode() {
   }
 
   function onUpdateFavicon(event) {
-    console.log(event.target.type);
+    let oldLink = document.querySelector("link[rel~='icon']");
+    oldLink.remove();
+    let link = document.createElement("link");
+    link.rel = "icon";
+
+    const file = event.target.files[0];
+    if (!isImageFile(file)) {
+      alert(STRINGS.ERROR_IMAGE_ONLY);
+      return null;
+    }
+
+    link.file = file;
+
+    // Set img src to file contents as Data URL
+    const reader = new FileReader();
+    reader.onload = ((aLink) => {
+      return (e) => {
+        aLink.href = e.target.result;
+        document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src =
+          e.target.result;
+      };
+    })(link);
+    reader.readAsDataURL(file);
+
+    document.getElementsByTagName("head")[0].appendChild(link);
   }
 
   function uniqueId(readableString) {
