@@ -35,6 +35,7 @@ function localEditingMode() {
   const EDITOR_TYPES = {
     TEXT: "text",
     HEADING: "heading",
+    HEADING_LEVEL: "heading-level",
     PARAGRAPH: "paragraph",
     IMAGE: "image",
   };
@@ -44,8 +45,9 @@ function localEditingMode() {
     BUTTON_UPDATE: "Update",
     ERROR_IMAGE_ONLY: "Error: Please choose an image file",
     EDITOR_LABELS: {
-      [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph",
-      [EDITOR_TYPES.HEADING]: "Edit heading",
+      [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph text",
+      [EDITOR_TYPES.HEADING]: "Edit heading text",
+      [EDITOR_TYPES.HEADING_LEVEL]: "Edit heading level",
       [EDITOR_TYPES.IMAGE]: "Select an image",
     },
     PLACEHOLDER_TEXT: "Your text here",
@@ -183,7 +185,7 @@ function localEditingMode() {
           buttonElement
         );
         buttonElement.addEventListener("click", function (_event) {
-          const success = i.updateElement(editElements[1], element);
+          const success = i.updateElement(editElements[3], element);
           if (success) {
             editorContainerElement.remove();
             element.style.display = originalDisplay;
@@ -438,13 +440,31 @@ function localEditingMode() {
   }
 
   function createTextEditor(id, type, content) {
+    const levelEditorId = `level-${id}`;
+    if (type === EDITOR_TYPES.HEADING) {
+      var editLevelElement = createElement("select");
+      HEADING_ELEMENTS.forEach((level) => {
+        let headingLevelElement = createElement("option");
+        headingLevelElement.innerHTML = level;
+        headingLevelElement.value = level;
+        editLevelElement.insertAdjacentElement(
+          "beforeend",
+          headingLevelElement
+        );
+      });
+    }
+    const editLevelLabel = createEditorLabel(
+      levelEditorId,
+      EDITOR_TYPES.HEADING_LEVEL
+    );
     let editElement = createElement("textarea");
     editElement.id = id;
     editElement.classList.add(EDIT_CLASS);
     editElement.innerHTML = content;
     editElement.addEventListener("input", makeUpdateButtonListener(id));
+
     const editElementLabel = createEditorLabel(id, type);
-    return [editElementLabel, editElement];
+    return [editLevelLabel, editLevelElement, editElementLabel, editElement];
   }
 
   function createImageEditor(id, type, _content) {
