@@ -43,6 +43,10 @@ img {
   padding: 5px;
 }
 
+.edit-container select {
+  display: block;
+}
+
 label.edit,
 input.edit {
   width: 100%;
