@@ -112,7 +112,7 @@ function localEditingMode() {
 
       const originalDisplay = element.style.display;
       element.style.display = "none";
-      const originalContent = element.innerHTML;
+      const { tagName, innerHTML: originalContent } = element;
 
       const cancelButton = {
         label: STRINGS.BUTTON_CANCEL,
@@ -123,10 +123,23 @@ function localEditingMode() {
       const updateTextButton = {
         label: STRINGS.BUTTON_UPDATE,
         initiallyDisabled: false,
-        updateElement: (editorElement, originalElement) => {
+        updateElement: (editorElement, tagNameSelect, originalElement) => {
+          let updatedElement = originalElement;
           const newContent = editorElement.value;
           if (!newContent) return false;
-          originalElement.innerHTML = editorElement.value;
+          if (
+            tagNameSelect &&
+            element.tagName.toLowerCase() !== tagNameSelect.value.toLowerCase()
+          ) {
+            updatedElement = createElement(tagNameSelect.value);
+            originalElement.insertAdjacentElement(
+              "beforebegin",
+              updatedElement
+            );
+            originalElement.remove();
+            activateHeading(updatedElement);
+          }
+          updatedElement.innerHTML = editorElement.value;
           return true;
         },
       };
@@ -134,7 +147,7 @@ function localEditingMode() {
       const upateImageButton = {
         label: STRINGS.BUTTON_UPDATE,
         initiallyDisabled: true,
-        updateElement: (imagePicker, originalElement) => {
+        updateElement: (imagePicker) => {
           const newImage = addImage({
             filePickerId: imagePicker.id,
             update: true,
@@ -166,7 +179,8 @@ function localEditingMode() {
       const editElements = type.createEditor(
         editorId,
         editorType,
-        originalContent
+        originalContent,
+        tagName
       );
 
       let buttonsContainerElement = createElement("div");
@@ -185,7 +199,11 @@ function localEditingMode() {
           buttonElement
         );
         buttonElement.addEventListener("click", function (_event) {
-          const success = i.updateElement(editElements[3], element);
+          const success = i.updateElement(
+            editElements[0], // Editor
+            editElements[2], // Tag Picker
+            element
+          );
           if (success) {
             editorContainerElement.remove();
             element.style.display = originalDisplay;
@@ -194,12 +212,17 @@ function localEditingMode() {
       });
 
       element.insertAdjacentElement("beforebegin", editorContainerElement);
-      [...editElements, buttonsContainerElement].forEach((editorElement) => {
-        editorContainerElement.insertAdjacentElement(
-          "beforeend",
-          editorElement
-        );
-      });
+      // Reverse so labels are placed above inputs
+      const editElementsReversed = [...editElements].reverse();
+      [...editElementsReversed, buttonsContainerElement].forEach(
+        (editorElement) => {
+          if (!editorElement) return;
+          editorContainerElement.insertAdjacentElement(
+            "beforeend",
+            editorElement
+          );
+        }
+      );
     };
   }
 
@@ -207,29 +230,31 @@ function localEditingMode() {
    * Activate existing elements for editing
    */
 
+  function makeActivator(type) {
+    return function (element) {
+      element.addEventListener("click", makeElementEventListener(type));
+    };
+  }
+
   // Headings
-  document.querySelectorAll(HEADING_ELEMENTS.join(", ")).forEach((element) => {
-    element.addEventListener(
-      "click",
-      makeElementEventListener(EDITOR_TYPES.HEADING)
-    );
-  });
+  function activateHeading(element) {
+    makeActivator(EDITOR_TYPES.HEADING)(element);
+  }
+  document
+    .querySelectorAll(HEADING_ELEMENTS.join(", "))
+    .forEach(activateHeading);
 
   // Paragraph
-  document.querySelectorAll(PARAGRAPH_ELEMENT).forEach((element) => {
-    element.addEventListener(
-      "click",
-      makeElementEventListener(EDITOR_TYPES.PARAGRAPH)
-    );
-  });
+  function activateParagraph(element) {
+    makeActivator(EDITOR_TYPES.PARAGRAPH)(element);
+  }
+  document.querySelectorAll(PARAGRAPH_ELEMENT).forEach(activateParagraph);
 
   // Image
-  document.querySelectorAll("img").forEach((element) => {
-    element.addEventListener(
-      "click",
-      makeElementEventListener(EDITOR_TYPES.IMAGE)
-    );
-  });
+  function activateImage(element) {
+    makeActivator(EDITOR_TYPES.IMAGE)(element);
+  }
+  document.querySelectorAll("img").forEach(activateImage);
 
   /*
    * Page Controls:
@@ -439,32 +464,37 @@ function localEditingMode() {
     await writableStream.close();
   }
 
-  function createTextEditor(id, type, content) {
-    const levelEditorId = `level-${id}`;
+  function createTextEditor(id, type, content, tagName) {
+    let levelEditorId, editLevelLabel;
     if (type === EDITOR_TYPES.HEADING) {
+      levelEditorId = `level-${id}`;
       var editLevelElement = createElement("select");
       HEADING_ELEMENTS.forEach((level) => {
         let headingLevelElement = createElement("option");
         headingLevelElement.innerHTML = level;
         headingLevelElement.value = level;
+        if (level.toLowerCase() === tagName.toLowerCase()) {
+          headingLevelElement.selected = "selected";
+        }
         editLevelElement.insertAdjacentElement(
           "beforeend",
           headingLevelElement
         );
       });
+      editLevelLabel = createEditorLabel(
+        levelEditorId,
+        EDITOR_TYPES.HEADING_LEVEL
+      );
     }
-    const editLevelLabel = createEditorLabel(
-      levelEditorId,
-      EDITOR_TYPES.HEADING_LEVEL
-    );
+
     let editElement = createElement("textarea");
     editElement.id = id;
     editElement.classList.add(EDIT_CLASS);
     editElement.innerHTML = content;
-    editElement.addEventListener("input", makeUpdateButtonListener(id));
+    editElement.addEventListener("input", makeEditorChangeListener(id));
 
     const editElementLabel = createEditorLabel(id, type);
-    return [editLevelLabel, editLevelElement, editElementLabel, editElement];
+    return [editElement, editElementLabel, editLevelElement, editLevelLabel];
   }
 
   function createImageEditor(id, type, _content) {
@@ -472,12 +502,12 @@ function localEditingMode() {
     imagePicker.type = "file";
     imagePicker.id = id;
     imagePicker.classList.add(EDIT_CLASS);
-    imagePicker.addEventListener("change", makeUpdateButtonListener(id));
+    imagePicker.addEventListener("change", makeEditorChangeListener(id));
     const imagePickerLabel = createEditorLabel(id, type);
-    return [imagePickerLabel, imagePicker];
+    return [imagePicker, imagePickerLabel];
   }
 
-  function makeUpdateButtonListener(id) {
+  function makeEditorChangeListener(id) {
     return function (event) {
       const updateButtonId = getButtonId(STRINGS.BUTTON_UPDATE, id);
       const updateButton = document.getElementById(updateButtonId);
