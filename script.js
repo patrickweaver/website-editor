@@ -13,6 +13,9 @@ if (protocol === "file:") {
 
 function localEditingMode() {
   // Constants
+  const PAGE_TITLE_INPUT_ID = "edit-page-title";
+  const PAGE_DESC_INPUT_ID = "edit-page-description";
+  const PAGE_LANG_INPUT_ID = "edit-page-language";
   const ADD_ITEM_ID = "add-item";
   const ADD_ITEM_HEADING_ID = "add-item-heading";
   const ADD_ITEM_IMAGE_ID = "add-item-image";
@@ -76,6 +79,18 @@ function localEditingMode() {
           </div>
 
           <h3>Metadata</h3>
+
+          <div class="controls-section">
+            <h4>General</h4>
+            <label for="${PAGE_TITLE_INPUT_ID}">Page Title: </label>
+            <input type="text" id="${PAGE_TITLE_INPUT_ID}" />
+            <label for="${PAGE_DESC_INPUT_ID}">Page Description</label>
+            <textarea id="${PAGE_DESC_INPUT_ID}" style="min-height: 2rem"></textarea>
+            <label for="${PAGE_LANG_INPUT_ID}">Page Language</label>
+            <input type="text" id="${PAGE_LANG_INPUT_ID}" value="en" />
+            <label for="edit-page-langauge" class="below-label">See list of valid language tags <a href="https://en.wikipedia.org/wiki/IETF_language_tag#List_of_subtags" target="_blank">here</a>.
+          </div>
+
           <div class="controls-section">
             <h4>Favicon</h4>
             <figure id="favicon-preview">
@@ -89,15 +104,6 @@ function localEditingMode() {
               <button id="${CANCEL_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_CANCEL}</button>
               <button id="${CONFIRM_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_UPDATE}</button>
             </div>
-
-          </div>
-
-          <div class="controls-section">
-            <h4>Social Media Metadata</h4>
-            <label for="edit-page-title">Page Title: </label>
-            <input type="text" id="edit-page-title" />
-            <label for="edit-page-description">Page Description</label>
-            <textarea id="edit-page-description" style="min-height: 2rem"></textarea>
           </div>
 
           <div class="controls-section">
@@ -399,16 +405,18 @@ function localEditingMode() {
   }
 
   metaDataEditor(
-    "edit-page-title",
+    PAGE_TITLE_INPUT_ID,
     "page-title",
     ["meta-title", "twitter-title"],
     "innerHTML"
   );
 
-  metaDataEditor("edit-page-description", "page-description", [
+  metaDataEditor(PAGE_DESC_INPUT_ID, "page-description", [
     "meta-description",
     "twitter-description",
   ]);
+
+  metaDataEditor(PAGE_LANG_INPUT_ID, "html-element", [], "lang");
 
   /*
    *   Save Changes
