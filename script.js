@@ -27,6 +27,8 @@ function localEditingMode() {
   const EDIT_CLASS = "edit";
   const EDIT_CONTAINER_CLASS = "edit-container";
   const EDIT_BUTTONS_CLASS = "edit-buttons";
+  const NEW_CONTAINER_CLASS = "new-container";
+  const NEW_CONTAINER_END_CLASS = "new-container-transition-end";
   const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
   const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
   const END_OF_DOC_ID = "end-of-document";
@@ -375,6 +377,15 @@ function localEditingMode() {
       document
         .getElementById(END_OF_DOC_ID)
         .insertAdjacentElement("beforebegin", newElement);
+      newElement.scrollIntoView();
+      newElement.classList.add(NEW_CONTAINER_CLASS);
+      setTimeout(() => {
+        newElement.classList.add(NEW_CONTAINER_END_CLASS);
+        setTimeout(() => {
+          newElement.classList.remove(NEW_CONTAINER_CLASS);
+          newElement.classList.remove(NEW_CONTAINER_END_CLASS);
+        }, 3000);
+      }, 5000);
 
       newElement.addEventListener("click", makeElementEventListener(type));
     }
