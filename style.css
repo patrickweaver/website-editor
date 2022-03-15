@@ -76,6 +76,10 @@ input.edit {
   margin: 0.25rem 0 1rem;
 }
 
+.controls-section .below-label {
+  margin: -0.5rem 0 1rem;
+}
+
 #update-favicon {
   margin-bottom: 0.25rem;
 }
