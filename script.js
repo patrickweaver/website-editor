@@ -1,3 +1,7 @@
+// TODO:
+// - Scroll to new image
+// - Highlight new image
+
 /*
  *   Check for local file:
  */
