@@ -534,7 +534,11 @@ function localEditingMode() {
       if (tagName === "TEXTAREA") {
         updateButton.disabled = !event.target.value;
       } else if (tagName === "INPUT" && type === "file") {
-        updateButton.disabled = !isImageFile(files[0]);
+        const validFile = isImageFile(files[0]);
+        updateButton.disabled = !validFile;
+        if (!validFile) {
+          alert(STRINGS.ERROR_IMAGE_ONLY);
+        }
       }
     };
   }

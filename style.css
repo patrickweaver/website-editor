@@ -55,7 +55,7 @@ img {
   background-color: cyan;
   transition-property: background-color;
   transition-duration: 2s;
-  transition-timing-function: ease-in-out;
+  transition-timing-function: ease-out;
 }
 
 .new-container-transition-end {
