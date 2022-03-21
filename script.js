@@ -1,7 +1,3 @@
-// TODO:
-// - Scroll to new image
-// - Highlight new image
-
 /*
  *   Check for local file:
  */
@@ -160,10 +156,7 @@ function localEditingMode() {
         label: STRINGS.BUTTON_UPDATE,
         initiallyDisabled: true,
         updateElement: (imagePicker) => {
-          const newImage = addImage({
-            filePickerId: imagePicker.id,
-            update: true,
-          });
+          const newImage = addImage(imagePicker.id);
           if (!newImage) return false;
           element.remove();
           return true;
@@ -323,12 +316,13 @@ function localEditingMode() {
     document
       .getElementById(ADD_ITEM_IMAGE_ID)
       .addEventListener("change", () => {
-        addImage({ filePickerId: ADD_ITEM_IMAGE_ID });
+        addImage(ADD_ITEM_IMAGE_ID);
         document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
       });
   }
 
-  function addImage({ filePickerId, update = false }) {
+  function addImage(filePickerId) {
+    const update = filePickerId !== ADD_ITEM_IMAGE_ID;
     const filePicker = document.getElementById(filePickerId);
     const file = filePicker.files[0];
     // This won't happen because button is disabled
@@ -344,10 +338,9 @@ function localEditingMode() {
       filePicker.parentElement.insertAdjacentElement("afterend", newElement);
     } else {
       // Add image at the end of the document
-      document
-        .getElementById(END_OF_DOC_ID)
-        .insertAdjacentElement("beforebegin", newElement);
+      addAtEndOfDocument(newElement);
     }
+    highlightNewElement(newElement);
 
     // Set img src to file contents as Data URL
     const reader = new FileReader();
@@ -378,18 +371,8 @@ function localEditingMode() {
     if (type === EDITOR_TYPES.HEADING || type === EDITOR_TYPES.PARAGRAPH) {
       newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
 
-      document
-        .getElementById(END_OF_DOC_ID)
-        .insertAdjacentElement("beforebegin", newElement);
-      newElement.scrollIntoView();
-      newElement.classList.add(NEW_CONTAINER_CLASS);
-      setTimeout(() => {
-        newElement.classList.add(NEW_CONTAINER_END_CLASS);
-        setTimeout(() => {
-          newElement.classList.remove(NEW_CONTAINER_CLASS);
-          newElement.classList.remove(NEW_CONTAINER_END_CLASS);
-        }, 3000);
-      }, 5000);
+      addAtEndOfDocument(newElement);
+      highlightNewElement(newElement);
 
       newElement.addEventListener("click", makeElementEventListener(type));
     }
@@ -641,5 +624,26 @@ function localEditingMode() {
       return false;
     }
     return true;
+  }
+
+  function addAtEndOfDocument(element) {
+    document
+      .getElementById(END_OF_DOC_ID)
+      .insertAdjacentElement("beforebegin", element);
+  }
+
+  function highlightNewElement(element) {
+    const elementTop = element.getBoundingClientRect().top;
+    const { scrollTop } = document.documentElement;
+    const scrollTo = elementTop + scrollTop - 20;
+    window.scrollTo(0, scrollTo < 0 ? 0 : scrollTo);
+    element.classList.add(NEW_CONTAINER_CLASS);
+    setTimeout(() => {
+      element.classList.add(NEW_CONTAINER_END_CLASS);
+      setTimeout(() => {
+        element.classList.remove(NEW_CONTAINER_CLASS);
+        element.classList.remove(NEW_CONTAINER_END_CLASS);
+      }, 3000);
+    }, 5000);
   }
 }

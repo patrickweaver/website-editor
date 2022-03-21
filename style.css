@@ -19,6 +19,7 @@ textarea {
 
 img {
   display: block;
+  margin: 1rem 0;
 }
 
 #favicon-preview {
@@ -52,14 +53,18 @@ img {
 }
 
 .new-container {
-  background-color: cyan;
-  transition-property: background-color;
-  transition-duration: 2s;
-  transition-timing-function: ease-out;
+  position: relative;
+  top: -5px;
+  left: -5px;
+  padding: 3px;
+  border: 2px solid cyan;
 }
 
 .new-container-transition-end {
-  background-color: transparent;
+  border: none;
+  padding: 0;
+  top: 0;
+  left: 0;
 }
 
 label.edit,
