@@ -186,6 +186,7 @@ function localEditingMode() {
         originalContent,
         tagName
       );
+      const [editor, _e, tagPicker, _t] = editElements;
 
       let buttonsContainerElement = createElement("div");
       buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
@@ -203,11 +204,7 @@ function localEditingMode() {
           buttonElement
         );
         buttonElement.addEventListener("click", function (_event) {
-          const success = i.updateElement(
-            editElements[0], // Editor
-            editElements[2], // Tag Picker
-            element
-          );
+          const success = i.updateElement(editor, tagPicker, element);
           if (success) {
             editorContainerElement.remove();
             element.style.display = originalDisplay;
@@ -227,6 +224,9 @@ function localEditingMode() {
           );
         }
       );
+
+      editor.focus();
+      editor.select();
     };
   }
 
