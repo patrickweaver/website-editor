@@ -27,6 +27,7 @@ function localEditingMode() {
   const EDIT_CLASS = "edit";
   const EDIT_CONTAINER_CLASS = "edit-container";
   const EDIT_BUTTONS_CLASS = "edit-buttons";
+  const NEW_CONTAINER_CLASS = "new-container";
   const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
   const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
   const END_OF_DOC_ID = "end-of-document";
@@ -154,10 +155,7 @@ function localEditingMode() {
         label: STRINGS.BUTTON_UPDATE,
         initiallyDisabled: true,
         updateElement: (imagePicker) => {
-          const newImage = addImage({
-            filePickerId: imagePicker.id,
-            update: true,
-          });
+          const newImage = addImage(imagePicker.id);
           if (!newImage) return false;
           element.remove();
           return true;
@@ -317,12 +315,13 @@ function localEditingMode() {
     document
       .getElementById(ADD_ITEM_IMAGE_ID)
       .addEventListener("change", () => {
-        addImage({ filePickerId: ADD_ITEM_IMAGE_ID });
+        addImage(ADD_ITEM_IMAGE_ID);
         document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
       });
   }
 
-  function addImage({ filePickerId, update = false }) {
+  function addImage(filePickerId) {
+    const update = filePickerId !== ADD_ITEM_IMAGE_ID;
     const filePicker = document.getElementById(filePickerId);
     const file = filePicker.files[0];
     // This won't happen because button is disabled
@@ -338,10 +337,9 @@ function localEditingMode() {
       filePicker.parentElement.insertAdjacentElement("afterend", newElement);
     } else {
       // Add image at the end of the document
-      document
-        .getElementById(END_OF_DOC_ID)
-        .insertAdjacentElement("beforebegin", newElement);
+      addAtEndOfDocument(newElement);
     }
+    highlightNewElement(newElement);
 
     // Set img src to file contents as Data URL
     const reader = new FileReader();
@@ -372,9 +370,8 @@ function localEditingMode() {
     if (type === EDITOR_TYPES.HEADING || type === EDITOR_TYPES.PARAGRAPH) {
       newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
 
-      document
-        .getElementById(END_OF_DOC_ID)
-        .insertAdjacentElement("beforebegin", newElement);
+      addAtEndOfDocument(newElement);
+      highlightNewElement(newElement);
 
       newElement.addEventListener("click", makeElementEventListener(type));
     }
@@ -523,7 +520,11 @@ function localEditingMode() {
       if (tagName === "TEXTAREA") {
         updateButton.disabled = !event.target.value;
       } else if (tagName === "INPUT" && type === "file") {
-        updateButton.disabled = !isImageFile(files[0]);
+        const validFile = isImageFile(files[0]);
+        updateButton.disabled = !validFile;
+        if (!validFile) {
+          alert(STRINGS.ERROR_IMAGE_ONLY);
+        }
       }
     };
   }
@@ -622,5 +623,24 @@ function localEditingMode() {
       return false;
     }
     return true;
+  }
+
+  function addAtEndOfDocument(element) {
+    document
+      .getElementById(END_OF_DOC_ID)
+      .insertAdjacentElement("beforebegin", element);
+  }
+
+  function highlightNewElement(element) {
+    const elementTop = element.getBoundingClientRect().top;
+    if (elementTop < 0) {
+      const { scrollTop } = document.documentElement;
+      const scrollTo = elementTop + scrollTop - 20;
+      window.scrollTo(0, scrollTo < 0 ? 0 : scrollTo);
+    }
+    element.classList.add(NEW_CONTAINER_CLASS);
+    setTimeout(() => {
+      element.classList.remove(NEW_CONTAINER_CLASS);
+    }, 5000);
   }
 }
