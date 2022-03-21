@@ -60,13 +60,6 @@ img {
   border: 2px solid cyan;
 }
 
-.new-container-transition-end {
-  border: none;
-  padding: 0;
-  top: 0;
-  left: 0;
-}
-
 label.edit,
 input.edit {
   width: 100%;

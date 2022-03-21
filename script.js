@@ -28,7 +28,6 @@ function localEditingMode() {
   const EDIT_CONTAINER_CLASS = "edit-container";
   const EDIT_BUTTONS_CLASS = "edit-buttons";
   const NEW_CONTAINER_CLASS = "new-container";
-  const NEW_CONTAINER_END_CLASS = "new-container-transition-end";
   const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
   const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
   const END_OF_DOC_ID = "end-of-document";
@@ -634,16 +633,14 @@ function localEditingMode() {
 
   function highlightNewElement(element) {
     const elementTop = element.getBoundingClientRect().top;
-    const { scrollTop } = document.documentElement;
-    const scrollTo = elementTop + scrollTop - 20;
-    window.scrollTo(0, scrollTo < 0 ? 0 : scrollTo);
+    if (elementTop < 0) {
+      const { scrollTop } = document.documentElement;
+      const scrollTo = elementTop + scrollTop - 20;
+      window.scrollTo(0, scrollTo < 0 ? 0 : scrollTo);
+    }
     element.classList.add(NEW_CONTAINER_CLASS);
     setTimeout(() => {
-      element.classList.add(NEW_CONTAINER_END_CLASS);
-      setTimeout(() => {
-        element.classList.remove(NEW_CONTAINER_CLASS);
-        element.classList.remove(NEW_CONTAINER_END_CLASS);
-      }, 3000);
+      element.classList.remove(NEW_CONTAINER_CLASS);
     }, 5000);
   }
 }
