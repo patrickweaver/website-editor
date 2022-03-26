@@ -9,6 +9,7 @@ textarea {
   font-size: 1rem;
   line-height: 1.2rem;
   padding: 0.5rem;
+  margin: 0.25rem 0;
 }
 
 textarea {
@@ -45,7 +46,8 @@ img {
 .edit-container {
   border: 2px solid yellow;
   margin: 1rem 0;
-  padding: 5px;
+  padding: 0.5rem;
+  background-color: #ddd;
 }
 
 .edit-container select {
@@ -60,9 +62,28 @@ img {
   border: 2px solid cyan;
 }
 
+.clone-container {
+  border: 1px solid #222;
+  background-color: #f4f4f4;
+  padding: 1rem;
+  margin: 0.5rem 0 1rem;
+}
+
+img.clone,
+p.clone,
+h1.clone,
+h2.clone,
+h3.clone,
+h4.clone,
+h5.clone,
+h6.clone {
+  opacity: 50%;
+  margin: 0;
+}
+
 label.edit,
 input.edit {
-  width: 100%;
+  width: Calc(100% - 1rem);
 }
 
 #local-controls {
@@ -86,7 +107,7 @@ input.edit {
 .controls-section input,
 .controls-section textarea,
 .controls-section button {
-  margin: 0.25rem 0 1rem;
+  margin: 0.5rem 0 1rem;
 }
 
 .controls-section .below-label {
@@ -99,7 +120,6 @@ input.edit {
 
 .edit-buttons {
   background-color: #ddd;
-  padding: 0.5rem;
   margin: 0.5rem 0;
   display: inline-block;
 }
@@ -107,6 +127,17 @@ input.edit {
 .edit-buttons button {
   margin: 0 0.25rem;
   display: inline-block;
+  font-size: 1.125rem;
+}
+
+.edit-buttons button.delete-button {
+  border: 2px outset #ff0000;
+  background-color: #ffbfbf;
+}
+
+.edit-buttons button.delete-button:hover {
+  border: 2px outset #ff2f2f;
+  background-color: #ffafaf;
 }
 
 .controls-section label {
