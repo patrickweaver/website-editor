@@ -24,6 +24,8 @@ function localEditingMode() {
   const UPDATE_FAVICON_ID = "update-favicon";
   const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
   const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
+  const CLONE_CLASS = "clone";
+  const CLONE_CONTAINER_CLASS = "clone-container";
   const EDIT_CLASS = "edit";
   const EDIT_CONTAINER_CLASS = "edit-container";
   const EDIT_BUTTONS_CLASS = "edit-buttons";
@@ -46,7 +48,9 @@ function localEditingMode() {
 
   const STRINGS = {
     BUTTON_CANCEL: "Cancel",
+    BUTTON_DELETE: "Delete",
     BUTTON_UPDATE: "Update",
+    CONFIRM_DELETE: "Are you sure you want to delete this element?",
     ERROR_IMAGE_ONLY: "Error: Please choose an image file",
     EDITOR_LABELS: {
       [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph text",
@@ -116,10 +120,23 @@ function localEditingMode() {
   function makeElementEventListener(editorType) {
     return function (event) {
       const element = event.target;
-
+      const elementClone = element.cloneNode(true);
+      elementClone.classList.add(CLONE_CLASS);
       const originalDisplay = element.style.display;
       element.style.display = "none";
       const { tagName, innerHTML: originalContent } = element;
+
+      const deleteButton = {
+        label: STRINGS.BUTTON_DELETE,
+        initiallyDisabled: false,
+        updateElement: (editorElement, _, originalElement) => {
+          const result = window.confirm(STRINGS.CONFIRM_DELETE);
+          if (!result) return;
+          editorElement.remove();
+          originalElement.remove();
+          return true;
+        },
+      };
 
       const cancelButton = {
         label: STRINGS.BUTTON_CANCEL,
@@ -165,12 +182,12 @@ function localEditingMode() {
       let types = {
         text: {
           idReadableString: TEXT_EDITOR_ID_READABLE_STRING,
-          controls: [cancelButton, updateTextButton],
+          controls: [cancelButton, deleteButton, updateTextButton],
           createEditor: createTextEditor,
         },
         [EDITOR_TYPES.IMAGE]: {
           idReadableString: IMAGE_PICKER_ID_READABLE_STRING,
-          controls: [cancelButton, upateImageButton],
+          controls: [cancelButton, deleteButton, upateImageButton],
           createEditor: createImageEditor,
         },
       };
@@ -194,8 +211,19 @@ function localEditingMode() {
       let editorContainerElement = createElement("div");
       editorContainerElement.classList.add(EDIT_CONTAINER_CLASS);
 
+      const elementCloneContainer = createElement("div");
+      elementCloneContainer.classList.add(CLONE_CONTAINER_CLASS);
+
+      elementCloneContainer.insertAdjacentElement("beforeend", elementClone);
+
+      editorContainerElement.insertAdjacentElement(
+        "beforeend",
+        elementCloneContainer
+      );
+
       type.controls.forEach((i) => {
         let buttonElement = createElement("button");
+        buttonElement.classList.add(`${slugify(i.label)}-button`);
         buttonElement.id = getButtonId(i.label, editorId);
         buttonElement.disabled = i.initiallyDisabled;
         buttonElement.innerHTML = i.label;
