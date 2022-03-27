@@ -17,9 +17,10 @@ function localEditingMode() {
   const PAGE_DESC_INPUT_ID = "edit-page-description";
   const PAGE_LANG_INPUT_ID = "edit-page-language";
   const ADD_ITEM_ID = "add-item";
-  const ADD_ITEM_HEADING_ID = "add-item-heading";
-  const ADD_ITEM_IMAGE_ID = "add-item-image";
-  const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
+  const ADD_ITEM_ID_PREFIX = "add-item-";
+  const ADD_ITEM_HEADING_ID = `${ADD_ITEM_ID_PREFIX}heading`;
+  const ADD_ITEM_IMAGE_ID = `${ADD_ITEM_ID_PREFIX}image`;
+  const ADD_ITEM_PARAGRAPH_ID = `${ADD_ITEM_ID_PREFIX}paragraph`;
   const CURRENT_FAVICON_PREVIEW_ID = "current-favicon-preview";
   const UPDATE_FAVICON_ID = "update-favicon";
   const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
@@ -127,7 +128,8 @@ function localEditingMode() {
       elementClone.classList.add(CLONE_CLASS);
       const originalDisplay = element.style.display;
       element.style.display = "none";
-      const { tagName, innerHTML: originalContent } = element;
+      const { tagName: _tagName, innerHTML: originalContent } = element;
+      const tagName = _tagName.toLowerCase();
 
       const deleteButton = {
         label: STRINGS.BUTTON_DELETE,
@@ -170,7 +172,7 @@ function localEditingMode() {
           if (!newContent) return false;
           if (
             tagNameSelect &&
-            element.tagName.toLowerCase() !== tagNameSelect.value.toLowerCase()
+            element.tagName !== tagNameSelect.value.toLowerCase()
           ) {
             updatedElement = createElement(tagNameSelect.value);
             originalElement.insertAdjacentElement(
@@ -349,8 +351,7 @@ function localEditingMode() {
       document.getElementById(buttonId).addEventListener("click", (event) => {
         addTextItem(
           event.currentTarget.id.slice(
-            // 🚸 This is fragile with the strings coming from the constants above.
-            "add-item-".length,
+            ADD_ITEM_ID_PREFIX.length,
             event.currentTarget.id.length
           )
         );
@@ -524,7 +525,7 @@ function localEditingMode() {
         let headingLevelElement = createElement("option");
         headingLevelElement.innerHTML = level;
         headingLevelElement.value = level;
-        if (level.toLowerCase() === tagName.toLowerCase()) {
+        if (level.toLowerCase() === tagName) {
           headingLevelElement.selected = "selected";
         }
         editLevelElement.insertAdjacentElement(
@@ -562,10 +563,11 @@ function localEditingMode() {
     return function (event) {
       const updateButtonId = getButtonId(STRINGS.BUTTON_UPDATE, id);
       const updateButton = document.getElementById(updateButtonId);
-      const { tagName, type, files } = event.currentTarget;
-      if (tagName === "TEXTAREA") {
+      const { tagName: _tagName, type, files } = event.currentTarget;
+      const tagName = _tagName.toLowerCase();
+      if (tagName === "textarea") {
         updateButton.disabled = !event.currentTarget.value;
-      } else if (tagName === "INPUT" && type === "file") {
+      } else if (tagName === "input" && type === "file") {
         const validFile = isImageFile(files[0]);
         updateButton.disabled = !validFile;
         if (!validFile) {
