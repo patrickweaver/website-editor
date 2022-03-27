@@ -30,6 +30,7 @@ img {
 #favicon-preview figcaption,
 #favicon-preview img {
   display: inline;
+  margin: 0;
 }
 
 #favicon-preview img {
