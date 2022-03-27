@@ -49,9 +49,11 @@ function localEditingMode() {
   const STRINGS = {
     BUTTON_CANCEL: "Cancel",
     BUTTON_DELETE: "Delete",
+    BUTTON_LINK: "Make Link From Selection",
     BUTTON_UPDATE: "Update",
     CONFIRM_DELETE: "Are you sure you want to delete this element?",
     ERROR_IMAGE_ONLY: "Error: Please choose an image file",
+    ERROR_NO_SELECTION: "Error: Nothing selected",
     EDITOR_LABELS: {
       [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph text",
       [EDITOR_TYPES.HEADING]: "Edit heading text",
@@ -59,6 +61,7 @@ function localEditingMode() {
       [EDITOR_TYPES.IMAGE]: "Select an image",
     },
     PLACEHOLDER_TEXT: "Your text here",
+    PROMPT_LINK_URL: "URL:",
   };
 
   const NEW_CONTENT_MODAL_HTML = `
@@ -119,7 +122,7 @@ function localEditingMode() {
 
   function makeElementEventListener(editorType) {
     return function (event) {
-      const element = event.target;
+      const element = event.currentTarget;
       const elementClone = element.cloneNode(true);
       elementClone.classList.add(CLONE_CLASS);
       const originalDisplay = element.style.display;
@@ -142,6 +145,20 @@ function localEditingMode() {
         label: STRINGS.BUTTON_CANCEL,
         initiallyDisabled: false,
         updateElement: (_) => true,
+      };
+
+      const linkButton = {
+        label: STRINGS.BUTTON_LINK,
+        initiallyDisabled: false,
+        updateElement: (
+          _editorElement,
+          _tagNameSelect,
+          _originalElement,
+          editorId
+        ) => {
+          const selectableInput = document.getElementById(editorId);
+          selectableInput.value = addLinkAroundSelection(selectableInput);
+        },
       };
 
       const updateTextButton = {
@@ -182,7 +199,7 @@ function localEditingMode() {
       let types = {
         text: {
           idReadableString: TEXT_EDITOR_ID_READABLE_STRING,
-          controls: [cancelButton, deleteButton, updateTextButton],
+          controls: [cancelButton, deleteButton, linkButton, updateTextButton],
           createEditor: createTextEditor,
         },
         [EDITOR_TYPES.IMAGE]: {
@@ -210,6 +227,7 @@ function localEditingMode() {
 
       let editorContainerElement = createElement("div");
       editorContainerElement.classList.add(EDIT_CONTAINER_CLASS);
+      editorContainerElement.id = getEditorContainerId(editorId);
 
       const elementCloneContainer = createElement("div");
       elementCloneContainer.classList.add(CLONE_CONTAINER_CLASS);
@@ -232,7 +250,7 @@ function localEditingMode() {
           buttonElement
         );
         buttonElement.addEventListener("click", function (_event) {
-          const success = i.updateElement(editor, tagPicker, element);
+          const success = i.updateElement(editor, tagPicker, element, editorId);
           if (success) {
             editorContainerElement.remove();
             element.style.display = originalDisplay;
@@ -330,10 +348,10 @@ function localEditingMode() {
     addItemButtonIds.forEach((buttonId) => {
       document.getElementById(buttonId).addEventListener("click", (event) => {
         addTextItem(
-          event.target.id.slice(
+          event.currentTarget.id.slice(
             // 🚸 This is fragile with the strings coming from the constants above.
             "add-item-".length,
-            event.target.id.length
+            event.currentTarget.id.length
           )
         );
         document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
@@ -544,9 +562,9 @@ function localEditingMode() {
     return function (event) {
       const updateButtonId = getButtonId(STRINGS.BUTTON_UPDATE, id);
       const updateButton = document.getElementById(updateButtonId);
-      const { tagName, type, files } = event.target;
+      const { tagName, type, files } = event.currentTarget;
       if (tagName === "TEXTAREA") {
-        updateButton.disabled = !event.target.value;
+        updateButton.disabled = !event.currentTarget.value;
       } else if (tagName === "INPUT" && type === "file") {
         const validFile = isImageFile(files[0]);
         updateButton.disabled = !validFile;
@@ -631,7 +649,7 @@ function localEditingMode() {
   }
 
   function uniqueId(readableString) {
-    return `${readableString}-${Math.random()}`;
+    return `${readableString}-${Math.random().toString().slice(2, 12)}`;
   }
 
   function createElement(type) {
@@ -640,6 +658,10 @@ function localEditingMode() {
 
   function slugify(string) {
     return string.split(" ").join("-").toLowerCase();
+  }
+
+  function getEditorContainerId(editorId) {
+    return `container-${editorId}`;
   }
 
   function getButtonId(label, editorId) {
@@ -670,5 +692,22 @@ function localEditingMode() {
     setTimeout(() => {
       element.classList.remove(NEW_CONTAINER_CLASS);
     }, 5000);
+  }
+
+  function addLinkAroundSelection(selectableInput) {
+    const { selectionStart: start, selectionEnd: end, value } = selectableInput;
+    if (start === end) {
+      alert(STRINGS.ERROR_NO_SELECTION);
+      return value;
+    }
+    const selection = value.substring(start, end);
+    const url = window.prompt(STRINGS.PROMPT_LINK_URL);
+    return `${value.slice(
+      0,
+      start
+    )}<a href="${url}" target="_blank">${selection}</a>${value.slice(
+      end,
+      value.length
+    )}`;
   }
 }
