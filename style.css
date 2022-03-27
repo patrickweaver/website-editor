@@ -1,3 +1,17 @@
+:root {
+  --button-del-bg: #ffbfbf;
+  --button-del-border: #ff0000;
+  --button-del-hover-bg: #ffafaf;
+  --button-del-hover-border: #ff2f2f;
+  --local-controls-bg: #dfdfe8;
+  --local-controls-bg-2: #f8f8ff;
+  --local-controls-bg-3: #f4f4f4;
+  --local-controls-border-3: #2f2f2f;
+  --modal-shadow-bg: #4f4f4fdf;
+  --new-element-highlight: #00ffff;
+  --edit-element-highlight: #ffff00;
+}
+
 body {
   font-family: "Arial", sans-serif;
   background-color: plum;
@@ -45,10 +59,10 @@ img {
 }
 
 .edit-container {
-  border: 2px solid yellow;
+  border: 2px solid var(--edit-element-highlight);
   margin: 1rem 0;
   padding: 0.5rem;
-  background-color: #ddd;
+  background-color: var(--local-controls-bg);
 }
 
 .edit-container select {
@@ -60,12 +74,12 @@ img {
   top: -5px;
   left: -5px;
   padding: 3px;
-  border: 2px solid cyan;
+  border: 2px solid var(--new-element-highlight);
 }
 
 .clone-container {
-  border: 1px solid #222;
-  background-color: #f4f4f4;
+  border: 1px solid var(--local-controls-border-3);
+  background-color: var(--local-controls-bg-3);
   padding: 1rem;
   margin: 0.5rem 0 1rem;
 }
@@ -88,9 +102,16 @@ input.edit {
 }
 
 #local-controls {
-  background-color: #ddd;
+  background-color: var(--local-controls-bg);
   margin: 4rem 0 1rem;
   padding: 0.5rem 1rem;
+}
+
+#local-controls button,
+.edit-buttons button {
+  margin: 0 0.25rem;
+  display: inline-block;
+  font-size: 1.125rem;
 }
 
 .controls-section {
@@ -120,25 +141,19 @@ input.edit {
 }
 
 .edit-buttons {
-  background-color: #ddd;
+  background-color: var(--local-controls-bg);
   margin: 0.5rem 0;
   display: inline-block;
 }
 
-.edit-buttons button {
-  margin: 0 0.25rem;
-  display: inline-block;
-  font-size: 1.125rem;
-}
-
 .edit-buttons button.delete-button {
-  border: 2px outset #ff0000;
-  background-color: #ffbfbf;
+  border: 2px outset var(--button-del-border);
+  background-color: var(--button-del-bg);
 }
 
 .edit-buttons button.delete-button:hover {
-  border: 2px outset #ff2f2f;
-  background-color: #ffafaf;
+  border: 2px outset var(--button-del-hover-border);
+  background-color: var(--button-del-hover-bg);
 }
 
 .controls-section label {
@@ -151,12 +166,12 @@ input.edit {
   height: 100vh;
   top: 0;
   left: 0;
-  background-color: hsla(0, 20%, 20%, 80%);
+  background-color: var(--modal-shadow-bg);
 }
 
 #new-content-modal {
   margin: 5rem 10% 0;
-  background-color: #fff;
+  background-color: var(--local-controls-bg-2);
   padding: 1rem 2rem;
   width: Calc(80% - 2rem - 2rem); /* 2rem is body margin */
 }
