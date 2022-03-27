@@ -1,3 +1,5 @@
+const DEV_MODE = true;
+
 /*
  *   Check for local file:
  */
@@ -21,6 +23,7 @@ function localEditingMode() {
   const ADD_ITEM_HEADING_ID = `${ADD_ITEM_ID_PREFIX}heading`;
   const ADD_ITEM_IMAGE_ID = `${ADD_ITEM_ID_PREFIX}image`;
   const ADD_ITEM_PARAGRAPH_ID = `${ADD_ITEM_ID_PREFIX}paragraph`;
+  const ADD_ITEM_CANCEL_ID = `${ADD_ITEM_ID_PREFIX}cancel`;
   const CURRENT_FAVICON_PREVIEW_ID = "current-favicon-preview";
   const UPDATE_FAVICON_ID = "update-favicon";
   const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
@@ -70,10 +73,10 @@ function localEditingMode() {
             <h2>Add New Content</h2>
             <ul>
               <li><button id="${ADD_ITEM_HEADING_ID}">Heading</button></li>
-              <li><button id="${ADD_ITEM_PARAGRAPH_ID}">Text</button></li>
+              <li><button id="${ADD_ITEM_PARAGRAPH_ID}">Paragraph</button></li>
               <li><button><label class="label-button" for="${ADD_ITEM_IMAGE_ID}">Image</label><input type="file" id="${ADD_ITEM_IMAGE_ID}" style="display: none" /></button></li>
             </ul>
-            <button>Cancel</button>
+            <button id="${ADD_ITEM_CANCEL_ID}">Cancel</button>
           </div>
         `;
 
@@ -324,8 +327,10 @@ function localEditingMode() {
     document.getElementById(ADD_ITEM_ID).addEventListener("click", preAddItem);
 
     window.addEventListener("beforeunload", function (event) {
-      event.preventDefault();
-      event.returnValue = "";
+      if (!DEV_MODE) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
     });
   }
 
@@ -348,10 +353,16 @@ function localEditingMode() {
     newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
     newContentModal.innerHTML = NEW_CONTENT_MODAL_HTML;
 
-    document.body.insertAdjacentElement("beforeend", newContentModal);
+    document
+      .getElementById(LOCAL_CONTROLS_ID)
+      .insertAdjacentElement("beforeend", newContentModal);
 
+    function clearAddItemModal() {
+      document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
+    }
+
+    // Heading and Paragraph buttons
     const addItemButtonIds = [ADD_ITEM_HEADING_ID, ADD_ITEM_PARAGRAPH_ID];
-
     addItemButtonIds.forEach((buttonId) => {
       document.getElementById(buttonId).addEventListener("click", (event) => {
         addTextItem(
@@ -360,16 +371,22 @@ function localEditingMode() {
             event.currentTarget.id.length
           )
         );
-        document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
+        clearAddItemModal();
       });
     });
 
+    // Image Button
     document
       .getElementById(ADD_ITEM_IMAGE_ID)
       .addEventListener("change", () => {
         addImage(ADD_ITEM_IMAGE_ID);
-        document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
+        clearAddItemModal();
       });
+
+    // cancel Button
+    document
+      .getElementById(ADD_ITEM_CANCEL_ID)
+      .addEventListener("click", clearAddItemModal);
   }
 
   function addImage(filePickerId) {
