@@ -322,6 +322,11 @@ function localEditingMode() {
       .insertAdjacentElement("afterend", localControls);
 
     document.getElementById(ADD_ITEM_ID).addEventListener("click", preAddItem);
+
+    window.addEventListener("beforeunload", function (event) {
+      event.preventDefault();
+      event.returnValue = "";
+    });
   }
 
   addLocalControls();
