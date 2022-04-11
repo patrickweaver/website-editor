@@ -128,6 +128,7 @@ function localEditingMode() {
     return function (event) {
       const element = event.currentTarget;
       const elementClone = element.cloneNode(true);
+      elementClone.classList.remove(NEW_CONTAINER_CLASS);
       elementClone.classList.add(CLONE_CLASS);
       const originalDisplay = element.style.display;
       element.style.display = "none";
@@ -244,6 +245,13 @@ function localEditingMode() {
         elementCloneContainer
       );
 
+      const elementCloneLabel = createElement("label");
+      elementCloneLabel.innerHTML = "Original Element:";
+      elementCloneContainer.insertAdjacentElement(
+        "beforebegin",
+        elementCloneLabel
+      );
+
       type.controls.forEach((i) => {
         let buttonElement = createElement("button");
         buttonElement.classList.add(`${slugify(i.label)}-button`);
@@ -324,7 +332,9 @@ function localEditingMode() {
       .getElementById(END_OF_DOC_ID)
       .insertAdjacentElement("afterend", localControls);
 
-    document.getElementById(ADD_ITEM_ID).addEventListener("click", preAddItem);
+    document
+      .getElementById(ADD_ITEM_ID)
+      .addEventListener("click", showNewContentModal);
 
     window.addEventListener("beforeunload", function (event) {
       if (!DEV_MODE) {
@@ -348,7 +358,7 @@ function localEditingMode() {
    *   Add Content
    */
 
-  function preAddItem() {
+  function showNewContentModal() {
     let newContentModal = createElement("div");
     newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
     newContentModal.innerHTML = NEW_CONTENT_MODAL_HTML;
@@ -362,8 +372,8 @@ function localEditingMode() {
     }
 
     // Heading and Paragraph buttons
-    const addItemButtonIds = [ADD_ITEM_HEADING_ID, ADD_ITEM_PARAGRAPH_ID];
-    addItemButtonIds.forEach((buttonId) => {
+    const addTextItemButtonIds = [ADD_ITEM_HEADING_ID, ADD_ITEM_PARAGRAPH_ID];
+    addTextItemButtonIds.forEach((buttonId) => {
       document.getElementById(buttonId).addEventListener("click", (event) => {
         addTextItem(
           event.currentTarget.id.slice(
