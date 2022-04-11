@@ -1,4 +1,5 @@
-const DEV_MODE = true;
+const DEV_MODE = false;
+var editingStateDirty = false;
 
 /*
  *   Check for local file:
@@ -28,6 +29,7 @@ function localEditingMode() {
   const UPDATE_FAVICON_ID = "update-favicon";
   const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
   const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
+  const SAVE_CHANGES_ID = "save-changes";
   const CLONE_CLASS = "clone";
   const CLONE_CONTAINER_CLASS = "clone-container";
   const EDIT_CLASS = "edit";
@@ -120,7 +122,7 @@ function localEditingMode() {
 
           <div class="controls-section">
             <h3>Save Changes</h3>
-            <button id="save-changes">Save All Changes to Local File</button>
+            <button id="${SAVE_CHANGES_ID}">Save All Changes to Local File</button>
           </div>
         `;
 
@@ -180,10 +182,9 @@ function localEditingMode() {
           let updatedElement = originalElement;
           const newContent = editorElement.value;
           if (!newContent) return false;
-          if (
-            tagNameSelect &&
-            element.tagName !== tagNameSelect.value.toLowerCase()
-          ) {
+          const tagChanged =
+            tagNameSelect && tagName !== tagNameSelect.value.toLowerCase();
+          if (tagChanged) {
             updatedElement = createElement(tagNameSelect.value);
             originalElement.insertAdjacentElement(
               "beforebegin",
@@ -192,7 +193,9 @@ function localEditingMode() {
             originalElement.remove();
             activateHeading(updatedElement);
           }
-          updatedElement.innerHTML = editorElement.value;
+          const contentChanged = newContent !== originalContent;
+          updatedElement.innerHTML = newContent;
+          editingStateDirty = editingStateDirty || tagChanged || contentChanged;
           return true;
         },
       };
@@ -204,6 +207,7 @@ function localEditingMode() {
           const newImage = addImage(imagePicker.id);
           if (!newImage) return false;
           element.remove();
+          editingStateDirty = true;
           return true;
         },
       };
@@ -351,7 +355,7 @@ function localEditingMode() {
       .addEventListener("click", showNewContentModal);
 
     window.addEventListener("beforeunload", function (event) {
-      if (!DEV_MODE) {
+      if (!DEV_MODE && editingStateDirty) {
         event.preventDefault();
         event.returnValue = "";
       }
@@ -516,8 +520,8 @@ function localEditingMode() {
    */
 
   document
-    .getElementById("save-changes")
-    .addEventListener("click", function (_event) {
+    .getElementById(SAVE_CHANGES_ID)
+    .addEventListener("click", async function (_event) {
       // Remove local controls:
       localControls.remove();
 
@@ -532,8 +536,15 @@ function localEditingMode() {
               </body>
             </html>
           `;
-      saveFile(htmlSourceCode);
-
+      try {
+        await saveFile(htmlSourceCode);
+      } catch (error) {
+        if (error?.message === "The user aborted a request.") {
+          // Error is just cancel button
+        } else {
+          alert(error?.message ?? "Error saving file.");
+        }
+      }
       // Re-add local controls
       addLocalControls();
     });
