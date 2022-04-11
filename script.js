@@ -33,7 +33,6 @@ function localEditingMode() {
   const EDIT_CLASS = "edit";
   const EDIT_CONTAINER_CLASS = "edit-container";
   const EDIT_BUTTONS_CLASS = "edit-buttons";
-  const NEW_CONTAINER_CLASS = "new-container";
   const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
   const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
   const END_OF_DOC_ID = "end-of-document";
@@ -54,6 +53,7 @@ function localEditingMode() {
     BUTTON_CANCEL: "Cancel",
     BUTTON_DELETE: "Delete",
     BUTTON_LINK: "Make Link From Selection",
+    BUTTON_SAVE: "Save",
     BUTTON_UPDATE: "Update",
     CONFIRM_DELETE: "Are you sure you want to delete this element?",
     ERROR_IMAGE_ONLY: "Error: Please choose an image file",
@@ -125,10 +125,13 @@ function localEditingMode() {
         `;
 
   function makeElementEventListener(editorType) {
-    return function (event) {
+    return function (event, isExistingElement = true) {
       const element = event.currentTarget;
-      const elementClone = element.cloneNode(true);
-      elementClone.classList.add(CLONE_CLASS);
+      let elementClone;
+      if (isExistingElement) {
+        elementClone = element.cloneNode(true);
+        elementClone.classList.add(CLONE_CLASS);
+      }
       const originalDisplay = element.style.display;
       element.style.display = "none";
       const { tagName: _tagName, innerHTML: originalContent } = element;
@@ -166,8 +169,12 @@ function localEditingMode() {
         },
       };
 
+      const updateButtonLabel = isExistingElement
+        ? STRINGS.BUTTON_UPDATE
+        : STRINGS.BUTTON_SAVE;
+
       const updateTextButton = {
-        label: STRINGS.BUTTON_UPDATE,
+        label: updateButtonLabel,
         initiallyDisabled: false,
         updateElement: (editorElement, tagNameSelect, originalElement) => {
           let updatedElement = originalElement;
@@ -191,7 +198,7 @@ function localEditingMode() {
       };
 
       const upateImageButton = {
-        label: STRINGS.BUTTON_UPDATE,
+        label: updateButtonLabel,
         initiallyDisabled: true,
         updateElement: (imagePicker) => {
           const newImage = addImage(imagePicker.id);
@@ -201,15 +208,20 @@ function localEditingMode() {
         },
       };
 
+      const defaultButtons = [deleteButton];
+      if (isExistingElement) {
+        defaultButtons.unshift(cancelButton);
+      }
+
       let types = {
         text: {
           idReadableString: TEXT_EDITOR_ID_READABLE_STRING,
-          controls: [cancelButton, deleteButton, linkButton, updateTextButton],
+          controls: [...defaultButtons, linkButton, updateTextButton],
           createEditor: createTextEditor,
         },
         [EDITOR_TYPES.IMAGE]: {
           idReadableString: IMAGE_PICKER_ID_READABLE_STRING,
-          controls: [cancelButton, deleteButton, upateImageButton],
+          controls: [...defaultButtons, upateImageButton],
           createEditor: createImageEditor,
         },
       };
@@ -222,6 +234,7 @@ function localEditingMode() {
       const editElements = type.createEditor(
         editorId,
         editorType,
+        updateButtonLabel,
         originalContent,
         tagName
       );
@@ -234,15 +247,24 @@ function localEditingMode() {
       editorContainerElement.classList.add(EDIT_CONTAINER_CLASS);
       editorContainerElement.id = getEditorContainerId(editorId);
 
-      const elementCloneContainer = createElement("div");
-      elementCloneContainer.classList.add(CLONE_CONTAINER_CLASS);
+      if (isExistingElement) {
+        const elementCloneContainer = createElement("div");
+        elementCloneContainer.classList.add(CLONE_CONTAINER_CLASS);
 
-      elementCloneContainer.insertAdjacentElement("beforeend", elementClone);
+        elementCloneContainer.insertAdjacentElement("beforeend", elementClone);
 
-      editorContainerElement.insertAdjacentElement(
-        "beforeend",
-        elementCloneContainer
-      );
+        editorContainerElement.insertAdjacentElement(
+          "beforeend",
+          elementCloneContainer
+        );
+
+        const elementCloneLabel = createElement("label");
+        elementCloneLabel.innerHTML = "Original Element:";
+        elementCloneContainer.insertAdjacentElement(
+          "beforebegin",
+          elementCloneLabel
+        );
+      }
 
       type.controls.forEach((i) => {
         let buttonElement = createElement("button");
@@ -324,7 +346,9 @@ function localEditingMode() {
       .getElementById(END_OF_DOC_ID)
       .insertAdjacentElement("afterend", localControls);
 
-    document.getElementById(ADD_ITEM_ID).addEventListener("click", preAddItem);
+    document
+      .getElementById(ADD_ITEM_ID)
+      .addEventListener("click", showNewContentModal);
 
     window.addEventListener("beforeunload", function (event) {
       if (!DEV_MODE) {
@@ -348,7 +372,7 @@ function localEditingMode() {
    *   Add Content
    */
 
-  function preAddItem() {
+  function showNewContentModal() {
     let newContentModal = createElement("div");
     newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
     newContentModal.innerHTML = NEW_CONTENT_MODAL_HTML;
@@ -362,8 +386,8 @@ function localEditingMode() {
     }
 
     // Heading and Paragraph buttons
-    const addItemButtonIds = [ADD_ITEM_HEADING_ID, ADD_ITEM_PARAGRAPH_ID];
-    addItemButtonIds.forEach((buttonId) => {
+    const addTextItemButtonIds = [ADD_ITEM_HEADING_ID, ADD_ITEM_PARAGRAPH_ID];
+    addTextItemButtonIds.forEach((buttonId) => {
       document.getElementById(buttonId).addEventListener("click", (event) => {
         addTextItem(
           event.currentTarget.id.slice(
@@ -436,13 +460,16 @@ function localEditingMode() {
 
     const newElement = createElement(elementType);
 
+    const editCallback = makeElementEventListener(type);
     if (type === EDITOR_TYPES.HEADING || type === EDITOR_TYPES.PARAGRAPH) {
       newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
 
       addAtEndOfDocument(newElement);
       highlightNewElement(newElement);
 
-      newElement.addEventListener("click", makeElementEventListener(type));
+      newElement.addEventListener("click", editCallback);
+      const fakeEvent = { currentTarget: newElement };
+      editCallback(fakeEvent, false);
     }
   }
 
@@ -538,7 +565,7 @@ function localEditingMode() {
     await writableStream.close();
   }
 
-  function createTextEditor(id, type, content, tagName) {
+  function createTextEditor(id, type, confirmButtonLabel, content, tagName) {
     let levelEditorId, editLevelLabel;
     if (type === EDITOR_TYPES.HEADING) {
       levelEditorId = `level-${id}`;
@@ -565,29 +592,35 @@ function localEditingMode() {
     editElement.id = id;
     editElement.classList.add(EDIT_CLASS);
     editElement.innerHTML = content;
-    editElement.addEventListener("input", makeEditorChangeListener(id));
+    editElement.addEventListener(
+      "input",
+      makeEditorChangeListener(id, confirmButtonLabel)
+    );
 
     const editElementLabel = createEditorLabel(id, type);
     return [editElement, editElementLabel, editLevelElement, editLevelLabel];
   }
 
-  function createImageEditor(id, type, _content) {
+  function createImageEditor(id, type, confirmButtonLabel, _content) {
     const imagePicker = createElement("input");
     imagePicker.type = "file";
     imagePicker.id = id;
     imagePicker.classList.add(EDIT_CLASS);
-    imagePicker.addEventListener("change", makeEditorChangeListener(id));
+    imagePicker.addEventListener(
+      "change",
+      makeEditorChangeListener(id, confirmButtonLabel)
+    );
     const imagePickerLabel = createEditorLabel(id, type);
     return [imagePicker, imagePickerLabel];
   }
 
-  function makeEditorChangeListener(id) {
+  function makeEditorChangeListener(id, confirmButtonLabel) {
     return function (event) {
-      const updateButtonId = getButtonId(STRINGS.BUTTON_UPDATE, id);
+      const updateButtonId = getButtonId(confirmButtonLabel, id);
       const updateButton = document.getElementById(updateButtonId);
       const { tagName: _tagName, type, files } = event.currentTarget;
       const tagName = _tagName.toLowerCase();
-      if (tagName === "textarea") {
+      if (tagName === "textarea" && updateButton) {
         updateButton.disabled = !event.currentTarget.value;
       } else if (tagName === "input" && type === "file") {
         const validFile = isImageFile(files[0]);
@@ -712,10 +745,6 @@ function localEditingMode() {
       const scrollTo = elementTop + scrollTop - 20;
       window.scrollTo(0, scrollTo < 0 ? 0 : scrollTo);
     }
-    element.classList.add(NEW_CONTAINER_CLASS);
-    setTimeout(() => {
-      element.classList.remove(NEW_CONTAINER_CLASS);
-    }, 5000);
   }
 
   function addLinkAroundSelection(selectableInput) {
