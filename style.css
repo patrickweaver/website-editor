@@ -53,8 +53,7 @@ img {
   top: 3px;
 }
 
-.edit-container,
-.new-container {
+.edit-container {
   border-radius: 3px;
 }
 
@@ -67,14 +66,6 @@ img {
 
 .edit-container select {
   display: block;
-}
-
-.new-container {
-  position: relative;
-  top: -5px;
-  left: -5px;
-  padding: 3px;
-  border: 2px solid var(--new-element-highlight);
 }
 
 .clone-container {
