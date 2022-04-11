@@ -149,7 +149,7 @@ function localEditingMode() {
         },
       };
 
-      let cancelButton = {
+      const cancelButton = {
         label: STRINGS.BUTTON_CANCEL,
         initiallyDisabled: false,
         updateElement: (_) => true,
