@@ -30,6 +30,7 @@ function localEditingMode() {
   const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
   const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
   const SAVE_CHANGES_ID = "save-changes";
+  const CLONE_LABEL = "Original Element";
   const CLONE_CLASS = "clone";
   const CLONE_CONTAINER_CLASS = "clone-container";
   const EDIT_CLASS = "edit";
@@ -242,7 +243,7 @@ function localEditingMode() {
         originalContent,
         tagName
       );
-      const [editor, _e, tagPicker, _t] = editElements;
+      const { editor, editorLabel, tagPicker, tagPickerLabel } = editElements;
 
       let buttonsContainerElement = createElement("div");
       buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
@@ -263,7 +264,7 @@ function localEditingMode() {
         );
 
         const elementCloneLabel = createElement("label");
-        elementCloneLabel.innerHTML = "Original Element:";
+        elementCloneLabel.innerHTML = CLONE_LABEL;
         elementCloneContainer.insertAdjacentElement(
           "beforebegin",
           elementCloneLabel
@@ -291,16 +292,20 @@ function localEditingMode() {
 
       element.insertAdjacentElement("beforebegin", editorContainerElement);
       // Reverse so labels are placed above inputs
-      const editElementsReversed = [...editElements].reverse();
-      [...editElementsReversed, buttonsContainerElement].forEach(
-        (editorElement) => {
-          if (!editorElement) return;
-          editorContainerElement.insertAdjacentElement(
-            "beforeend",
-            editorElement
-          );
-        }
-      );
+      const editElementsArray = [
+        tagPickerLabel,
+        tagPicker,
+        editorLabel,
+        editor,
+        buttonsContainerElement,
+      ];
+      editElementsArray.forEach((editorElement) => {
+        if (!editorElement) return;
+        editorContainerElement.insertAdjacentElement(
+          "beforeend",
+          editorElement
+        );
+      });
 
       editor.focus();
       editor.select();
@@ -609,7 +614,12 @@ function localEditingMode() {
     );
 
     const editElementLabel = createEditorLabel(id, type);
-    return [editElement, editElementLabel, editLevelElement, editLevelLabel];
+    return {
+      editor: editElement,
+      editorLabel: editElementLabel,
+      tagPicker: editLevelElement,
+      tagPickerLabel: editLevelLabel,
+    };
   }
 
   function createImageEditor(id, type, confirmButtonLabel, _content) {
@@ -622,7 +632,7 @@ function localEditingMode() {
       makeEditorChangeListener(id, confirmButtonLabel)
     );
     const imagePickerLabel = createEditorLabel(id, type);
-    return [imagePicker, imagePickerLabel];
+    return { editor: imagePicker, editorLabel: imagePickerLabel };
   }
 
   function makeEditorChangeListener(id, confirmButtonLabel) {
