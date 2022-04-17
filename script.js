@@ -29,6 +29,8 @@ function localEditingMode() {
   const UPDATE_FAVICON_ID = "update-favicon";
   const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
   const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
+  const UPDATE_BACKGROUND_COLOR_ID = "update-background-color";
+  const COLOR_PICKER_CLASS = "color-picker";
   const SAVE_CHANGES_ID = "save-changes";
   const CLONE_LABEL = "Original Element";
   const CLONE_CLASS = "clone";
@@ -75,6 +77,12 @@ function localEditingMode() {
     PROMPT_LINK_URL: "URL:",
   };
 
+  const currentFaviconURL = document.querySelector("link[rel~='icon']").href;
+  const currentBackgroundColorRGB =
+    document.body?.style?.backgroundColor ?? "rgb(255, 255, 255)";
+
+  const currentBackgroundColor = rgb2hex(currentBackgroundColorRGB);
+
   const NEW_CONTENT_MODAL_HTML = `
           <div id="new-content-modal">
             <h2>Add New Content</h2>
@@ -111,10 +119,15 @@ function localEditingMode() {
           </div>
 
           <div class="controls-section">
+            <h4>Background Color</h4>
+            <input type="color" value="${currentBackgroundColor}" class="${COLOR_PICKER_CLASS}" id="${UPDATE_BACKGROUND_COLOR_ID}" />
+          </div>
+
+          <div class="controls-section">
             <h4>Favicon</h4>
             <figure id="favicon-preview">
               <figcaption>Current Favicon:</figcaption>  
-              <img id="${CURRENT_FAVICON_PREVIEW_ID}" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📓</text></svg>"
+              <img id="${CURRENT_FAVICON_PREVIEW_ID}" src="${currentFaviconURL}"
               alt="The current favicon">
             </figure>
             <label for="${UPDATE_FAVICON_ID}">Update Favicon</label>
@@ -406,6 +419,10 @@ function localEditingMode() {
   document
     .getElementById(UPDATE_FAVICON_ID)
     .addEventListener("change", onUpdateFaviconPicker);
+
+  document
+    .getElementById(UPDATE_BACKGROUND_COLOR_ID)
+    .addEventListener("change", onUpdateBackgorundColor);
 
   /*
    *   Add Content
@@ -763,6 +780,10 @@ function localEditingMode() {
     }
   }
 
+  function onUpdateBackgorundColor(changeEvent) {
+    document.body.style.backgroundColor = changeEvent.target.value;
+  }
+
   function onConfirmUpdateFavicon(file) {
     let oldLink = document.querySelector("link[rel~='icon']");
     oldLink.remove();
@@ -772,16 +793,14 @@ function localEditingMode() {
 
     // Set img src to file contents as Data URL
     const reader = new FileReader();
-    reader.onload = ((aLink) => {
-      return (e) => {
-        aLink.href = e.target.result;
-        document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src =
-          e.target.result;
-      };
+    reader.onload = ((_link) => (e) => {
+      _link.href = e.target.result;
+      document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src = e.target.result;
     })(link);
     reader.readAsDataURL(file);
 
     document.getElementsByTagName("head")[0].appendChild(link);
+    editingStateDirty = true;
   }
 
   function uniqueId(readableString) {
@@ -841,5 +860,14 @@ function localEditingMode() {
       end,
       value.length
     )}`;
+  }
+
+  // https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
+  function rgb2hex(rgb) {
+    return `#${rgb
+      .match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/)
+      .slice(1)
+      .map((n) => parseInt(n, 10).toString(16).padStart(2, "0"))
+      .join("")}`;
   }
 }

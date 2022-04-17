@@ -14,7 +14,6 @@
 
 body {
   font-family: "Arial", sans-serif;
-  background-color: plum;
   margin: 2rem;
 }
 
@@ -51,6 +50,11 @@ img {
   width: 16px;
   position: relative;
   top: 3px;
+}
+
+.color-picker {
+  height: 2rem;
+  padding: 2px;
 }
 
 .edit-container {
