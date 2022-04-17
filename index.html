@@ -100,14 +100,7 @@
         margin: 0.5rem 0 1rem;
       }
 
-      img.clone,
-      p.clone,
-      h1.clone,
-      h2.clone,
-      h3.clone,
-      h4.clone,
-      h5.clone,
-      h6.clone {
+      .clone {
         opacity: 50%;
         margin: 0;
       }
@@ -314,10 +307,7 @@
 
         const currentFaviconURL =
           document.querySelector("link[rel~='icon']").href;
-        const currentBackgroundColorRGB =
-          document.body?.style?.backgroundColor ?? "rgb(255, 255, 255)";
-
-        const currentBackgroundColor = rgb2hex(currentBackgroundColorRGB);
+        const currentBackgroundColor = getBodyBackgroundColor();
 
         const NEW_CONTENT_MODAL_HTML = `
           <div id="new-content-modal">
@@ -362,7 +352,7 @@
           <div class="controls-section">
             <h4>Favicon</h4>
             <figure id="favicon-preview">
-              <figcaption>Current Favicon:</figcaption>  
+              <figcaption>Current Favicon:</figcaption>
               <img id="${CURRENT_FAVICON_PREVIEW_ID}" src="${currentFaviconURL}"
               alt="The current favicon">
             </figure>
@@ -840,7 +830,7 @@
               <head>
                 ${document.head.innerHTML}
               </head>
-              <body>
+              <body style="background-color: ${getBodyBackgroundColor()}">
                 ${document.body.innerHTML}
               </body>
             </html>
@@ -1127,6 +1117,12 @@
             end,
             value.length
           )}`;
+        }
+
+        function getBodyBackgroundColor() {
+          return rgb2hex(
+            document.body?.style?.backgroundColor ?? "rgb(255, 255, 255)"
+          );
         }
 
         // https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
