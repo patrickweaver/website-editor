@@ -705,13 +705,6 @@ function localEditingMode() {
         if (!validFile) {
           alert(STRINGS.ERROR_IMAGE_ONLY);
         }
-      } else if (tagName === "input" && type === "text") {
-        // 🚸 Real check
-        const validText = true;
-        updateButton.disabled = !validText;
-        if (!validText) {
-          alert(STRINGS.ERROR_IMAGE_ONLY);
-        }
       }
     };
   }
