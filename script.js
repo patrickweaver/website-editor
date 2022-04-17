@@ -222,7 +222,7 @@ function localEditingMode() {
             updatedImage?.alt !== originalElement?.alt;
           if (!updatedImage) return false;
           originalElement.remove();
-          editingStateDirty = _editingStateDirty;
+          editingStateDirty = editingStateDirty || _editingStateDirty;
           return true;
         },
       };
