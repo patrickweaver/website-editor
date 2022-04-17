@@ -705,6 +705,8 @@ function localEditingMode() {
         if (!validFile) {
           alert(STRINGS.ERROR_IMAGE_ONLY);
         }
+      } else if (tagName === "input" && type === "text") {
+        updateButton.disabled = false;
       }
     };
   }
