@@ -43,6 +43,7 @@ function localEditingMode() {
   const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
   const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
   const PARAGRAPH_ELEMENT = "p";
+  const IMG_ELEMENT = "img";
 
   const EDITOR_TYPES = {
     TEXT: "text",
@@ -80,7 +81,7 @@ function localEditingMode() {
             <ul>
               <li><button id="${ADD_ITEM_HEADING_ID}">Heading</button></li>
               <li><button id="${ADD_ITEM_PARAGRAPH_ID}">Paragraph</button></li>
-              <li><button><label class="label-button" for="${ADD_ITEM_IMAGE_ID}">Image</label><input type="file" id="${ADD_ITEM_IMAGE_ID}" style="display: none" /></button></li>
+              <li><button id="${ADD_ITEM_IMAGE_ID}">Image</button></li>
             </ul>
             <button id="${ADD_ITEM_CANCEL_ID}">Cancel</button>
           </div>
@@ -423,11 +424,15 @@ function localEditingMode() {
       document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
     }
 
-    // Heading and Paragraph buttons
-    const addTextItemButtonIds = [ADD_ITEM_HEADING_ID, ADD_ITEM_PARAGRAPH_ID];
+    // Heading, Paragraph, and Image buttons
+    const addTextItemButtonIds = [
+      ADD_ITEM_HEADING_ID,
+      ADD_ITEM_PARAGRAPH_ID,
+      ADD_ITEM_IMAGE_ID,
+    ];
     addTextItemButtonIds.forEach((buttonId) => {
       document.getElementById(buttonId).addEventListener("click", (event) => {
-        addTextItem(
+        addItem(
           event.currentTarget.id.slice(
             ADD_ITEM_ID_PREFIX.length,
             event.currentTarget.id.length
@@ -436,14 +441,6 @@ function localEditingMode() {
         clearAddItemModal();
       });
     });
-
-    // Image Button
-    document
-      .getElementById(ADD_ITEM_IMAGE_ID)
-      .addEventListener("change", () => {
-        addImage(ADD_ITEM_IMAGE_ID);
-        clearAddItemModal();
-      });
 
     // cancel Button
     document
@@ -495,27 +492,25 @@ function localEditingMode() {
     return newElement;
   }
 
-  function addTextItem(type) {
+  function addItem(type) {
     let elementType;
     if (type === EDITOR_TYPES.HEADING) {
       elementType = HEADING_ELEMENTS[1];
     } else if (type === EDITOR_TYPES.PARAGRAPH) {
       elementType = PARAGRAPH_ELEMENT;
+    } else if (type === EDITOR_TYPES.IMAGE) {
+      elementType = IMG_ELEMENT;
     }
 
     const newElement = createElement(elementType);
-
     const editCallback = makeElementEventListener(type);
     if (type === EDITOR_TYPES.HEADING || type === EDITOR_TYPES.PARAGRAPH) {
       newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
-
-      addAtEndOfDocument(newElement);
-      scrollToNewElement(newElement);
-
-      newElement.addEventListener("click", editCallback);
-      const fakeEvent = { currentTarget: newElement };
-      editCallback(fakeEvent, false);
     }
+    addAtEndOfDocument(newElement);
+    scrollToNewElement(newElement);
+    const fakeEvent = { currentTarget: newElement };
+    editCallback(fakeEvent, false);
   }
 
   /*
