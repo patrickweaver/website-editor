@@ -229,19 +229,13 @@
       const DEV_MODE = false;
       var editingStateDirty = false;
 
-      /*
-       *   Check for local file:
-       */
-
+      /* Check for local file */
       const protocol = window.location.protocol;
       if (protocol === "file:") {
         localEditingMode();
       }
 
-      /*
-       *   Editng JavaScript only runs locally:
-       */
-
+      /* Editng JavaScript only runs locally */
       function localEditingMode() {
         // Constants
         const PAGE_TITLE_INPUT_ID = "edit-page-title";
@@ -593,10 +587,7 @@
           };
         }
 
-        /*
-         * Activate existing elements for editing
-         */
-
+        /* Activate existing elements for editing */
         function makeActivator(type) {
           return function (element) {
             element.addEventListener("click", makeElementEventListener(type));
@@ -623,10 +614,7 @@
         }
         document.querySelectorAll("img").forEach(activateImage);
 
-        /*
-         * Page Controls:
-         */
-
+        /* Local Controls */
         let localControls = createElement("div");
         localControls.id = LOCAL_CONTROLS_ID;
         localControls.innerHTML = LOCAL_CONTROLS_HTML;
@@ -650,10 +638,7 @@
 
         addLocalControls();
 
-        /*
-         * Activate Controls
-         */
-
+        /* Activate Controls on Existing Elements */
         document
           .getElementById(UPDATE_FAVICON_ID)
           .addEventListener("change", onUpdateFaviconPicker);
@@ -662,10 +647,7 @@
           .getElementById(UPDATE_BACKGROUND_COLOR_ID)
           .addEventListener("change", onUpdateBackgorundColor);
 
-        /*
-         *   Add Content
-         */
-
+        /* Add Content */
         function showNewContentModal() {
           let newContentModal = createElement("div");
           newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
@@ -776,10 +758,7 @@
           editCallback(fakeEvent, false);
         }
 
-        /*
-         *   Page Metadata
-         */
-
+        /* Page Metadata */
         function metaDataEditor(
           editElementId,
           mainElementId,
@@ -814,10 +793,7 @@
 
         metaDataEditor(PAGE_LANG_INPUT_ID, "html-element", [], "lang");
 
-        /*
-         *   Save Changes
-         */
-
+        /* Save Changes */
         document
           .getElementById(SAVE_CHANGES_ID)
           .addEventListener("click", async function (_event) {
