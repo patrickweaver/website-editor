@@ -821,9 +821,7 @@
         document
           .getElementById(SAVE_CHANGES_ID)
           .addEventListener("click", async function (_event) {
-            // Remove local controls:
             localControls.remove();
-
             const htmlSourceCode = `
             <!DOCTYPE html>
             <html lang="en">
@@ -844,7 +842,6 @@
                 alert(error?.message ?? "Error saving file.");
               }
             }
-            // Re-add local controls
             addLocalControls();
           });
 
@@ -856,21 +853,13 @@
             startIn: "desktop",
             suggestedName: "index.html",
             types: [
-              {
-                description: "HTML",
-                accept: {
-                  "text/markdown": [".html"],
-                },
-              },
+              { description: "HTML", accept: { "text/markdown": [".html"] } },
             ],
           });
-
           // create a FileSystemWritableFileStream to write to
           const writableStream = await newHandle.createWritable();
-
           // write our file
           await writableStream.write(data);
-
           // close the file and write the contents to disk.
           await writableStream.close();
         }
