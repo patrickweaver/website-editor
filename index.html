@@ -334,7 +334,7 @@
             <label for="${PAGE_DESC_INPUT_ID}">Page Description</label>
             <textarea id="${PAGE_DESC_INPUT_ID}" style="min-height: 2rem"></textarea>
             <label for="${PAGE_LANG_INPUT_ID}">Page Language</label>
-            <input type="text" id="${PAGE_LANG_INPUT_ID}" value="en" />
+            <input type="text" id="${PAGE_LANG_INPUT_ID}" value="${document.documentElement.lang}" />
             <label for="edit-page-langauge" class="below-label">See list of valid language tags <a href="https://en.wikipedia.org/wiki/IETF_language_tag#List_of_subtags" target="_blank">here</a>.
           </div>
 
@@ -800,7 +800,7 @@
             localControls.remove();
             const htmlSourceCode = `
             <!DOCTYPE html>
-            <html lang="en">
+            <html lang="${document.documentElement.lang}"  id="html-element">
               <head>
                 ${document.head.innerHTML}
               </head>
