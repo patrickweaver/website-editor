@@ -61,6 +61,7 @@ function localEditingMode() {
     BUTTON_UPDATE: "Update",
     CONFIRM_DELETE: "Are you sure you want to delete this element?",
     ERROR_IMAGE_ONLY: "Error: Please choose an image file",
+    ERROR_NO_IMAGE: "ERROR: No image found",
     ERROR_NO_SELECTION: "Error: Nothing selected",
     EDITOR_LABELS: {
       [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph text",
@@ -139,13 +140,17 @@ function localEditingMode() {
       }
       const originalDisplay = element.style.display;
       element.style.display = "none";
-      const { tagName: _tagName, innerHTML: originalContent } = element;
+      const {
+        tagName: _tagName,
+        innerHTML: originalContent,
+        alt: altTextContent,
+      } = element;
       const tagName = _tagName.toLowerCase();
 
       const deleteButton = {
         label: STRINGS.BUTTON_DELETE,
         initiallyDisabled: false,
-        updateElement: (editorElement, _, originalElement) => {
+        updateElement: ({ editorElement, originalElement }) => {
           const result = window.confirm(STRINGS.CONFIRM_DELETE);
           if (!result) return;
           editorElement.remove();
@@ -157,18 +162,13 @@ function localEditingMode() {
       const cancelButton = {
         label: STRINGS.BUTTON_CANCEL,
         initiallyDisabled: false,
-        updateElement: (_) => true,
+        updateElement: ({}) => true,
       };
 
       const linkButton = {
         label: STRINGS.BUTTON_LINK,
         initiallyDisabled: false,
-        updateElement: (
-          _editorElement,
-          _tagNameSelect,
-          _originalElement,
-          editorId
-        ) => {
+        updateElement: ({ editorId }) => {
           const selectableInput = document.getElementById(editorId);
           selectableInput.value = addLinkAroundSelection(selectableInput);
         },
@@ -181,7 +181,7 @@ function localEditingMode() {
       const updateTextButton = {
         label: updateButtonLabel,
         initiallyDisabled: false,
-        updateElement: (editorElement, tagNameSelect, originalElement) => {
+        updateElement: ({ editorElement, tagNameSelect, originalElement }) => {
           let updatedElement = originalElement;
           const newContent = editorElement.value;
           if (!newContent) return false;
@@ -206,11 +206,22 @@ function localEditingMode() {
       const upateImageButton = {
         label: updateButtonLabel,
         initiallyDisabled: true,
-        updateElement: (imagePicker) => {
-          const newImage = addImage(imagePicker.id);
-          if (!newImage) return false;
-          element.remove();
-          editingStateDirty = true;
+        updateElement: ({
+          editorElement: imagePicker,
+          altTextEditor,
+          originalElement,
+        }) => {
+          const updatedImage = addImage(
+            imagePicker.id,
+            altTextEditor?.value,
+            originalElement
+          );
+          const _editingStateDirty =
+            updatedImage?.src !== originalElement?.src ||
+            updatedImage?.alt !== originalElement?.alt;
+          if (!updatedImage) return false;
+          originalElement.remove();
+          editingStateDirty = _editingStateDirty;
           return true;
         },
       };
@@ -238,13 +249,14 @@ function localEditingMode() {
 
       const editorId = uniqueId(type.idReadableString);
 
-      const editElements = type.createEditor(
-        editorId,
-        editorType,
-        updateButtonLabel,
-        originalContent,
-        tagName
-      );
+      const editElements = type.createEditor({
+        id: editorId,
+        type: editorType,
+        confirmButtonLabel: updateButtonLabel,
+        content: originalContent,
+        tagName,
+        altTextContent,
+      });
       const {
         editor,
         editorLabel,
@@ -291,7 +303,13 @@ function localEditingMode() {
           buttonElement
         );
         buttonElement.addEventListener("click", function (_event) {
-          const success = i.updateElement(editor, tagPicker, element, editorId);
+          const success = i.updateElement({
+            editorElement: editor,
+            tagNameSelect: tagPicker,
+            altTextEditor: altEditor,
+            originalElement: element,
+            editorId,
+          });
           if (success) {
             editorContainerElement.remove();
             element.style.display = originalDisplay;
@@ -433,18 +451,17 @@ function localEditingMode() {
       .addEventListener("click", clearAddItemModal);
   }
 
-  function addImage(filePickerId) {
+  function addImage(filePickerId, altText, originalElement) {
     const update = filePickerId !== ADD_ITEM_IMAGE_ID;
     const filePicker = document.getElementById(filePickerId);
     const file = filePicker.files[0];
-    // This won't happen because button is disabled
-    // unless file is an image
-    if (!isImageFile(file)) {
+    if (file && !isImageFile(file)) {
+      // This won't happen because button is disabled
+      // unless file is an image
       alert(STRINGS.ERROR_IMAGE_ONLY);
       return null;
     }
     const newElement = createElement("img");
-    newElement.file = file;
     if (update) {
       // Add image above current image
       filePicker.parentElement.insertAdjacentElement("afterend", newElement);
@@ -452,16 +469,24 @@ function localEditingMode() {
       // Add image at the end of the document
       addAtEndOfDocument(newElement);
     }
-    highlightNewElement(newElement);
+    scrollToNewElement(newElement);
 
     // Set img src to file contents as Data URL
-    const reader = new FileReader();
-    reader.onload = ((aImg) => {
-      return (e) => {
-        aImg.src = e.target.result;
-      };
-    })(newElement);
-    reader.readAsDataURL(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (
+        (_newElement) => (e) =>
+          (_newElement.src = e.target.result)
+      )(newElement);
+      reader.readAsDataURL(file);
+    } else if (originalElement.src) {
+      newElement.src = originalElement.src;
+    } else {
+      alert(STRINGS.ERROR_NO_IMAGE);
+      return null;
+    }
+
+    if (altText) newElement.alt = altText;
 
     newElement.addEventListener(
       "click",
@@ -485,7 +510,7 @@ function localEditingMode() {
       newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
 
       addAtEndOfDocument(newElement);
-      highlightNewElement(newElement);
+      scrollToNewElement(newElement);
 
       newElement.addEventListener("click", editCallback);
       const fakeEvent = { currentTarget: newElement };
@@ -592,7 +617,13 @@ function localEditingMode() {
     await writableStream.close();
   }
 
-  function createTextEditor(id, type, confirmButtonLabel, content, tagName) {
+  function createTextEditor({
+    id,
+    type,
+    confirmButtonLabel,
+    content,
+    tagName,
+  }) {
     let levelEditorId, editLevelLabel;
     if (type === EDITOR_TYPES.HEADING) {
       levelEditorId = `level-${id}`;
@@ -633,7 +664,7 @@ function localEditingMode() {
     };
   }
 
-  function createImageEditor(id, type, confirmButtonLabel, _content) {
+  function createImageEditor({ id, type, confirmButtonLabel, altTextContent }) {
     const imagePicker = createElement("input");
     imagePicker.type = "file";
     imagePicker.id = id;
@@ -648,6 +679,11 @@ function localEditingMode() {
     const altEditorId = `alt-text-${id}`;
     altEditor.id = altEditorId;
     altEditor.classList.add(EDIT_CLASS);
+    altEditor.value = altTextContent ?? "";
+    altEditor.addEventListener(
+      "input",
+      makeEditorChangeListener(id, confirmButtonLabel)
+    );
     const altEditorLabel = createEditorLabel(
       altEditorId,
       EDITOR_TYPES.IMAGE_ALT_TEXT
@@ -672,6 +708,13 @@ function localEditingMode() {
         const validFile = isImageFile(files[0]);
         updateButton.disabled = !validFile;
         if (!validFile) {
+          alert(STRINGS.ERROR_IMAGE_ONLY);
+        }
+      } else if (tagName === "input" && type === "text") {
+        // 🚸 Real check
+        const validText = true;
+        updateButton.disabled = !validText;
+        if (!validText) {
           alert(STRINGS.ERROR_IMAGE_ONLY);
         }
       }
@@ -784,7 +827,7 @@ function localEditingMode() {
       .insertAdjacentElement("beforebegin", element);
   }
 
-  function highlightNewElement(element) {
+  function scrollToNewElement(element) {
     const elementTop = element.getBoundingClientRect().top;
     if (elementTop < 0) {
       const { scrollTop } = document.documentElement;
