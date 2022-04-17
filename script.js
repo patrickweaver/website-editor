@@ -30,6 +30,7 @@ function localEditingMode() {
   const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
   const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
   const SAVE_CHANGES_ID = "save-changes";
+  const CLONE_LABEL = "Original Element";
   const CLONE_CLASS = "clone";
   const CLONE_CONTAINER_CLASS = "clone-container";
   const EDIT_CLASS = "edit";
@@ -42,6 +43,7 @@ function localEditingMode() {
   const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
   const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
   const PARAGRAPH_ELEMENT = "p";
+  const IMG_ELEMENT = "img";
 
   const EDITOR_TYPES = {
     TEXT: "text",
@@ -49,6 +51,7 @@ function localEditingMode() {
     HEADING_LEVEL: "heading-level",
     PARAGRAPH: "paragraph",
     IMAGE: "image",
+    IMAGE_ALT_TEXT: "image-alt",
   };
 
   const STRINGS = {
@@ -59,12 +62,14 @@ function localEditingMode() {
     BUTTON_UPDATE: "Update",
     CONFIRM_DELETE: "Are you sure you want to delete this element?",
     ERROR_IMAGE_ONLY: "Error: Please choose an image file",
+    ERROR_NO_IMAGE: "Error: No image found",
     ERROR_NO_SELECTION: "Error: Nothing selected",
     EDITOR_LABELS: {
       [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph text",
       [EDITOR_TYPES.HEADING]: "Edit heading text",
       [EDITOR_TYPES.HEADING_LEVEL]: "Edit heading level",
       [EDITOR_TYPES.IMAGE]: "Select an image",
+      [EDITOR_TYPES.IMAGE_ALT_TEXT]: "Image alt text",
     },
     PLACEHOLDER_TEXT: "Your text here",
     PROMPT_LINK_URL: "URL:",
@@ -76,7 +81,7 @@ function localEditingMode() {
             <ul>
               <li><button id="${ADD_ITEM_HEADING_ID}">Heading</button></li>
               <li><button id="${ADD_ITEM_PARAGRAPH_ID}">Paragraph</button></li>
-              <li><button><label class="label-button" for="${ADD_ITEM_IMAGE_ID}">Image</label><input type="file" id="${ADD_ITEM_IMAGE_ID}" style="display: none" /></button></li>
+              <li><button id="${ADD_ITEM_IMAGE_ID}">Image</button></li>
             </ul>
             <button id="${ADD_ITEM_CANCEL_ID}">Cancel</button>
           </div>
@@ -136,13 +141,17 @@ function localEditingMode() {
       }
       const originalDisplay = element.style.display;
       element.style.display = "none";
-      const { tagName: _tagName, innerHTML: originalContent } = element;
+      const {
+        tagName: _tagName,
+        innerHTML: originalContent,
+        alt: altTextContent,
+      } = element;
       const tagName = _tagName.toLowerCase();
 
       const deleteButton = {
         label: STRINGS.BUTTON_DELETE,
         initiallyDisabled: false,
-        updateElement: (editorElement, _, originalElement) => {
+        updateElement: ({ editorElement, originalElement }) => {
           const result = window.confirm(STRINGS.CONFIRM_DELETE);
           if (!result) return;
           editorElement.remove();
@@ -154,18 +163,13 @@ function localEditingMode() {
       const cancelButton = {
         label: STRINGS.BUTTON_CANCEL,
         initiallyDisabled: false,
-        updateElement: (_) => true,
+        updateElement: ({}) => true,
       };
 
       const linkButton = {
         label: STRINGS.BUTTON_LINK,
         initiallyDisabled: false,
-        updateElement: (
-          _editorElement,
-          _tagNameSelect,
-          _originalElement,
-          editorId
-        ) => {
+        updateElement: ({ editorId }) => {
           const selectableInput = document.getElementById(editorId);
           selectableInput.value = addLinkAroundSelection(selectableInput);
         },
@@ -178,7 +182,7 @@ function localEditingMode() {
       const updateTextButton = {
         label: updateButtonLabel,
         initiallyDisabled: false,
-        updateElement: (editorElement, tagNameSelect, originalElement) => {
+        updateElement: ({ editorElement, tagNameSelect, originalElement }) => {
           let updatedElement = originalElement;
           const newContent = editorElement.value;
           if (!newContent) return false;
@@ -203,11 +207,22 @@ function localEditingMode() {
       const upateImageButton = {
         label: updateButtonLabel,
         initiallyDisabled: true,
-        updateElement: (imagePicker) => {
-          const newImage = addImage(imagePicker.id);
-          if (!newImage) return false;
-          element.remove();
-          editingStateDirty = true;
+        updateElement: ({
+          editorElement: imagePicker,
+          altTextEditor,
+          originalElement,
+        }) => {
+          const updatedImage = addImage(
+            imagePicker.id,
+            altTextEditor?.value,
+            originalElement
+          );
+          const _editingStateDirty =
+            updatedImage?.src !== originalElement?.src ||
+            updatedImage?.alt !== originalElement?.alt;
+          if (!updatedImage) return false;
+          originalElement.remove();
+          editingStateDirty = editingStateDirty || _editingStateDirty;
           return true;
         },
       };
@@ -235,14 +250,22 @@ function localEditingMode() {
 
       const editorId = uniqueId(type.idReadableString);
 
-      const editElements = type.createEditor(
-        editorId,
-        editorType,
-        updateButtonLabel,
-        originalContent,
-        tagName
-      );
-      const [editor, _e, tagPicker, _t] = editElements;
+      const editElements = type.createEditor({
+        id: editorId,
+        type: editorType,
+        confirmButtonLabel: updateButtonLabel,
+        content: originalContent,
+        tagName,
+        altTextContent,
+      });
+      const {
+        editor,
+        editorLabel,
+        tagPicker,
+        tagPickerLabel,
+        altEditor,
+        altEditorLabel,
+      } = editElements;
 
       let buttonsContainerElement = createElement("div");
       buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
@@ -263,7 +286,7 @@ function localEditingMode() {
         );
 
         const elementCloneLabel = createElement("label");
-        elementCloneLabel.innerHTML = "Original Element:";
+        elementCloneLabel.innerHTML = CLONE_LABEL;
         elementCloneContainer.insertAdjacentElement(
           "beforebegin",
           elementCloneLabel
@@ -281,7 +304,13 @@ function localEditingMode() {
           buttonElement
         );
         buttonElement.addEventListener("click", function (_event) {
-          const success = i.updateElement(editor, tagPicker, element, editorId);
+          const success = i.updateElement({
+            editorElement: editor,
+            tagNameSelect: tagPicker,
+            altTextEditor: altEditor,
+            originalElement: element,
+            editorId,
+          });
           if (success) {
             editorContainerElement.remove();
             element.style.display = originalDisplay;
@@ -291,16 +320,22 @@ function localEditingMode() {
 
       element.insertAdjacentElement("beforebegin", editorContainerElement);
       // Reverse so labels are placed above inputs
-      const editElementsReversed = [...editElements].reverse();
-      [...editElementsReversed, buttonsContainerElement].forEach(
-        (editorElement) => {
-          if (!editorElement) return;
-          editorContainerElement.insertAdjacentElement(
-            "beforeend",
-            editorElement
-          );
-        }
-      );
+      const editElementsArray = [
+        tagPickerLabel,
+        tagPicker,
+        editorLabel,
+        editor,
+        altEditorLabel,
+        altEditor,
+        buttonsContainerElement,
+      ];
+      editElementsArray.forEach((editorElement) => {
+        if (!editorElement) return;
+        editorContainerElement.insertAdjacentElement(
+          "beforeend",
+          editorElement
+        );
+      });
 
       editor.focus();
       editor.select();
@@ -389,11 +424,15 @@ function localEditingMode() {
       document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
     }
 
-    // Heading and Paragraph buttons
-    const addTextItemButtonIds = [ADD_ITEM_HEADING_ID, ADD_ITEM_PARAGRAPH_ID];
+    // Heading, Paragraph, and Image buttons
+    const addTextItemButtonIds = [
+      ADD_ITEM_HEADING_ID,
+      ADD_ITEM_PARAGRAPH_ID,
+      ADD_ITEM_IMAGE_ID,
+    ];
     addTextItemButtonIds.forEach((buttonId) => {
       document.getElementById(buttonId).addEventListener("click", (event) => {
-        addTextItem(
+        addItem(
           event.currentTarget.id.slice(
             ADD_ITEM_ID_PREFIX.length,
             event.currentTarget.id.length
@@ -403,32 +442,23 @@ function localEditingMode() {
       });
     });
 
-    // Image Button
-    document
-      .getElementById(ADD_ITEM_IMAGE_ID)
-      .addEventListener("change", () => {
-        addImage(ADD_ITEM_IMAGE_ID);
-        clearAddItemModal();
-      });
-
     // cancel Button
     document
       .getElementById(ADD_ITEM_CANCEL_ID)
       .addEventListener("click", clearAddItemModal);
   }
 
-  function addImage(filePickerId) {
+  function addImage(filePickerId, altText, originalElement) {
     const update = filePickerId !== ADD_ITEM_IMAGE_ID;
     const filePicker = document.getElementById(filePickerId);
     const file = filePicker.files[0];
-    // This won't happen because button is disabled
-    // unless file is an image
-    if (!isImageFile(file)) {
+    if (file && !isImageFile(file)) {
+      // This won't happen because button is disabled
+      // unless file is an image
       alert(STRINGS.ERROR_IMAGE_ONLY);
       return null;
     }
     const newElement = createElement("img");
-    newElement.file = file;
     if (update) {
       // Add image above current image
       filePicker.parentElement.insertAdjacentElement("afterend", newElement);
@@ -436,16 +466,24 @@ function localEditingMode() {
       // Add image at the end of the document
       addAtEndOfDocument(newElement);
     }
-    highlightNewElement(newElement);
+    scrollToNewElement(newElement);
 
     // Set img src to file contents as Data URL
-    const reader = new FileReader();
-    reader.onload = ((aImg) => {
-      return (e) => {
-        aImg.src = e.target.result;
-      };
-    })(newElement);
-    reader.readAsDataURL(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (
+        (_newElement) => (e) =>
+          (_newElement.src = e.target.result)
+      )(newElement);
+      reader.readAsDataURL(file);
+    } else if (originalElement.src) {
+      newElement.src = originalElement.src;
+    } else {
+      alert(STRINGS.ERROR_NO_IMAGE);
+      return null;
+    }
+
+    if (altText) newElement.alt = altText;
 
     newElement.addEventListener(
       "click",
@@ -454,27 +492,25 @@ function localEditingMode() {
     return newElement;
   }
 
-  function addTextItem(type) {
+  function addItem(type) {
     let elementType;
     if (type === EDITOR_TYPES.HEADING) {
       elementType = HEADING_ELEMENTS[1];
     } else if (type === EDITOR_TYPES.PARAGRAPH) {
       elementType = PARAGRAPH_ELEMENT;
+    } else if (type === EDITOR_TYPES.IMAGE) {
+      elementType = IMG_ELEMENT;
     }
 
     const newElement = createElement(elementType);
-
     const editCallback = makeElementEventListener(type);
     if (type === EDITOR_TYPES.HEADING || type === EDITOR_TYPES.PARAGRAPH) {
       newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
-
-      addAtEndOfDocument(newElement);
-      highlightNewElement(newElement);
-
-      newElement.addEventListener("click", editCallback);
-      const fakeEvent = { currentTarget: newElement };
-      editCallback(fakeEvent, false);
     }
+    addAtEndOfDocument(newElement);
+    scrollToNewElement(newElement);
+    const fakeEvent = { currentTarget: newElement };
+    editCallback(fakeEvent, false);
   }
 
   /*
@@ -576,7 +612,13 @@ function localEditingMode() {
     await writableStream.close();
   }
 
-  function createTextEditor(id, type, confirmButtonLabel, content, tagName) {
+  function createTextEditor({
+    id,
+    type,
+    confirmButtonLabel,
+    content,
+    tagName,
+  }) {
     let levelEditorId, editLevelLabel;
     if (type === EDITOR_TYPES.HEADING) {
       levelEditorId = `level-${id}`;
@@ -609,10 +651,15 @@ function localEditingMode() {
     );
 
     const editElementLabel = createEditorLabel(id, type);
-    return [editElement, editElementLabel, editLevelElement, editLevelLabel];
+    return {
+      editor: editElement,
+      editorLabel: editElementLabel,
+      tagPicker: editLevelElement,
+      tagPickerLabel: editLevelLabel,
+    };
   }
 
-  function createImageEditor(id, type, confirmButtonLabel, _content) {
+  function createImageEditor({ id, type, confirmButtonLabel, altTextContent }) {
     const imagePicker = createElement("input");
     imagePicker.type = "file";
     imagePicker.id = id;
@@ -622,7 +669,26 @@ function localEditingMode() {
       makeEditorChangeListener(id, confirmButtonLabel)
     );
     const imagePickerLabel = createEditorLabel(id, type);
-    return [imagePicker, imagePickerLabel];
+    const altEditor = createElement("input");
+    altEditor.type = "text";
+    const altEditorId = `alt-text-${id}`;
+    altEditor.id = altEditorId;
+    altEditor.classList.add(EDIT_CLASS);
+    altEditor.value = altTextContent ?? "";
+    altEditor.addEventListener(
+      "input",
+      makeEditorChangeListener(id, confirmButtonLabel)
+    );
+    const altEditorLabel = createEditorLabel(
+      altEditorId,
+      EDITOR_TYPES.IMAGE_ALT_TEXT
+    );
+    return {
+      editor: imagePicker,
+      editorLabel: imagePickerLabel,
+      altEditor,
+      altEditorLabel,
+    };
   }
 
   function makeEditorChangeListener(id, confirmButtonLabel) {
@@ -639,6 +705,8 @@ function localEditingMode() {
         if (!validFile) {
           alert(STRINGS.ERROR_IMAGE_ONLY);
         }
+      } else if (tagName === "input" && type === "text") {
+        updateButton.disabled = false;
       }
     };
   }
@@ -749,7 +817,7 @@ function localEditingMode() {
       .insertAdjacentElement("beforebegin", element);
   }
 
-  function highlightNewElement(element) {
+  function scrollToNewElement(element) {
     const elementTop = element.getBoundingClientRect().top;
     if (elementTop < 0) {
       const { scrollTop } = document.documentElement;
