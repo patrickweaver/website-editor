@@ -90,6 +90,7 @@ h6.clone {
 label.edit,
 input.edit {
   width: Calc(100% - 1rem);
+  margin-bottom: 0.5rem;
 }
 
 #local-controls {

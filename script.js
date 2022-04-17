@@ -50,6 +50,7 @@ function localEditingMode() {
     HEADING_LEVEL: "heading-level",
     PARAGRAPH: "paragraph",
     IMAGE: "image",
+    IMAGE_ALT_TEXT: "image-alt",
   };
 
   const STRINGS = {
@@ -66,6 +67,7 @@ function localEditingMode() {
       [EDITOR_TYPES.HEADING]: "Edit heading text",
       [EDITOR_TYPES.HEADING_LEVEL]: "Edit heading level",
       [EDITOR_TYPES.IMAGE]: "Select an image",
+      [EDITOR_TYPES.IMAGE_ALT_TEXT]: "Image alt text",
     },
     PLACEHOLDER_TEXT: "Your text here",
     PROMPT_LINK_URL: "URL:",
@@ -243,7 +245,14 @@ function localEditingMode() {
         originalContent,
         tagName
       );
-      const { editor, editorLabel, tagPicker, tagPickerLabel } = editElements;
+      const {
+        editor,
+        editorLabel,
+        tagPicker,
+        tagPickerLabel,
+        altEditor,
+        altEditorLabel,
+      } = editElements;
 
       let buttonsContainerElement = createElement("div");
       buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
@@ -297,6 +306,8 @@ function localEditingMode() {
         tagPicker,
         editorLabel,
         editor,
+        altEditorLabel,
+        altEditor,
         buttonsContainerElement,
       ];
       editElementsArray.forEach((editorElement) => {
@@ -632,7 +643,21 @@ function localEditingMode() {
       makeEditorChangeListener(id, confirmButtonLabel)
     );
     const imagePickerLabel = createEditorLabel(id, type);
-    return { editor: imagePicker, editorLabel: imagePickerLabel };
+    const altEditor = createElement("input");
+    altEditor.type = "text";
+    const altEditorId = `alt-text-${id}`;
+    altEditor.id = altEditorId;
+    altEditor.classList.add(EDIT_CLASS);
+    const altEditorLabel = createEditorLabel(
+      altEditorId,
+      EDITOR_TYPES.IMAGE_ALT_TEXT
+    );
+    return {
+      editor: imagePicker,
+      editorLabel: imagePickerLabel,
+      altEditor,
+      altEditorLabel,
+    };
   }
 
   function makeEditorChangeListener(id, confirmButtonLabel) {
