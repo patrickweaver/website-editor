@@ -62,7 +62,7 @@ function localEditingMode() {
     BUTTON_UPDATE: "Update",
     CONFIRM_DELETE: "Are you sure you want to delete this element?",
     ERROR_IMAGE_ONLY: "Error: Please choose an image file",
-    ERROR_NO_IMAGE: "ERROR: No image found",
+    ERROR_NO_IMAGE: "Error: No image found",
     ERROR_NO_SELECTION: "Error: Nothing selected",
     EDITOR_LABELS: {
       [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph text",
