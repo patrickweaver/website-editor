@@ -77,17 +77,17 @@
         margin: 1rem 0;
       }
 
-      #favicon-preview {
+      #local-controls figure {
         margin: 0 0 1rem;
       }
 
-      #favicon-preview figcaption,
-      #favicon-preview img {
+      #local-controls figure figcaption,
+      #local-controls figure img {
         display: inline;
         margin: 0;
       }
 
-      #favicon-preview img {
+      #local-controls figure img {
         width: 16px;
         position: relative;
         top: 3px;
@@ -251,6 +251,11 @@
         const UPDATE_FAVICON_ID = "update-favicon";
         const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
         const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
+        const CURRENT_SOCIAL_IMAGE_ID = "meta-image";
+        const CURRENT_SOCIAL_IMAGE_PREVIEW_ID = "current-social-image-preview";
+        const UPDATE_SOCIAL_IMAGE_ID = "update-social-image";
+        const CANCEL_SOCIAL_IMAGE_UPDATE_ID = "cancel-social-image-update";
+        const CONFIRM_SOCIAL_IMAGE_UPDATE_ID = "confirm-social-image-update";
         const UPDATE_BACKGROUND_COLOR_ID = "update-background-color";
         const COLOR_PICKER_CLASS = "color-picker";
         const SAVE_CHANGES_ID = "save-changes";
@@ -302,6 +307,8 @@
         const currentFaviconURL =
           document.querySelector("link[rel~='icon']").href;
         const currentBackgroundColor = getBodyBackgroundColor();
+        const { href: currentSocialImageURL, alt: currentSocialImageAlt } =
+          document.getElementById(CURRENT_SOCIAL_IMAGE_ID);
 
         const NEW_CONTENT_MODAL_HTML = `
           <div id="new-content-modal">
@@ -334,7 +341,9 @@
             <label for="${PAGE_DESC_INPUT_ID}">Page Description</label>
             <textarea id="${PAGE_DESC_INPUT_ID}" style="min-height: 2rem"></textarea>
             <label for="${PAGE_LANG_INPUT_ID}">Page Language</label>
-            <input type="text" id="${PAGE_LANG_INPUT_ID}" value="${document.documentElement.lang}" />
+            <input type="text" id="${PAGE_LANG_INPUT_ID}" value="${
+          document.documentElement.lang
+        }" />
             <label for="edit-page-langauge" class="below-label">See list of valid language tags <a href="https://en.wikipedia.org/wiki/IETF_language_tag#List_of_subtags" target="_blank">here</a>.
           </div>
 
@@ -353,8 +362,38 @@
             <label for="${UPDATE_FAVICON_ID}">Update Favicon</label>
             <input id="${UPDATE_FAVICON_ID}" type="file" />
             <div class="${EDIT_BUTTONS_CLASS}">
-              <button id="${CANCEL_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_CANCEL}</button>
-              <button id="${CONFIRM_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_UPDATE}</button>
+              <button id="${CANCEL_FAVICON_UPDATE_ID}" disabled>${
+          STRINGS.BUTTON_CANCEL
+        }</button>
+              <button id="${CONFIRM_FAVICON_UPDATE_ID}" disabled>${
+          STRINGS.BUTTON_UPDATE
+        }</button>
+            </div>
+          </div>
+
+          <div class="controls-section">
+            <h4>Social Image</h4>
+            <figure id="social-image-preview">
+              <figcaption>Current Social Image:</figcaption>
+              <img
+                id="${CURRENT_SOCIAL_IMAGE_PREVIEW_ID}"
+                src="${currentSocialImageURL ?? ""}"
+                alt="${
+                  currentSocialImageAlt ?? currentSocialImageURL
+                    ? ""
+                    : "&nbsp;Social Image is not set."
+                }"
+              >
+            </figure>
+            <label for="${UPDATE_SOCIAL_IMAGE_ID}">Update Social Image</label>
+            <input id="${UPDATE_SOCIAL_IMAGE_ID}" type="file" />
+            <div class="${EDIT_BUTTONS_CLASS}">
+              <button id="${CANCEL_SOCIAL_IMAGE_UPDATE_ID}" disabled>${
+          STRINGS.BUTTON_CANCEL
+        }</button>
+              <button id="${CONFIRM_SOCIAL_IMAGE_UPDATE_ID}" disabled>${
+          STRINGS.BUTTON_UPDATE
+        }</button>
             </div>
           </div>
 
@@ -640,12 +679,14 @@
 
         /* Activate Controls on Existing Elements */
         document
-          .getElementById(UPDATE_FAVICON_ID)
-          .addEventListener("change", onUpdateFaviconPicker);
-
-        document
           .getElementById(UPDATE_BACKGROUND_COLOR_ID)
           .addEventListener("change", onUpdateBackgorundColor);
+        document
+          .getElementById(UPDATE_FAVICON_ID)
+          .addEventListener("change", makeOnUpdateFaviconPicker());
+        document
+          .getElementById(UPDATE_SOCIAL_IMAGE_ID)
+          .addEventListener("change", onUpdateSocialImagePicker);
 
         /* Add Content */
         function showNewContentModal() {
@@ -952,72 +993,103 @@
           return editElementLabel;
         }
 
-        function onUpdateFaviconPicker(changeEvent) {
-          const file = changeEvent.target.files[0];
-          const validFile = isImageFile(file);
+        function makeOnUpdateFaviconPicker() {
+          return makeUpdateMetaImagePicker({
+            cancelButtonId: CANCEL_FAVICON_UPDATE_ID,
+            confirmButtonId: CONFIRM_FAVICON_UPDATE_ID,
+            querySelector: "link[rel~='icon']",
+            insertHandler: insertFavicon,
+          });
+        }
 
-          const UPDATE_METHODS = {
-            REMOVE: "removeEventListener",
-            ADD: "addEventListener",
-          };
+        function makeOnUpdateSocialImagePicker() {
+          return makeUpdateMetaImagePicker({
+            cancelButtonId: CANCEL_SOCIAL_IMAGE_UPDATE_ID,
+            confirmButtonId: CONFIRM_SOCIAL_IMAGE_UPDATE_ID,
+            querySelector: "#meta-image",
+            insertHandler: insertSocialImage,
+          });
+        }
 
-          const faviconUpdateButtons = [
-            {
-              id: CANCEL_FAVICON_UPDATE_ID,
-              onClick: (clickEvent) => {
-                updateFaviconUpdateButtons(true, UPDATE_METHODS.REMOVE);
+        function makeUpdateMetaImagePicker({
+          cancelButtonId,
+          confirmButtonId,
+          querySelector,
+          insertHandler,
+        }) {
+          return (changeEvent) => {
+            const file = changeEvent.target.files[0];
+            const validFile = isImageFile(file);
+
+            const UPDATE_METHODS = {
+              REMOVE: "removeEventListener",
+              ADD: "addEventListener",
+            };
+
+            const updateButtons = [
+              {
+                id: cancelButtonId,
+                onClick: (clickEvent) => {
+                  updateHandler(true, UPDATE_METHODS.REMOVE);
+                },
               },
-            },
-            {
-              id: CONFIRM_FAVICON_UPDATE_ID,
-              onClick: (clickEvent) => {
-                updateFaviconUpdateButtons(true, UPDATE_METHODS.REMOVE);
-                onConfirmUpdateFavicon(file);
+              {
+                id: confirmButtonId,
+                onClick: (clickEvent) => {
+                  updateHandler(true, UPDATE_METHODS.REMOVE);
+                  confirmHandler(file);
+                },
               },
-            },
-          ];
+            ];
 
-          function updateFaviconUpdateButtons(disabled, method) {
-            if (disabled) {
-              changeEvent.target.value = "";
+            function updateHandler(disabled, method) {
+              if (disabled) {
+                changeEvent.target.value = "";
+              }
+              updateButtons.forEach((i) => {
+                const button = document.getElementById(i.id);
+                button.disabled = disabled;
+                button[method]("click", i.onClick);
+              });
             }
-            faviconUpdateButtons.forEach((i) => {
-              const button = document.getElementById(i.id);
-              button.disabled = disabled;
-              button[method]("click", i.onClick);
-            });
-          }
 
-          updateFaviconUpdateButtons(!validFile, UPDATE_METHODS.ADD);
+            function confirmHandler(file) {
+              let oldElement = document.querySelector(querySelector);
+              oldElement.remove();
+              insertHandler(file);
+              editingStateDirty = true;
+            }
 
-          if (!validFile) {
-            alert(STRINGS.ERROR_IMAGE_ONLY);
-            return null;
-          }
+            updateHandler(!validFile, UPDATE_METHODS.ADD);
+
+            if (!validFile) {
+              alert(STRINGS.ERROR_IMAGE_ONLY);
+              return null;
+            }
+          };
+        }
+
+        function insertFavicon(file) {
+          let newElement = document.createElement("link");
+          newElement.rel = "icon";
+          newElement.file = file;
+          // Set img src to file contents as Data URL
+          const reader = new FileReader();
+          reader.onload = ((_newElement) => (e) => {
+            _newElement.href = e.target.result;
+            document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src =
+              e.target.result;
+          })(newElement);
+          reader.readAsDataURL(file);
+          document.getElementsByTagName("head")[0].appendChild(newElement);
+        }
+
+        function insertSocialImage(file) {
+          // TODO
         }
 
         function onUpdateBackgorundColor(changeEvent) {
           document.body.style.backgroundColor = changeEvent.target.value;
-          editingStateDirty = true;
-        }
-
-        function onConfirmUpdateFavicon(file) {
-          let oldLink = document.querySelector("link[rel~='icon']");
-          oldLink.remove();
-          let link = document.createElement("link");
-          link.rel = "icon";
-          link.file = file;
-
-          // Set img src to file contents as Data URL
-          const reader = new FileReader();
-          reader.onload = ((_link) => (e) => {
-            _link.href = e.target.result;
-            document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src =
-              e.target.result;
-          })(link);
-          reader.readAsDataURL(file);
-
-          document.getElementsByTagName("head")[0].appendChild(link);
           editingStateDirty = true;
         }
 
