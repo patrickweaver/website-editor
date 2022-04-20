@@ -11,11 +11,31 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title id="page-title">Website</title>
 
-    <!-- https://emojicon.dev/ -->
+    <!-- Favicon - SVG from Emoji: https://emojicon.dev/ -->
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📓</text></svg>"
     />
+
+    <!-- Social -->
+    <meta property="og:title" content="Website" id="meta-title" />
+    <meta
+      property="og:description"
+      content="A website that edits itself"
+      id="meta-description"
+    />
+    <meta property="og:image" content="" id="meta-image" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" id="twitter-card" />
+    <meta name="twitter:title" content="Website" id="twitter-title" />
+    <meta
+      name="twitter:description"
+      content="A website that edits itself"
+      id="twitter-description"
+    />
+    <meta name="twitter:image" content="" id="twitter-image" />
+    <meta name="twitter:image:alt" content="" id="twitter-image-alt" />
 
     <!-- CSS -->
     <style>
@@ -31,6 +51,8 @@
         --modal-shadow-bg: #4f4f4fdf;
         --new-element-highlight: #00ffff;
         --edit-element-highlight: #ffff00;
+        --note-border: #ffe8b8;
+        --note-bg: #fffce8;
       }
 
       body {
@@ -46,8 +68,12 @@
         margin: 0.25rem 0;
       }
 
+      input.text-input {
+        width: Calc(100% - 1rem - 4px); /* padding 0.5rem, border 2px */
+      }
+
       textarea {
-        width: Calc(100% - 1rem);
+        width: Calc(100% - 1rem - 2px); /* padding 0.5rem, border 1px */
         min-height: 6rem;
         font-family: "Arial", sans-serif;
       }
@@ -55,22 +81,6 @@
       img {
         display: block;
         margin: 1rem 0;
-      }
-
-      #favicon-preview {
-        margin: 0 0 1rem;
-      }
-
-      #favicon-preview figcaption,
-      #favicon-preview img {
-        display: inline;
-        margin: 0;
-      }
-
-      #favicon-preview img {
-        width: 16px;
-        position: relative;
-        top: 3px;
       }
 
       .color-picker {
@@ -111,10 +121,34 @@
         margin-bottom: 0.5rem;
       }
 
+      .note {
+        border: 1px solid var(--note-border);
+        background-color: var(--note-bg);
+        padding: 0.5rem;
+      }
+
       #local-controls {
         background-color: var(--local-controls-bg);
         margin: 4rem 0 1rem;
         padding: 0.5rem 1rem;
+        max-width: 600px;
+        outline: 1px dashed var(--local-controls-border-3);
+      }
+
+      #local-controls figure {
+        margin: 0 0 1rem;
+      }
+
+      #local-controls figure figcaption,
+      #local-controls figure img {
+        display: inline;
+        margin: 0;
+      }
+
+      #local-controls figure img {
+        width: 16px;
+        position: relative;
+        top: 3px;
       }
 
       #local-controls button,
@@ -190,26 +224,6 @@
         margin: 0.5rem;
       }
     </style>
-
-    <!-- Social -->
-    <meta property="og:title" content="Website" id="meta-title" />
-    <meta
-      property="og:description"
-      content="A website that edits itself"
-      id="meta-description"
-    />
-    <meta property="og:image" content="" id="meta-image" />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary" id="twitter-card" />
-    <meta name="twitter:title" content="Website" id="twitter-title" />
-    <meta
-      name="twitter:description"
-      content="A website that edits itself"
-      id="twitter-description"
-    />
-    <meta name="twitter:image" content="" id="twitter-image" />
-    <meta name="twitter:image:alt" content="" id="twitter-image-alt" />
   </head>
   <body style="background-color: #dda0dd">
     <h1>Website</h1>
@@ -251,6 +265,11 @@
         const UPDATE_FAVICON_ID = "update-favicon";
         const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
         const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
+        const FAVICON_QUERY_SELECTOR = "link[rel~='icon']";
+        const CURRENT_SOCIAL_IMAGE_ID = "meta-image";
+        const CURRENT_TWITTER_IMAGE_ID = "twitter-image";
+        const CURRENT_SOCIAL_IMAGE_PREVIEW_ID = "current-social-image-preview";
+        const UPDATE_SOCIAL_IMAGE_ID = "update-social-image";
         const UPDATE_BACKGROUND_COLOR_ID = "update-background-color";
         const COLOR_PICKER_CLASS = "color-picker";
         const SAVE_CHANGES_ID = "save-changes";
@@ -297,11 +316,15 @@
           },
           PLACEHOLDER_TEXT: "Your text here",
           PROMPT_LINK_URL: "URL:",
+          MISSING_SOCIAL_IMAGE_ALT: "&nbsp;Social Image is not set.",
         };
 
-        const currentFaviconURL =
-          document.querySelector("link[rel~='icon']").href;
+        const currentFaviconURL = document.querySelector(
+          FAVICON_QUERY_SELECTOR
+        ).href;
         const currentBackgroundColor = getBodyBackgroundColor();
+        const { href: currentSocialImageURL, alt: currentSocialImageAlt } =
+          document.getElementById(CURRENT_SOCIAL_IMAGE_ID);
 
         const NEW_CONTENT_MODAL_HTML = `
           <div id="new-content-modal">
@@ -330,11 +353,13 @@
           <div class="controls-section">
             <h4>General</h4>
             <label for="${PAGE_TITLE_INPUT_ID}">Page Title: </label>
-            <input type="text" id="${PAGE_TITLE_INPUT_ID}" />
+            <input type="text" id="${PAGE_TITLE_INPUT_ID}" class="text-input" />
             <label for="${PAGE_DESC_INPUT_ID}">Page Description</label>
             <textarea id="${PAGE_DESC_INPUT_ID}" style="min-height: 2rem"></textarea>
             <label for="${PAGE_LANG_INPUT_ID}">Page Language</label>
-            <input type="text" id="${PAGE_LANG_INPUT_ID}" value="${document.documentElement.lang}" />
+            <input type="text" id="${PAGE_LANG_INPUT_ID}" class="text-input" value="${
+          document.documentElement.lang
+        }" />
             <label for="edit-page-langauge" class="below-label">See list of valid language tags <a href="https://en.wikipedia.org/wiki/IETF_language_tag#List_of_subtags" target="_blank">here</a>.
           </div>
 
@@ -353,9 +378,32 @@
             <label for="${UPDATE_FAVICON_ID}">Update Favicon</label>
             <input id="${UPDATE_FAVICON_ID}" type="file" />
             <div class="${EDIT_BUTTONS_CLASS}">
-              <button id="${CANCEL_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_CANCEL}</button>
-              <button id="${CONFIRM_FAVICON_UPDATE_ID}" disabled>${STRINGS.BUTTON_UPDATE}</button>
+              <button id="${CANCEL_FAVICON_UPDATE_ID}" disabled>${
+          STRINGS.BUTTON_CANCEL
+        }</button>
+              <button id="${CONFIRM_FAVICON_UPDATE_ID}" disabled>${
+          STRINGS.BUTTON_UPDATE
+        }</button>
             </div>
+          </div>
+
+          <div class="controls-section">
+            <h4>Social Image</h4>
+            <figure id="social-image-preview">
+              <figcaption>Current Social Image:</figcaption>
+              <img
+                id="${CURRENT_SOCIAL_IMAGE_PREVIEW_ID}"
+                src="${currentSocialImageURL ?? ""}"
+                alt="${
+                  currentSocialImageAlt ?? currentSocialImageURL
+                    ? ""
+                    : STRINGS.MISSING_SOCIAL_IMAGE_ALT
+                }"
+              >
+            </figure>
+            <label for="${UPDATE_SOCIAL_IMAGE_ID}">Update Social Image</label>
+            <input type="text" id="${UPDATE_SOCIAL_IMAGE_ID}" class="text-input" />
+            <label for="${UPDATE_SOCIAL_IMAGE_ID}" class="note">Social Image must be a full URL including the domain name and cannot be included inline as a data URL like other images. You will likely need to upload the image to your web host, then update your page again with the hosted image URL. The social image is configured for a square image at least 144px x 144px large.</label>
           </div>
 
           <div class="controls-section">
@@ -612,7 +660,7 @@
         function activateImage(element) {
           makeActivator(EDITOR_TYPES.IMAGE)(element);
         }
-        document.querySelectorAll("img").forEach(activateImage);
+        document.querySelectorAll(IMG_ELEMENT).forEach(activateImage);
 
         /* Local Controls */
         let localControls = createElement("div");
@@ -640,12 +688,14 @@
 
         /* Activate Controls on Existing Elements */
         document
+          .getElementById(UPDATE_BACKGROUND_COLOR_ID)
+          .addEventListener("change", onUpdateBackgroundColor);
+        document
           .getElementById(UPDATE_FAVICON_ID)
           .addEventListener("change", onUpdateFaviconPicker);
-
         document
-          .getElementById(UPDATE_BACKGROUND_COLOR_ID)
-          .addEventListener("change", onUpdateBackgorundColor);
+          .getElementById(UPDATE_SOCIAL_IMAGE_ID)
+          .addEventListener("input", onUpdateSocialImage);
 
         /* Add Content */
         function showNewContentModal() {
@@ -712,12 +762,7 @@
 
           // Set img src to file contents as Data URL
           if (file) {
-            const reader = new FileReader();
-            reader.onload = (
-              (_newElement) => (e) =>
-                (_newElement.src = e.target.result)
-            )(newElement);
-            reader.readAsDataURL(file);
+            setFileAsDataURL(file, newElement);
           } else if (originalElement.src) {
             newElement.src = originalElement.src;
           } else {
@@ -961,34 +1006,34 @@
             ADD: "addEventListener",
           };
 
-          const faviconUpdateButtons = [
+          const updateButtons = [
             {
               id: CANCEL_FAVICON_UPDATE_ID,
               onClick: (clickEvent) => {
-                updateFaviconUpdateButtons(true, UPDATE_METHODS.REMOVE);
+                updateHandler(true, UPDATE_METHODS.REMOVE);
               },
             },
             {
               id: CONFIRM_FAVICON_UPDATE_ID,
               onClick: (clickEvent) => {
-                updateFaviconUpdateButtons(true, UPDATE_METHODS.REMOVE);
-                onConfirmUpdateFavicon(file);
+                updateHandler(true, UPDATE_METHODS.REMOVE);
+                insertFavicon(file);
               },
             },
           ];
 
-          function updateFaviconUpdateButtons(disabled, method) {
+          function updateHandler(disabled, method) {
             if (disabled) {
               changeEvent.target.value = "";
             }
-            faviconUpdateButtons.forEach((i) => {
+            updateButtons.forEach((i) => {
               const button = document.getElementById(i.id);
               button.disabled = disabled;
               button[method]("click", i.onClick);
             });
           }
 
-          updateFaviconUpdateButtons(!validFile, UPDATE_METHODS.ADD);
+          updateHandler(!validFile, UPDATE_METHODS.ADD);
 
           if (!validFile) {
             alert(STRINGS.ERROR_IMAGE_ONLY);
@@ -996,28 +1041,33 @@
           }
         }
 
-        function onUpdateBackgorundColor(changeEvent) {
-          document.body.style.backgroundColor = changeEvent.target.value;
+        function insertFavicon(file) {
+          const oldElement = document.querySelector(FAVICON_QUERY_SELECTOR);
+          oldElement.remove();
+          const newElement = document.createElement("link");
+          newElement.rel = "icon";
+          setFileAsDataURL(file, newElement, "href");
+          const faviconPreviewElement = document.getElementById(
+            CURRENT_FAVICON_PREVIEW_ID
+          );
+          setFileAsDataURL(file, faviconPreviewElement);
+          document.getElementsByTagName("head")[0].appendChild(newElement);
           editingStateDirty = true;
         }
 
-        function onConfirmUpdateFavicon(file) {
-          let oldLink = document.querySelector("link[rel~='icon']");
-          oldLink.remove();
-          let link = document.createElement("link");
-          link.rel = "icon";
-          link.file = file;
+        function onUpdateSocialImage(inputEvent) {
+          [
+            { id: CURRENT_SOCIAL_IMAGE_ID, property: "content" },
+            { id: CURRENT_TWITTER_IMAGE_ID, property: "content" },
+            { id: CURRENT_SOCIAL_IMAGE_PREVIEW_ID, property: "src" },
+          ].forEach(({ id, property }) => {
+            const element = document.getElementById(id);
+            element[property] = inputEvent.target.value;
+          });
+        }
 
-          // Set img src to file contents as Data URL
-          const reader = new FileReader();
-          reader.onload = ((_link) => (e) => {
-            _link.href = e.target.result;
-            document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src =
-              e.target.result;
-          })(link);
-          reader.readAsDataURL(file);
-
-          document.getElementsByTagName("head")[0].appendChild(link);
+        function onUpdateBackgroundColor(changeEvent) {
+          document.body.style.backgroundColor = changeEvent.target.value;
           editingStateDirty = true;
         }
 
@@ -1039,13 +1089,6 @@
 
         function getButtonId(label, editorId) {
           return `${slugify(label)}-${editorId}`;
-        }
-
-        function isImageFile(file) {
-          if (!file.type.startsWith("image/")) {
-            return false;
-          }
-          return true;
         }
 
         function addAtEndOfDocument(element) {
@@ -1097,6 +1140,21 @@
             .slice(1)
             .map((n) => parseInt(n, 10).toString(16).padStart(2, "0"))
             .join("")}`;
+        }
+
+        function isImageFile(file) {
+          if (!file.type.startsWith("image/")) {
+            return false;
+          }
+          return true;
+        }
+
+        function setFileAsDataURL(file, element, property = "src") {
+          const reader = new FileReader();
+          reader.onload = ((_element) => (event) => {
+            _element[property] = event.target.result;
+          })(element);
+          reader.readAsDataURL(file);
         }
       }
     </script>
