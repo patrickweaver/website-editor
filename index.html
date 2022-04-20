@@ -494,12 +494,12 @@
             const upateImageButton = {
               label: updateButtonLabel,
               initiallyDisabled: true,
-              updateElement: ({
+              updateElement: async ({
                 editorElement: imagePicker,
                 altTextEditor,
                 originalElement,
               }) => {
-                const updatedImage = addImage(
+                const updatedImage = await addImage(
                   imagePicker.id,
                   altTextEditor?.value,
                   originalElement
@@ -737,7 +737,7 @@
             .addEventListener("click", clearAddItemModal);
         }
 
-        function addImage(filePickerId, altText, originalElement) {
+        async function addImage(filePickerId, altText, originalElement) {
           const update = filePickerId !== ADD_ITEM_IMAGE_ID;
           const filePicker = document.getElementById(filePickerId);
           const file = filePicker.files[0];
@@ -762,7 +762,7 @@
 
           // Set img src to file contents as Data URL
           if (file) {
-            setFileAsDataURL(file, newElement);
+            newElement.src = await getDataURLFromFile(file);
           } else if (originalElement.src) {
             newElement.src = originalElement.src;
           } else {
@@ -1041,16 +1041,17 @@
           }
         }
 
-        function insertFavicon(file) {
+        async function insertFavicon(file) {
           const oldElement = document.querySelector(FAVICON_QUERY_SELECTOR);
           oldElement.remove();
           const newElement = document.createElement("link");
+          const dataURL = await getDataURLFromFile(file);
           newElement.rel = "icon";
-          setFileAsDataURL(file, newElement, "href");
+          newElement.href = dataURL;
           const faviconPreviewElement = document.getElementById(
             CURRENT_FAVICON_PREVIEW_ID
           );
-          setFileAsDataURL(file, faviconPreviewElement);
+          faviconPreviewElement.src = dataURL;
           document.getElementsByTagName("head")[0].appendChild(newElement);
           editingStateDirty = true;
         }
@@ -1149,12 +1150,13 @@
           return true;
         }
 
-        function setFileAsDataURL(file, element, property = "src") {
-          const reader = new FileReader();
-          reader.onload = ((_element) => (event) => {
-            _element[property] = event.target.result;
-          })(element);
-          reader.readAsDataURL(file);
+        async function getDataURLFromFile(file) {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
         }
       }
     </script>
