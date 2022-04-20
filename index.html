@@ -1017,7 +1017,7 @@
               id: CONFIRM_FAVICON_UPDATE_ID,
               onClick: (clickEvent) => {
                 updateHandler(true, UPDATE_METHODS.REMOVE);
-                confirmHandler(file);
+                insertFavicon(file);
               },
             },
           ];
@@ -1031,11 +1031,6 @@
               button.disabled = disabled;
               button[method]("click", i.onClick);
             });
-          }
-
-          function confirmHandler(file) {
-            insertFavicon(file);
-            editingStateDirty = true;
           }
 
           updateHandler(!validFile, UPDATE_METHODS.ADD);
@@ -1057,6 +1052,7 @@
           );
           setFileAsDataURL(file, faviconPreviewElement);
           document.getElementsByTagName("head")[0].appendChild(newElement);
+          editingStateDirty = true;
         }
 
         function onUpdateSocialImage(inputEvent) {
