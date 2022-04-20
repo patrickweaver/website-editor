@@ -251,6 +251,7 @@
         const UPDATE_FAVICON_ID = "update-favicon";
         const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
         const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
+        const FAVICON_QUERY_SELECTOR = "link[rel~='icon']";
         const CURRENT_SOCIAL_IMAGE_ID = "meta-image";
         const CURRENT_TWITTER_IMAGE_ID = "twitter-image";
         const CURRENT_SOCIAL_IMAGE_PREVIEW_ID = "current-social-image-preview";
@@ -305,8 +306,9 @@
           PROMPT_LINK_URL: "URL:",
         };
 
-        const currentFaviconURL =
-          document.querySelector("link[rel~='icon']").href;
+        const currentFaviconURL = document.querySelector(
+          FAVICON_QUERY_SELECTOR
+        ).href;
         const currentBackgroundColor = getBodyBackgroundColor();
         const { href: currentSocialImageURL, alt: currentSocialImageAlt } =
           document.getElementById(CURRENT_SOCIAL_IMAGE_ID);
@@ -652,7 +654,7 @@
         function activateImage(element) {
           makeActivator(EDITOR_TYPES.IMAGE)(element);
         }
-        document.querySelectorAll("img").forEach(activateImage);
+        document.querySelectorAll(IMG_ELEMENT).forEach(activateImage);
 
         /* Local Controls */
         let localControls = createElement("div");
@@ -684,7 +686,7 @@
           .addEventListener("change", onUpdateBackgorundColor);
         document
           .getElementById(UPDATE_FAVICON_ID)
-          .addEventListener("change", makeOnUpdateFaviconPicker());
+          .addEventListener("change", onUpdateFaviconPicker);
 
         /* Add Content */
         function showNewContentModal() {
@@ -986,73 +988,57 @@
           return editElementLabel;
         }
 
-        function makeOnUpdateFaviconPicker() {
-          return makeUpdateMetaImagePicker({
-            cancelButtonId: CANCEL_FAVICON_UPDATE_ID,
-            confirmButtonId: CONFIRM_FAVICON_UPDATE_ID,
-            querySelector: "link[rel~='icon']",
-            insertHandler: insertFavicon,
-          });
-        }
+        function onUpdateFaviconPicker(changeEvent) {
+          const file = changeEvent.target.files[0];
+          const validFile = isImageFile(file);
 
-        function makeUpdateMetaImagePicker({
-          cancelButtonId,
-          confirmButtonId,
-          querySelector,
-          insertHandler,
-        }) {
-          return (changeEvent) => {
-            const file = changeEvent.target.files[0];
-            const validFile = isImageFile(file);
-
-            const UPDATE_METHODS = {
-              REMOVE: "removeEventListener",
-              ADD: "addEventListener",
-            };
-
-            const updateButtons = [
-              {
-                id: cancelButtonId,
-                onClick: (clickEvent) => {
-                  updateHandler(true, UPDATE_METHODS.REMOVE);
-                },
-              },
-              {
-                id: confirmButtonId,
-                onClick: (clickEvent) => {
-                  updateHandler(true, UPDATE_METHODS.REMOVE);
-                  confirmHandler(file);
-                },
-              },
-            ];
-
-            function updateHandler(disabled, method) {
-              if (disabled) {
-                changeEvent.target.value = "";
-              }
-              updateButtons.forEach((i) => {
-                const button = document.getElementById(i.id);
-                button.disabled = disabled;
-                button[method]("click", i.onClick);
-              });
-            }
-
-            function confirmHandler(file) {
-              insertHandler(file);
-              editingStateDirty = true;
-            }
-
-            updateHandler(!validFile, UPDATE_METHODS.ADD);
-
-            if (!validFile) {
-              alert(STRINGS.ERROR_IMAGE_ONLY);
-              return null;
-            }
+          const UPDATE_METHODS = {
+            REMOVE: "removeEventListener",
+            ADD: "addEventListener",
           };
+
+          const updateButtons = [
+            {
+              id: CANCEL_FAVICON_UPDATE_ID,
+              onClick: (clickEvent) => {
+                updateHandler(true, UPDATE_METHODS.REMOVE);
+              },
+            },
+            {
+              id: CONFIRM_FAVICON_UPDATE_ID,
+              onClick: (clickEvent) => {
+                updateHandler(true, UPDATE_METHODS.REMOVE);
+                confirmHandler(file);
+              },
+            },
+          ];
+
+          function updateHandler(disabled, method) {
+            if (disabled) {
+              changeEvent.target.value = "";
+            }
+            updateButtons.forEach((i) => {
+              const button = document.getElementById(i.id);
+              button.disabled = disabled;
+              button[method]("click", i.onClick);
+            });
+          }
+
+          function confirmHandler(file) {
+            insertFavicon(file);
+            editingStateDirty = true;
+          }
+
+          updateHandler(!validFile, UPDATE_METHODS.ADD);
+
+          if (!validFile) {
+            alert(STRINGS.ERROR_IMAGE_ONLY);
+            return null;
+          }
         }
 
         function insertFavicon(file) {
-          const oldElement = document.querySelector(querySelector);
+          const oldElement = document.querySelector(FAVICON_QUERY_SELECTOR);
           oldElement.remove();
           const newElement = document.createElement("link");
           newElement.rel = "icon";
@@ -1087,13 +1073,6 @@
 
         function getButtonId(label, editorId) {
           return `${slugify(label)}-${editorId}`;
-        }
-
-        function isImageFile(file) {
-          if (!file.type.startsWith("image/")) {
-            return false;
-          }
-          return true;
         }
 
         function addAtEndOfDocument(element) {
@@ -1145,6 +1124,13 @@
             .slice(1)
             .map((n) => parseInt(n, 10).toString(16).padStart(2, "0"))
             .join("")}`;
+        }
+
+        function isImageFile(file) {
+          if (!file.type.startsWith("image/")) {
+            return false;
+          }
+          return true;
         }
 
         function setFileAsDataURL(file, element, property = "src") {
