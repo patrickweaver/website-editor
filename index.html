@@ -252,6 +252,7 @@
         const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
         const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
         const CURRENT_SOCIAL_IMAGE_ID = "meta-image";
+        const CURRENT_TWITTER_IMAGE_ID = "twitter-image";
         const CURRENT_SOCIAL_IMAGE_PREVIEW_ID = "current-social-image-preview";
         const UPDATE_SOCIAL_IMAGE_ID = "update-social-image";
         const CANCEL_SOCIAL_IMAGE_UPDATE_ID = "cancel-social-image-update";
@@ -386,7 +387,7 @@
               >
             </figure>
             <label for="${UPDATE_SOCIAL_IMAGE_ID}">Update Social Image</label>
-            <input id="${UPDATE_SOCIAL_IMAGE_ID}" type="file" />
+            <input id="${UPDATE_SOCIAL_IMAGE_ID}" type="text" />
             <div class="${EDIT_BUTTONS_CLASS}">
               <button id="${CANCEL_SOCIAL_IMAGE_UPDATE_ID}" disabled>${
           STRINGS.BUTTON_CANCEL
@@ -684,9 +685,6 @@
         document
           .getElementById(UPDATE_FAVICON_ID)
           .addEventListener("change", makeOnUpdateFaviconPicker());
-        document
-          .getElementById(UPDATE_SOCIAL_IMAGE_ID)
-          .addEventListener("change", onUpdateSocialImagePicker);
 
         /* Add Content */
         function showNewContentModal() {
@@ -753,12 +751,7 @@
 
           // Set img src to file contents as Data URL
           if (file) {
-            const reader = new FileReader();
-            reader.onload = (
-              (_newElement) => (e) =>
-                (_newElement.src = e.target.result)
-            )(newElement);
-            reader.readAsDataURL(file);
+            setFileAsDataURL(file, newElement);
           } else if (originalElement.src) {
             newElement.src = originalElement.src;
           } else {
@@ -1002,15 +995,6 @@
           });
         }
 
-        function makeOnUpdateSocialImagePicker() {
-          return makeUpdateMetaImagePicker({
-            cancelButtonId: CANCEL_SOCIAL_IMAGE_UPDATE_ID,
-            confirmButtonId: CONFIRM_SOCIAL_IMAGE_UPDATE_ID,
-            querySelector: "#meta-image",
-            insertHandler: insertSocialImage,
-          });
-        }
-
         function makeUpdateMetaImagePicker({
           cancelButtonId,
           confirmButtonId,
@@ -1054,8 +1038,6 @@
             }
 
             function confirmHandler(file) {
-              let oldElement = document.querySelector(querySelector);
-              oldElement.remove();
               insertHandler(file);
               editingStateDirty = true;
             }
@@ -1070,22 +1052,16 @@
         }
 
         function insertFavicon(file) {
-          let newElement = document.createElement("link");
+          const oldElement = document.querySelector(querySelector);
+          oldElement.remove();
+          const newElement = document.createElement("link");
           newElement.rel = "icon";
-          newElement.file = file;
-          // Set img src to file contents as Data URL
-          const reader = new FileReader();
-          reader.onload = ((_newElement) => (e) => {
-            _newElement.href = e.target.result;
-            document.getElementById(CURRENT_FAVICON_PREVIEW_ID).src =
-              e.target.result;
-          })(newElement);
-          reader.readAsDataURL(file);
+          setFileAsDataURL(file, newElement, "href");
+          const faviconPreviewElement = document.getElementById(
+            CURRENT_FAVICON_PREVIEW_ID
+          );
+          setFileAsDataURL(file, faviconPreviewElement);
           document.getElementsByTagName("head")[0].appendChild(newElement);
-        }
-
-        function insertSocialImage(file) {
-          // TODO
         }
 
         function onUpdateBackgorundColor(changeEvent) {
@@ -1169,6 +1145,14 @@
             .slice(1)
             .map((n) => parseInt(n, 10).toString(16).padStart(2, "0"))
             .join("")}`;
+        }
+
+        function setFileAsDataURL(file, element, property = "src") {
+          const reader = new FileReader();
+          reader.onload = ((_element) => (event) => {
+            _element[property] = event.target.result;
+          })(element);
+          reader.readAsDataURL(file);
         }
       }
     </script>
