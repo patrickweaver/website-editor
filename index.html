@@ -316,7 +316,7 @@
           },
           PLACEHOLDER_TEXT: "Your text here",
           PROMPT_LINK_URL: "URL:",
-          MISSING_SOCIAL_IMAGE: "&nbsp;Social Image is not set.",
+          MISSING_SOCIAL_IMAGE_ALT: "&nbsp;Social Image is not set.",
         };
 
         const currentFaviconURL = document.querySelector(
@@ -397,7 +397,7 @@
                 alt="${
                   currentSocialImageAlt ?? currentSocialImageURL
                     ? ""
-                    : STRINGS.MISSING_SOCIAL_IMAGE
+                    : STRINGS.MISSING_SOCIAL_IMAGE_ALT
                 }"
               >
             </figure>
