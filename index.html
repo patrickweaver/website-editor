@@ -58,6 +58,10 @@
       body {
         font-family: "Arial", sans-serif;
         margin: 2rem;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        justify-content: flex-start;
       }
 
       input,
@@ -81,6 +85,7 @@
       img {
         display: block;
         margin: 1rem 0;
+        align-self: flex-start;
       }
 
       .color-picker {
@@ -129,10 +134,16 @@
 
       #local-controls {
         background-color: var(--local-controls-bg);
-        margin: 4rem 0 1rem;
+        text-align: left;
+        margin: 4rem auto 1rem;
         padding: 0.5rem 1rem;
         max-width: 600px;
         outline: 1px dashed var(--local-controls-border-3);
+      }
+
+      #local-controls fieldset label,
+      #local-controls fieldset input {
+        display: inline-block;
       }
 
       #local-controls figure {
@@ -271,6 +282,7 @@
         const CURRENT_SOCIAL_IMAGE_PREVIEW_ID = "current-social-image-preview";
         const UPDATE_SOCIAL_IMAGE_ID = "update-social-image";
         const UPDATE_BACKGROUND_COLOR_ID = "update-background-color";
+        const UPDATE_TEXT_ALIGN_ID = "update-text-align";
         const COLOR_PICKER_CLASS = "color-picker";
         const SAVE_CHANGES_ID = "save-changes";
         const CLONE_LABEL = "Original Element";
@@ -366,6 +378,29 @@
           <div class="controls-section">
             <h4>Background Color</h4>
             <input type="color" value="${currentBackgroundColor}" class="${COLOR_PICKER_CLASS}" id="${UPDATE_BACKGROUND_COLOR_ID}" />
+          </div>
+
+          <div class="controls-section">
+            <h4>Text Alignment</h2>
+            <fieldset id="${UPDATE_TEXT_ALIGN_ID}">
+                <legend>Select an option</legend>
+                <div>
+                  <input type="radio" id="text-left" name="text-align" value="left"
+                        checked>
+                  <label for="text-left">Left</label>
+                </div>
+
+                <div>
+                  <input type="radio" id="text-right" name="text-align" value="center">
+                  <label for="text-right">Center</label>
+                </div>
+
+                <div>
+                  <input type="radio" id="text-center" name="text-align" value="right">
+                  <label for="text-center">Right</label>
+                </div>
+            </fieldset>
+
           </div>
 
           <div class="controls-section">
@@ -690,6 +725,9 @@
         document
           .getElementById(UPDATE_BACKGROUND_COLOR_ID)
           .addEventListener("change", onUpdateBackgroundColor);
+        document
+          .getElementById(UPDATE_TEXT_ALIGN_ID)
+          .addEventListener("change", onUpdateTextAlign);
         document
           .getElementById(UPDATE_FAVICON_ID)
           .addEventListener("change", onUpdateFaviconPicker);
@@ -1069,6 +1107,21 @@
 
         function onUpdateBackgroundColor(changeEvent) {
           document.body.style.backgroundColor = changeEvent.target.value;
+          editingStateDirty = true;
+        }
+
+        function onUpdateTextAlign(changeEvent) {
+          const { value } = changeEvent.target;
+          let flexValue = value;
+          const flexValues = {
+            left: "flex-start",
+            center: "center",
+            right: "flex-end"
+          }
+          document.body.style.textAlign = value;
+          document.querySelectorAll("body > img").forEach((i) => {
+            i.style.alignSelf = flexValues[value];
+          })
           editingStateDirty = true;
         }
 
