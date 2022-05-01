@@ -236,7 +236,7 @@
       }
     </style>
   </head>
-  <body style="background-color: #dda0dd; align-items: flex-start;">
+  <body style="background-color: rgb(220, 160, 220); text-align: left; align-items: flex-start;">
     <h1>Website</h1>
 
     <h2>About Me</h2>
@@ -887,7 +887,14 @@
               <head>
                 ${document.head.innerHTML}
               </head>
-              <body style="background-color: ${getBodyBackgroundColor()}">
+              <body
+                style="background-color: ${
+                  getBodyBackgroundColor()
+                }; text-align: ${
+                  document.body.style.textAlign
+                }; align-items: ${
+                  document.body.style.alignItems
+                };">
                 ${document.body.innerHTML}
               </body>
             </html>
@@ -1185,6 +1192,7 @@
         }
 
         // https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
+        // Hex is needed for <input type="color" />
         function rgb2hex(rgb) {
           return `#${rgb
             .match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/)
