@@ -282,6 +282,8 @@
         const CURRENT_SOCIAL_IMAGE_PREVIEW_ID = "current-social-image-preview";
         const UPDATE_SOCIAL_IMAGE_ID = "update-social-image";
         const UPDATE_BACKGROUND_COLOR_ID = "update-background-color";
+        const FULL_WIDTH_CHECKBOX_ID = "update-full-width";
+        const WIDTH_SLIDER_ID = "update-body-width";
         const UPDATE_TEXT_ALIGN_ID = "update-text-align";
         const COLOR_PICKER_CLASS = "color-picker";
         const SAVE_CHANGES_ID = "save-changes";
@@ -379,6 +381,32 @@
             <h4>Background Color</h4>
             <input type="color" value="${currentBackgroundColor}" class="${COLOR_PICKER_CLASS}" id="${UPDATE_BACKGROUND_COLOR_ID}" />
           </div>
+
+          <div class="controls-section">
+            <h4>Body Width</h4>
+            <label for="${FULL_WIDTH_CHECKBOX_ID}">Full Width</label>
+            <input type="checkbox" id="${FULL_WIDTH_CHECKBOX_ID}" />
+            <label for="${WIDTH_SLIDER_ID}">Body Width</label>
+            <input
+              type="range"
+              id="${WIDTH_SLIDER_ID}"
+              min="200"
+              max="1920"
+              value="800"
+              list="tickmarks" />
+            <datalist id="tickmarks">
+              <option value="200" label="200px" />
+              <option value="300" label="300px" />
+              <option value="400" label="400px" />
+              <option value="500" label="500px" />
+              <option value="600" label="640px" />
+              <option value="800" label ="800px" />
+              <option value="1000" label="1000px" />
+              <option value="1200" label="1200px" />
+              <option value="1400" label="1400px" />
+              <option value="1700" label="1700px" />
+              <option value="1920" label="1920px" />
+            </datalist>
 
           <div class="controls-section">
             <h4>Text Alignment</h2>
@@ -725,6 +753,9 @@
         document
           .getElementById(UPDATE_BACKGROUND_COLOR_ID)
           .addEventListener("change", onUpdateBackgroundColor);
+        document
+          .getElementById(FULL_WIDTH_CHECKBOX_ID)
+          .addEventListener("change", onUpdateFullWidth);
         document
           .getElementById(UPDATE_TEXT_ALIGN_ID)
           .addEventListener("change", onUpdateTextAlign);
@@ -1115,6 +1146,11 @@
         function onUpdateBackgroundColor(changeEvent) {
           document.body.style.backgroundColor = changeEvent.target.value;
           editingStateDirty = true;
+        }
+
+        function onUpdateFullWidth(changeEvent) {
+          document.getElementById(WIDTH_SLIDER_ID).disabled = true;
+          
         }
 
         function onUpdateTextAlign(changeEvent) {
