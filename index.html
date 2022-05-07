@@ -55,6 +55,10 @@
         --note-bg: #fffce8;
       }
 
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         font-family: "Arial", sans-serif;
         margin: 2rem;
@@ -121,8 +125,29 @@
       }
 
       label.edit,
-      input.edit {
+      input.edit,
+      fieldset.edit,
+      textarea.edit {
         width: Calc(100% - 1rem);
+      }
+
+      fieldset.edit > div {
+        line-height: 2rem;
+      }
+
+      fieldset.edit > div > label {
+        margin: 0 5px;
+      }
+
+      select.edit {
+        padding: 0.25rem;
+        min-width: 4rem;
+      }
+
+      label.edit,
+      input.edit,
+      select.edit,
+      fieldset.edit {
         margin-bottom: 0.5rem;
       }
 
@@ -346,9 +371,11 @@
           TEXT: "text",
           HEADING: "heading",
           HEADING_LEVEL: "heading-level",
+          ALIGN: "align",
           PARAGRAPH: "paragraph",
           IMAGE: "image",
           IMAGE_ALT_TEXT: "image-alt",
+          ALIGN: "align",
         };
 
         const STRINGS = {
@@ -367,6 +394,7 @@
             [EDITOR_TYPES.HEADING_LEVEL]: "Edit heading level",
             [EDITOR_TYPES.IMAGE]: "Select an image",
             [EDITOR_TYPES.IMAGE_ALT_TEXT]: "Image alt text",
+            [EDITOR_TYPES.ALIGN]: "Edit alignment",
           },
           PLACEHOLDER_TEXT: "Your text here",
           PROMPT_LINK_URL: "URL:",
@@ -681,6 +709,7 @@
               tagPickerLabel,
               altEditor,
               altEditorLabel,
+              alignSelect,
             } = editElements;
 
             let buttonsContainerElement = createElement("div");
@@ -693,6 +722,8 @@
             if (isExistingElement) {
               const elementCloneContainer = createElement("div");
               elementCloneContainer.classList.add(CLONE_CONTAINER_CLASS);
+              elementCloneContainer.style.textAlign =
+                document.body.style.textAlign;
 
               elementCloneContainer.insertAdjacentElement(
                 "beforeend",
@@ -745,6 +776,7 @@
             const editElementsArray = [
               tagPickerLabel,
               tagPicker,
+              alignSelect,
               editorLabel,
               editor,
               altEditorLabel,
@@ -1047,6 +1079,8 @@
           if (type === EDITOR_TYPES.HEADING) {
             levelEditorId = `level-${id}`;
             var editLevelElement = createElement("select");
+            editLevelElement.id = levelEditorId;
+            editLevelElement.classList.add(EDIT_CLASS);
             HEADING_ELEMENTS.forEach((level) => {
               let headingLevelElement = createElement("option");
               headingLevelElement.innerHTML = level;
@@ -1074,12 +1108,37 @@
             makeEditorChangeListener(id, confirmButtonLabel)
           );
 
+          const alignEditorId = `align-${id}`;
+          const editAlignElement = createElement("fieldset");
+          editAlignElement.id = alignEditorId;
+          editAlignElement.classList.add(EDIT_CLASS);
+          const alignLegend = createElement("legend");
+          alignLegend.innerHTML = STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN];
+          editAlignElement.insertAdjacentElement("beforeend", alignLegend);
+          const alignOptions = ["Right", "Center", "Left"];
+          alignOptions.forEach((labelText, index, array) => {
+            const container = createElement("div");
+            const input = createElement("input");
+            const value = labelText.toLowerCase();
+            const id = `${alignEditorId}-option-${value}`;
+            input.id = id;
+            input.type = "radio";
+            input.name = alignEditorId;
+            input.value = value;
+            input.checked = index === array.length - 1;
+            const label = createEditorLabel(id, null, labelText);
+            container.insertAdjacentElement("afterbegin", label);
+            container.insertAdjacentElement("afterbegin", input);
+            editAlignElement.insertAdjacentElement("afterbegin", container);
+          });
+
           const editElementLabel = createEditorLabel(id, type);
           return {
             editor: editElement,
             editorLabel: editElementLabel,
             tagPicker: editLevelElement,
             tagPickerLabel: editLevelLabel,
+            alignSelect: editAlignElement,
           };
         }
 
@@ -1140,9 +1199,10 @@
           };
         }
 
-        function createEditorLabel(editorId, type) {
+        function createEditorLabel(editorId, type, text = null) {
           let editElementLabel = createElement("label");
-          editElementLabel.innerHTML = STRINGS.EDITOR_LABELS[type];
+          console.log(text, STRINGS?.EDITOR_LABELS?.[type] ?? text);
+          editElementLabel.innerHTML = STRINGS?.EDITOR_LABELS?.[type] ?? text;
           editElementLabel.htmlFor = editorId;
           editElementLabel.classList.add(EDIT_CLASS);
           return editElementLabel;
