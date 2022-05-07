@@ -55,10 +55,6 @@
         --note-bg: #fffce8;
       }
 
-      html {
-        background-color: white;
-      }
-
       body {
         font-family: "Arial", sans-serif;
         margin: 2rem;
@@ -147,7 +143,6 @@
         text-align: left;
         margin: 1rem;
         padding: 0.5rem 1rem;
-        left: 0;
         max-width: 600px;
         outline: 1px dashed var(--local-controls-border-3);
       }
@@ -247,7 +242,13 @@
       }
     </style>
   </head>
-  <body style="background-color: rgb(220, 160, 220); text-align: left; align-items: flex-start;">
+  <body
+    style="
+      background-color: rgb(220, 160, 220);
+      text-align: left;
+      align-items: flex-start;
+    "
+  >
     <h1>Website</h1>
 
     <h2>About Me</h2>
@@ -414,12 +415,11 @@
                 <option value="300" label="300px" />
                 <option value="400" label="400px" />
                 <option value="500" label="500px" />
-                <option value="600" label="640px" />
+                <option value="640" label="640px" />
                 <option value="800" label ="800px" />
                 <option value="1000" label="1000px" />
                 <option value="1200" label="1200px" />
-                <option value="1400" label="1400px" />
-                <option value="1700" label="1700px" />
+                <option value="1500" label="1500px" />
                 <option value="1920" label="1920px" />
               </datalist>
             </div>
@@ -748,12 +748,12 @@
         let localControlsContainer = createElement("div");
         localControlsContainer.id = LOCAL_CONTROLS_CONTAINER_ID;
 
-
         function addLocalControls() {
           document
             .getElementById(END_OF_DOC_ID)
             .insertAdjacentElement("afterend", localControlsContainer);
-          document.getElementById(LOCAL_CONTROLS_CONTAINER_ID)
+          document
+            .getElementById(LOCAL_CONTROLS_CONTAINER_ID)
             .insertAdjacentElement("afterbegin", localControls);
 
           document
@@ -943,13 +943,11 @@
                 ${document.head.innerHTML}
               </head>
               <body
-                style="background-color: ${
-                  getBodyBackgroundColor()
-                }; text-align: ${
-                  document.body.style.textAlign
-                }; align-items: ${
-                  document.body.style.alignItems
-                };">
+                style="
+                  background-color: ${getBodyBackgroundColor()};
+                  text-align: ${document.body.style.textAlign};
+                  align-items: ${document.body.style.alignItems};
+                ">
                 ${document.body.innerHTML}
               </body>
             </html>
@@ -1175,17 +1173,19 @@
         function onUpdateFullWidth(changeEvent) {
           const fullWidth = event.target.checked;
           document.getElementById(WIDTH_SLIDER_ID).disabled = fullWidth;
-          document.getElementById(WIDTH_SLIDER_CONTAINER_ID).style.display = fullWidth ? "none" : "block";
-          let bodyWidth = '100%';
+          document.getElementById(WIDTH_SLIDER_CONTAINER_ID).style.display =
+            fullWidth ? "none" : "block";
+          let bodyWidth = "100%";
           if (fullWidth) {
-            document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML = "Disabled";
+            document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML =
+              "Disabled";
           } else {
             bodyWidth = `${document.getElementById(WIDTH_SLIDER_ID).value}px`;
-            document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML = bodyWidth;
+            document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML =
+              bodyWidth;
           }
 
           document.body.style.width = bodyWidth;
-          
         }
 
         function onUpdateWidth(inputEvent) {
@@ -1200,7 +1200,7 @@
             left: "flex-start",
             center: "center",
             right: "flex-end",
-          }
+          };
           document.body.style.textAlign = value;
           document.body.style.alignItems = flexClasses[value];
           editingStateDirty = true;
