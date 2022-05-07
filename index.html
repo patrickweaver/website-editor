@@ -247,13 +247,36 @@
       background-color: rgb(220, 160, 220);
       text-align: left;
       align-items: flex-start;
+      width: 800px;
     "
   >
     <h1>Website</h1>
 
     <h2>About Me</h2>
 
-    <p>I can update this website locally in my browser.</p>
+    <p>
+      You can update this website in your browser when viewing it as a local
+      file. Here is some text from Don Quixote long enough to wrap so that it is
+      easy to see the width of the body element: In a village of La Mancha, the
+      name of which I have no desire to call to mind, there lived not long since
+      one of those gentlemen that keep a lance in the lance-rack, an old
+      buckler, a lean hack, and a greyhound for coursing. An olla of rather more
+      beef than mutton, a salad on most nights, scraps on Saturdays, lentils on
+      Fridays, and a pigeon or so extra on Sundays, made away with
+      three-quarters of his income. The rest of it went in a doublet of fine
+      cloth and velvet breeches and shoes to match for holidays, while on
+      week-days he made a brave figure in his best homespun. He had in his house
+      a housekeeper past forty, a niece under twenty, and a lad for the field
+      and market-place, who used to saddle the hack as well as handle the
+      bill-hook. The age of this gentleman of ours was bordering on fifty; he
+      was of a hardy habit, spare, gaunt-featured, a very early riser and a
+      great sportsman. They will have it his surname was Quixada or Quesada (for
+      here there is some difference of opinion among the authors who write on
+      the subject), although from reasonable conjectures it seems plain that he
+      was called Quexana. This, however, is of but little importance to our
+      tale; it will be enough not to stray a hair’s breadth from the truth in
+      the telling of it.
+    </p>
 
     <img
       src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='100' height='100'><text y='0.9em' font-size='90'>📓</text></svg>"
@@ -298,6 +321,8 @@
         const WIDTH_SLIDER_CONTAINER_ID = "update-body-width-container";
         const WIDTH_SLIDER_ID = "update-body-width";
         const WIDTH_SLIDER_VALUE_ID = "update-body-width-value";
+        const UPDATE_BODY_ALIGN_CONTAINER = "udpate-body-align-container";
+        const UPDATE_BODY_ALIGN_ID = "update-body-align";
         const UPDATE_TEXT_ALIGN_ID = "update-text-align";
         const COLOR_PICKER_CLASS = "color-picker";
         const SAVE_CHANGES_ID = "save-changes";
@@ -399,7 +424,7 @@
 
           <div class="controls-section">
             <h4>Body Width</h4>
-            <label for="${FULL_WIDTH_CHECKBOX_ID}">Use Full Screen Width</label>
+            <label for="${FULL_WIDTH_CHECKBOX_ID}">Use Full Window Width</label>
             <input type="checkbox" id="${FULL_WIDTH_CHECKBOX_ID}" />
             <div id="${WIDTH_SLIDER_CONTAINER_ID}">
               <label for="${WIDTH_SLIDER_ID}">Fixed Body Width: <span id="${WIDTH_SLIDER_VALUE_ID}">800px</span></label>
@@ -424,10 +449,36 @@
               </datalist>
             </div>
 
+          <div class="controls-section" id="${UPDATE_BODY_ALIGN_CONTAINER}">
+            <h4>Body Alignment</h2>
+            <fieldset id="${UPDATE_BODY_ALIGN_ID}">
+                <legend>
+                  Select an option for aligning the body of the page on the
+                  window
+                </legend>
+                <div>
+                  <input type="radio" id="body-left" name="body-align" value="left"
+                        checked>
+                  <label for="body-left">Left</label>
+                </div>
+
+                <div>
+                  <input type="radio" id="body-center" name="body-align" value="center">
+                  <label for="body-center">Center</label>
+                </div>
+
+                <div>
+                  <label><em>Right aligned body is not supported.</em></label>
+                </div>
+            </fieldset>
+          </div>
+
           <div class="controls-section">
             <h4>Text Alignment</h2>
             <fieldset id="${UPDATE_TEXT_ALIGN_ID}">
-                <legend>Select an option</legend>
+                <legend>
+                  Select an option for aligning the text withing the body
+                </legend>
                 <div>
                   <input type="radio" id="text-left" name="text-align" value="left"
                         checked>
@@ -435,16 +486,15 @@
                 </div>
 
                 <div>
-                  <input type="radio" id="text-right" name="text-align" value="center">
-                  <label for="text-right">Center</label>
+                  <input type="radio" id="text-center" name="text-align" value="center">
+                  <label for="text-center">Center</label>
                 </div>
 
                 <div>
-                  <input type="radio" id="text-center" name="text-align" value="right">
-                  <label for="text-center">Right</label>
+                  <input type="radio" id="text-right" name="text-align" value="right">
+                  <label for="text-right">Right</label>
                 </div>
             </fieldset>
-
           </div>
 
           <div class="controls-section">
@@ -780,6 +830,9 @@
         document
           .getElementById(WIDTH_SLIDER_ID)
           .addEventListener("input", onUpdateWidth);
+        document
+          .getElementById(UPDATE_BODY_ALIGN_ID)
+          .addEventListener("change", onUpdateBodyAlign);
         document
           .getElementById(UPDATE_TEXT_ALIGN_ID)
           .addEventListener("change", onUpdateTextAlign);
@@ -1173,25 +1226,44 @@
         function onUpdateFullWidth(changeEvent) {
           const fullWidth = event.target.checked;
           document.getElementById(WIDTH_SLIDER_ID).disabled = fullWidth;
+          document.getElementById(UPDATE_BODY_ALIGN_ID).disabled = fullWidth;
           document.getElementById(WIDTH_SLIDER_CONTAINER_ID).style.display =
             fullWidth ? "none" : "block";
-          let bodyWidth = "100%";
+          document.getElementById(UPDATE_BODY_ALIGN_CONTAINER).style.display =
+            fullWidth ? "none" : "block";
+          let bodyWidth;
+          let bodyMargin;
           if (fullWidth) {
+            bodyWidth = "calc(100% - 4rem)";
+            bodyMargin = "2rem";
             document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML =
               "Disabled";
           } else {
             bodyWidth = `${document.getElementById(WIDTH_SLIDER_ID).value}px`;
+            onUpdateBodyAlign();
             document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML =
               bodyWidth;
           }
 
           document.body.style.width = bodyWidth;
+          document.body.style.margin = bodyMargin;
         }
 
         function onUpdateWidth(inputEvent) {
           const value = `${event.target.value}px`;
           document.body.style.width = value;
           document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML = value;
+        }
+
+        function onUpdateBodyAlign(_changeEvent) {
+          const { value } = document.querySelector(
+            "input[type='radio'][name='body-align']:checked"
+          );
+          if (value === "left") {
+            document.body.style.margin = "2rem";
+          } else if (value === "center") {
+            document.body.style.margin = "2rem auto";
+          }
         }
 
         function onUpdateTextAlign(changeEvent) {
