@@ -55,6 +55,10 @@
         --note-bg: #fffce8;
       }
 
+      html {
+        background-color: white;
+      }
+
       body {
         font-family: "Arial", sans-serif;
         margin: 2rem;
@@ -132,11 +136,18 @@
         padding: 0.5rem;
       }
 
+      #local-controls-container {
+        width: 100%;
+        text-align: left;
+        margin-top: 3rem;
+      }
+
       #local-controls {
         background-color: var(--local-controls-bg);
         text-align: left;
-        margin: 4rem auto 1rem;
+        margin: 1rem;
         padding: 0.5rem 1rem;
+        left: 0;
         max-width: 600px;
         outline: 1px dashed var(--local-controls-border-3);
       }
@@ -283,7 +294,9 @@
         const UPDATE_SOCIAL_IMAGE_ID = "update-social-image";
         const UPDATE_BACKGROUND_COLOR_ID = "update-background-color";
         const FULL_WIDTH_CHECKBOX_ID = "update-full-width";
+        const WIDTH_SLIDER_CONTAINER_ID = "update-body-width-container";
         const WIDTH_SLIDER_ID = "update-body-width";
+        const WIDTH_SLIDER_VALUE_ID = "update-body-width-value";
         const UPDATE_TEXT_ALIGN_ID = "update-text-align";
         const COLOR_PICKER_CLASS = "color-picker";
         const SAVE_CHANGES_ID = "save-changes";
@@ -296,6 +309,7 @@
         const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
         const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
         const END_OF_DOC_ID = "end-of-document";
+        const LOCAL_CONTROLS_CONTAINER_ID = "local-controls-container";
         const LOCAL_CONTROLS_ID = "local-controls";
         const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
         const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
@@ -384,29 +398,31 @@
 
           <div class="controls-section">
             <h4>Body Width</h4>
-            <label for="${FULL_WIDTH_CHECKBOX_ID}">Full Width</label>
+            <label for="${FULL_WIDTH_CHECKBOX_ID}">Use Full Screen Width</label>
             <input type="checkbox" id="${FULL_WIDTH_CHECKBOX_ID}" />
-            <label for="${WIDTH_SLIDER_ID}">Body Width</label>
-            <input
-              type="range"
-              id="${WIDTH_SLIDER_ID}"
-              min="200"
-              max="1920"
-              value="800"
-              list="tickmarks" />
-            <datalist id="tickmarks">
-              <option value="200" label="200px" />
-              <option value="300" label="300px" />
-              <option value="400" label="400px" />
-              <option value="500" label="500px" />
-              <option value="600" label="640px" />
-              <option value="800" label ="800px" />
-              <option value="1000" label="1000px" />
-              <option value="1200" label="1200px" />
-              <option value="1400" label="1400px" />
-              <option value="1700" label="1700px" />
-              <option value="1920" label="1920px" />
-            </datalist>
+            <div id="${WIDTH_SLIDER_CONTAINER_ID}">
+              <label for="${WIDTH_SLIDER_ID}">Fixed Body Width: <span id="${WIDTH_SLIDER_VALUE_ID}">800px</span></label>
+              <input
+                type="range"
+                id="${WIDTH_SLIDER_ID}"
+                min="200"
+                max="1920"
+                value="800"
+                list="tickmarks" />
+              <datalist id="tickmarks">
+                <option value="200" label="200px" />
+                <option value="300" label="300px" />
+                <option value="400" label="400px" />
+                <option value="500" label="500px" />
+                <option value="600" label="640px" />
+                <option value="800" label ="800px" />
+                <option value="1000" label="1000px" />
+                <option value="1200" label="1200px" />
+                <option value="1400" label="1400px" />
+                <option value="1700" label="1700px" />
+                <option value="1920" label="1920px" />
+              </datalist>
+            </div>
 
           <div class="controls-section">
             <h4>Text Alignment</h2>
@@ -729,11 +745,16 @@
         let localControls = createElement("div");
         localControls.id = LOCAL_CONTROLS_ID;
         localControls.innerHTML = LOCAL_CONTROLS_HTML;
+        let localControlsContainer = createElement("div");
+        localControlsContainer.id = LOCAL_CONTROLS_CONTAINER_ID;
+
 
         function addLocalControls() {
           document
             .getElementById(END_OF_DOC_ID)
-            .insertAdjacentElement("afterend", localControls);
+            .insertAdjacentElement("afterend", localControlsContainer);
+          document.getElementById(LOCAL_CONTROLS_CONTAINER_ID)
+            .insertAdjacentElement("afterbegin", localControls);
 
           document
             .getElementById(ADD_ITEM_ID)
@@ -756,6 +777,9 @@
         document
           .getElementById(FULL_WIDTH_CHECKBOX_ID)
           .addEventListener("change", onUpdateFullWidth);
+        document
+          .getElementById(WIDTH_SLIDER_ID)
+          .addEventListener("input", onUpdateWidth);
         document
           .getElementById(UPDATE_TEXT_ALIGN_ID)
           .addEventListener("change", onUpdateTextAlign);
@@ -1149,8 +1173,25 @@
         }
 
         function onUpdateFullWidth(changeEvent) {
-          document.getElementById(WIDTH_SLIDER_ID).disabled = true;
+          const fullWidth = event.target.checked;
+          document.getElementById(WIDTH_SLIDER_ID).disabled = fullWidth;
+          document.getElementById(WIDTH_SLIDER_CONTAINER_ID).style.display = fullWidth ? "none" : "block";
+          let bodyWidth = '100%';
+          if (fullWidth) {
+            document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML = "Disabled";
+          } else {
+            bodyWidth = `${document.getElementById(WIDTH_SLIDER_ID).value}px`;
+            document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML = bodyWidth;
+          }
+
+          document.body.style.width = bodyWidth;
           
+        }
+
+        function onUpdateWidth(inputEvent) {
+          const value = `${event.target.value}px`;
+          document.body.style.width = value;
+          document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML = value;
         }
 
         function onUpdateTextAlign(changeEvent) {
