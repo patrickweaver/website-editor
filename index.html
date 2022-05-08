@@ -76,6 +76,15 @@
         margin: 0.25rem 0;
       }
 
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        width: 100%;
+      }
+
       input.text-input {
         width: Calc(100% - 1rem - 4px); /* padding 0.5rem, border 2px */
       }
@@ -701,6 +710,7 @@
               content: originalContent,
               tagName,
               altTextContent,
+              style: element.style,
             });
             const {
               editor,
@@ -790,6 +800,10 @@
                 editorElement
               );
             });
+
+            alignSelect?.addEventListener("change", (e) =>
+              onUpdateElementAlign(e, element, elementClone)
+            );
 
             editor.focus();
             editor.select();
@@ -1074,6 +1088,7 @@
           confirmButtonLabel,
           content,
           tagName,
+          style,
         }) {
           let levelEditorId, editLevelLabel;
           if (type === EDITOR_TYPES.HEADING) {
@@ -1116,6 +1131,7 @@
           alignLegend.innerHTML = STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN];
           editAlignElement.insertAdjacentElement("beforeend", alignLegend);
           const alignOptions = ["Right", "Center", "Left", "Default"];
+          let foundCurrent = false;
           alignOptions.forEach((labelText, index, array) => {
             const container = createElement("div");
             const input = createElement("input");
@@ -1125,12 +1141,19 @@
             input.type = "radio";
             input.name = alignEditorId;
             input.value = value;
-            input.checked = index === array.length - 1;
+            if (style.textAlign === labelText.toLowerCase()) {
+              input.checked = true;
+              foundCurrent = true;
+            }
             const label = createEditorLabel(id, null, labelText);
             container.insertAdjacentElement("afterbegin", label);
             container.insertAdjacentElement("afterbegin", input);
             editAlignElement.insertAdjacentElement("afterbegin", container);
           });
+
+          if (!foundCurrent) {
+            editAlignElement.children[0].children[0].checked = true;
+          }
 
           const editElementLabel = createEditorLabel(id, type);
           return {
@@ -1201,7 +1224,6 @@
 
         function createEditorLabel(editorId, type, text = null) {
           let editElementLabel = createElement("label");
-          console.log(text, STRINGS?.EDITOR_LABELS?.[type] ?? text);
           editElementLabel.innerHTML = STRINGS?.EDITOR_LABELS?.[type] ?? text;
           editElementLabel.htmlFor = editorId;
           editElementLabel.classList.add(EDIT_CLASS);
@@ -1336,6 +1358,17 @@
           document.body.style.textAlign = value;
           document.body.style.alignItems = flexClasses[value];
           editingStateDirty = true;
+        }
+
+        function onUpdateElementAlign(changeEvent, element, elementClone) {
+          const { value } = changeEvent.target;
+          if (value === "default") {
+            elementClone.style.removeProperty("text-align");
+            element.style.removeProperty("text-align");
+          } else {
+            elementClone.style.textAlign = value;
+            element.style.textAlign = value;
+          }
         }
 
         function uniqueId(readableString) {
