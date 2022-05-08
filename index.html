@@ -62,10 +62,6 @@
       body {
         font-family: "Arial", sans-serif;
         margin: 2rem;
-        display: flex;
-        flex-direction: column;
-        text-align: left;
-        justify-content: flex-start;
       }
 
       input,
@@ -282,6 +278,9 @@
       text-align: left;
       align-items: flex-start;
       width: 800px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     "
   >
     <h1>Website</h1>
@@ -731,9 +730,11 @@
 
             if (isExistingElement) {
               const elementCloneContainer = createElement("div");
+              const { style } = document.body;
               elementCloneContainer.classList.add(CLONE_CONTAINER_CLASS);
-              elementCloneContainer.style.textAlign =
-                document.body.style.textAlign;
+              elementCloneContainer.style.textAlign = style.textAlign;
+              elementCloneContainer.style.display = style.display;
+              elementCloneContainer.style.flexDirection = style.flexDirection;
 
               elementCloneContainer.insertAdjacentElement(
                 "beforeend",
@@ -1170,6 +1171,7 @@
           type,
           confirmButtonLabel,
           altTextContent,
+          style,
         }) {
           const imagePicker = createElement("input");
           imagePicker.type = "file";
@@ -1194,11 +1196,52 @@
             altEditorId,
             EDITOR_TYPES.IMAGE_ALT_TEXT
           );
+
+          const alignEditorId = `align-${id}`;
+          const editAlignElement = createElement("fieldset");
+          editAlignElement.id = alignEditorId;
+          editAlignElement.classList.add(EDIT_CLASS);
+          const alignLegend = createElement("legend");
+          alignLegend.innerHTML = STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN];
+          editAlignElement.insertAdjacentElement("beforeend", alignLegend);
+          const alignOptions = ["Right", "Center", "Left", "Default"];
+          let foundCurrent = false;
+          alignOptions.forEach((labelText, index, array) => {
+            const container = createElement("div");
+            const input = createElement("input");
+            const value = labelText.toLowerCase();
+            const id = `${alignEditorId}-option-${value}`;
+            input.id = id;
+            input.type = "radio";
+            input.name = alignEditorId;
+            input.value = value;
+            const { alignSelf } = style;
+            if (
+              (alignSelf === "flex-start" &&
+                labelText.toLowerCase() === "left") ||
+              (alignSelf === "flex-end" &&
+                labelText.toLowerCase() === "right") ||
+              alignSelf === labelText.toLowerCase()
+            ) {
+              input.checked = true;
+              foundCurrent = true;
+            }
+            const label = createEditorLabel(id, null, labelText);
+            container.insertAdjacentElement("afterbegin", label);
+            container.insertAdjacentElement("afterbegin", input);
+            editAlignElement.insertAdjacentElement("afterbegin", container);
+          });
+
+          if (!foundCurrent) {
+            editAlignElement.children[0].children[0].checked = true;
+          }
+
           return {
             editor: imagePicker,
             editorLabel: imagePickerLabel,
             altEditor,
             altEditorLabel,
+            alignSelect: editAlignElement,
           };
         }
 
@@ -1362,13 +1405,34 @@
 
         function onUpdateElementAlign(changeEvent, element, elementClone) {
           const { value } = changeEvent.target;
+          const { tagName } = element;
           if (value === "default") {
             elementClone.style.removeProperty("text-align");
             element.style.removeProperty("text-align");
+            const { alignItems } = document.body.style;
+            elementClone.style.alignSelf = alignItems;
+            element.style.removeProperty("align-self");
           } else {
-            elementClone.style.textAlign = value;
-            element.style.textAlign = value;
+            if (tagName.toLowerCase() === IMG_ELEMENT) {
+              let flexValue = value;
+              flexValue =
+                value === "left"
+                  ? "flex-start"
+                  : value === "right"
+                  ? "flex-end"
+                  : value;
+              elementClone.style.alignSelf = flexValue;
+              element.style.alignSelf = flexValue;
+            } else if (
+              [...HEADING_ELEMENTS, PARAGRAPH_ELEMENT].some(
+                (i) => i === tagName.toLowerCase()
+              )
+            ) {
+              elementClone.style.textAlign = value;
+              element.style.textAlign = value;
+            }
           }
+          editingStateDirty = true;
         }
 
         function uniqueId(readableString) {
