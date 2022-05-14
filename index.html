@@ -640,7 +640,7 @@
                   tagNameSelect &&
                   tagName !== tagNameSelect.value.toLowerCase();
                 if (tagChanged) {
-                  updatedElement = createElement(tagNameSelect.value);
+                  updatedElement = createElement({ tag: tagNameSelect.value });
                   originalElement.insertAdjacentElement(
                     "beforebegin",
                     updatedElement
@@ -700,7 +700,7 @@
             types[EDITOR_TYPES.PARAGRAPH] = types.text;
             const type = types[editorType];
 
-            const editorId = uniqueId(type.idReadableString);
+            const editorId = getUniqueId(type.idReadableString);
 
             const editElements = type.createEditor({
               id: editorId,
@@ -721,20 +721,27 @@
               alignSelect,
             } = editElements;
 
-            let buttonsContainerElement = createElement("div");
-            buttonsContainerElement.classList.add(EDIT_BUTTONS_CLASS);
+            let buttonsContainerElement = createElement({
+              classList: [EDIT_BUTTONS_CLASS],
+            });
 
-            let editorContainerElement = createElement("div");
-            editorContainerElement.classList.add(EDIT_CONTAINER_CLASS);
+            let editorContainerElement = createElement({
+              classList: [EDIT_CONTAINER_CLASS],
+            });
+            editorContainerElement.classList.add();
             editorContainerElement.id = getEditorContainerId(editorId);
 
             if (isExistingElement) {
-              const elementCloneContainer = createElement("div");
-              const { style } = document.body;
-              elementCloneContainer.classList.add(CLONE_CONTAINER_CLASS);
-              elementCloneContainer.style.textAlign = style.textAlign;
-              elementCloneContainer.style.display = style.display;
-              elementCloneContainer.style.flexDirection = style.flexDirection;
+              const elementCloneContainer = createElement({
+                id: "clone-container",
+                uniqueId: true,
+                classList: [CLONE_CONTAINER_CLASS],
+                style: {
+                  textAlign: document.body.textAlign,
+                  display: document.body.display,
+                  flexDirection: document.body.flexDirection,
+                },
+              });
 
               elementCloneContainer.insertAdjacentElement(
                 "beforeend",
@@ -746,8 +753,10 @@
                 elementCloneContainer
               );
 
-              const elementCloneLabel = createElement("label");
-              elementCloneLabel.innerHTML = CLONE_LABEL;
+              const elementCloneLabel = createElement({
+                tag: "label",
+                innerHTML: CLONE_LABEL,
+              });
               elementCloneContainer.insertAdjacentElement(
                 "beforebegin",
                 elementCloneLabel
@@ -755,8 +764,10 @@
             }
 
             type.controls.forEach((i) => {
-              let buttonElement = createElement("button");
-              buttonElement.classList.add(`${slugify(i.label)}-button`);
+              let buttonElement = createElement({
+                tag: "button",
+                classList: [`${slugify(i.label)}-button`],
+              });
               buttonElement.id = getButtonId(i.label, editorId);
               buttonElement.disabled = i.initiallyDisabled;
               buttonElement.innerHTML = i.label;
@@ -811,6 +822,14 @@
           };
         }
 
+        function insertAdj(id, element, pos = "afterbegin") {
+          document.getElementById(id).insertAdjacentElement(pos, element);
+        }
+
+        function activate(id, callback, type = "change") {
+          document.getElementById(id).addEventListener(type, callback);
+        }
+
         /* Activate existing elements for editing */
         function makeActivator(type) {
           return function (element) {
@@ -818,44 +837,35 @@
           };
         }
 
-        // Headings
         function activateHeading(element) {
           makeActivator(EDITOR_TYPES.HEADING)(element);
         }
-        document
-          .querySelectorAll(HEADING_ELEMENTS.join(", "))
-          .forEach(activateHeading);
+        const headingElements = HEADING_ELEMENTS.join(", ");
+        document.querySelectorAll(headingElements).forEach(activateHeading);
 
-        // Paragraph
         function activateParagraph(element) {
           makeActivator(EDITOR_TYPES.PARAGRAPH)(element);
         }
         document.querySelectorAll(PARAGRAPH_ELEMENT).forEach(activateParagraph);
 
-        // Image
         function activateImage(element) {
           makeActivator(EDITOR_TYPES.IMAGE)(element);
         }
         document.querySelectorAll(IMG_ELEMENT).forEach(activateImage);
 
         /* Local Controls */
-        let localControls = createElement("div");
-        localControls.id = LOCAL_CONTROLS_ID;
-        localControls.innerHTML = LOCAL_CONTROLS_HTML;
-        let localControlsContainer = createElement("div");
-        localControlsContainer.id = LOCAL_CONTROLS_CONTAINER_ID;
+        let localControls = createElement({
+          id: LOCAL_CONTROLS_ID,
+          innerHTML: LOCAL_CONTROLS_HTML,
+        });
+        let localControlsContainer = createElement({
+          id: LOCAL_CONTROLS_CONTAINER_ID,
+        });
 
         function addLocalControls() {
-          document
-            .getElementById(END_OF_DOC_ID)
-            .insertAdjacentElement("afterend", localControlsContainer);
-          document
-            .getElementById(LOCAL_CONTROLS_CONTAINER_ID)
-            .insertAdjacentElement("afterbegin", localControls);
-
-          document
-            .getElementById(ADD_ITEM_ID)
-            .addEventListener("click", showNewContentModal);
+          insertAdj(END_OF_DOC_ID, localControlsContainer, "afterend");
+          insertAdj(LOCAL_CONTROLS_CONTAINER_ID, localControls);
+          activate(ADD_ITEM_ID, showNewContentModal, "click");
 
           window.addEventListener("beforeunload", function (event) {
             if (!DEV_MODE && editingStateDirty) {
@@ -866,10 +876,6 @@
         }
 
         addLocalControls();
-
-        function activate(id, callback, type = "change") {
-          document.getElementById(id).addEventListener(type, callback);
-        }
 
         /* Activate Controls on Existing Elements */
         activate(UPDATE_BACKGROUND_COLOR_ID, onUpdateBackgroundColor);
@@ -882,13 +888,11 @@
 
         /* Add Content */
         function showNewContentModal() {
-          let newContentModal = createElement("div");
-          newContentModal.id = NEW_CONTENT_MODAL_WRAPPER;
-          newContentModal.innerHTML = NEW_CONTENT_MODAL_HTML;
-
-          document
-            .getElementById(LOCAL_CONTROLS_ID)
-            .insertAdjacentElement("beforeend", newContentModal);
+          let newContentModal = createElement({
+            id: NEW_CONTENT_MODAL_WRAPPER,
+            innerHTML: NEW_CONTENT_MODAL_HTML,
+          });
+          insertAdj(LOCAL_CONTROLS_ID, newContentModal, "beforeend");
 
           function clearAddItemModal() {
             document.getElementById(NEW_CONTENT_MODAL_WRAPPER).remove();
@@ -901,23 +905,20 @@
             ADD_ITEM_IMAGE_ID,
           ];
           addTextItemButtonIds.forEach((buttonId) => {
-            document
-              .getElementById(buttonId)
-              .addEventListener("click", (event) => {
-                addItem(
-                  event.currentTarget.id.slice(
-                    ADD_ITEM_ID_PREFIX.length,
-                    event.currentTarget.id.length
-                  )
-                );
-                clearAddItemModal();
-              });
+            const callback = (event) => {
+              addItem(
+                event.currentTarget.id.slice(
+                  ADD_ITEM_ID_PREFIX.length,
+                  event.currentTarget.id.length
+                )
+              );
+              clearAddItemModal();
+            };
+            activate(buttonId, callback, "click");
           });
 
           // cancel Button
-          document
-            .getElementById(ADD_ITEM_CANCEL_ID)
-            .addEventListener("click", clearAddItemModal);
+          activate(ADD_ITEM_CANCEL_ID, clearAddItemModal, "click");
         }
 
         async function addImage(filePickerId, altText, originalElement) {
@@ -930,7 +931,7 @@
             alert(STRINGS.ERROR_IMAGE_ONLY);
             return null;
           }
-          const newElement = createElement("img");
+          const newElement = createElement({ tag: "img" });
           if (update) {
             // Add image above current image
             filePicker.parentElement.insertAdjacentElement(
@@ -972,7 +973,7 @@
             elementType = IMG_ELEMENT;
           }
 
-          const newElement = createElement(elementType);
+          const newElement = createElement({ tag: elementType });
           const editCallback = makeElementEventListener(type);
           if (
             type === EDITOR_TYPES.HEADING ||
@@ -1022,11 +1023,9 @@
         metaDataEditor(PAGE_LANG_INPUT_ID, "html-element", [], "lang");
 
         /* Save Changes */
-        document
-          .getElementById(SAVE_CHANGES_ID)
-          .addEventListener("click", async function (_event) {
-            localControls.remove();
-            const htmlSourceCode = `
+        const handleSaveChanges = async function (_event) {
+          localControls.remove();
+          const htmlSourceCode = `
             <!DOCTYPE html>
             <html lang="${document.documentElement.lang}"  id="html-element">
               <head>
@@ -1042,17 +1041,18 @@
               </body>
             </html>
           `;
-            try {
-              await saveFile(htmlSourceCode);
-            } catch (error) {
-              if (error?.message === "The user aborted a request.") {
-                // Error is just cancel button
-              } else {
-                alert(error?.message ?? "Error saving file.");
-              }
+          try {
+            await saveFile(htmlSourceCode);
+          } catch (error) {
+            if (error?.message === "The user aborted a request.") {
+              // Error is just cancel button
+            } else {
+              alert(error?.message ?? "Error saving file.");
             }
-            addLocalControls();
-          });
+          }
+          addLocalControls();
+        };
+        activate(SAVE_CHANGES_ID, handleSaveChanges, "click");
 
         // Chromium only
         // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/write
@@ -1083,14 +1083,17 @@
         }) {
           let levelEditorId, editLevelLabel;
           if (type === EDITOR_TYPES.HEADING) {
-            levelEditorId = `level-${id}`;
-            var editLevelElement = createElement("select");
-            editLevelElement.id = levelEditorId;
-            editLevelElement.classList.add(EDIT_CLASS);
+            var editLevelElement = createElement({
+              tag: "select",
+              id: `level-${id}`,
+              classList: [EDIT_CLASS],
+            });
             HEADING_ELEMENTS.forEach((level) => {
-              let headingLevelElement = createElement("option");
-              headingLevelElement.innerHTML = level;
-              headingLevelElement.value = level;
+              let headingLevelElement = createElement({
+                tag: "option",
+                innerHTML: level,
+                value: level,
+              });
               if (level.toLowerCase() === tagName) {
                 headingLevelElement.selected = "selected";
               }
@@ -1105,38 +1108,44 @@
             );
           }
 
-          let editElement = createElement("textarea");
-          editElement.id = id;
-          editElement.classList.add(EDIT_CLASS);
-          editElement.innerHTML = content;
+          let editElement = createElement({
+            tag: "textarea",
+            id,
+            classList: [EDIT_CLASS],
+            innerHTML: content,
+          });
           editElement.addEventListener(
             "input",
             makeEditorChangeListener(id, confirmButtonLabel)
           );
 
-          const alignEditorId = `align-${id}`;
-          const editAlignElement = createElement("fieldset");
-          editAlignElement.id = alignEditorId;
-          editAlignElement.classList.add(EDIT_CLASS);
-          const alignLegend = createElement("legend");
-          alignLegend.innerHTML = STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN];
+          const editAlignElement = createElement({
+            tag: "fieldset",
+            id: `align-${id}`,
+            classList: [EDIT_CLASS],
+          });
+          const alignLegend = createElement({
+            tag: "legend",
+            innerHTML: STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN],
+          });
           editAlignElement.insertAdjacentElement("beforeend", alignLegend);
           const alignOptions = ["Right", "Center", "Left", "Default"];
           let foundCurrent = false;
           alignOptions.forEach((labelText, index, array) => {
-            const container = createElement("div");
-            const input = createElement("input");
+            const container = createElement({ id: "cont", uniqueId: true });
             const value = labelText.toLowerCase();
-            const id = `${alignEditorId}-option-${value}`;
-            input.id = id;
-            input.type = "radio";
-            input.name = alignEditorId;
-            input.value = value;
+            const input = createElement({
+              tag: "input",
+              id: `${editAlignElement.id}-option-${value}`,
+              type: "radio",
+              name: editAlignElement.id,
+              value: value,
+            });
             if (style.textAlign === labelText.toLowerCase()) {
               input.checked = true;
               foundCurrent = true;
             }
-            const label = createEditorLabel(id, null, labelText);
+            const label = createEditorLabel(input.id, null, labelText);
             container.insertAdjacentElement("afterbegin", label);
             container.insertAdjacentElement("afterbegin", input);
             editAlignElement.insertAdjacentElement("afterbegin", container);
@@ -1163,48 +1172,56 @@
           altTextContent,
           style,
         }) {
-          const imagePicker = createElement("input");
-          imagePicker.type = "file";
-          imagePicker.id = id;
-          imagePicker.classList.add(EDIT_CLASS);
+          const imagePicker = createElement({
+            tag: "input",
+            type: "file",
+            id,
+            classList: [EDIT_CLASS],
+          });
           imagePicker.addEventListener(
             "change",
             makeEditorChangeListener(id, confirmButtonLabel)
           );
           const imagePickerLabel = createEditorLabel(id, type);
-          const altEditor = createElement("input");
-          altEditor.type = "text";
-          const altEditorId = `alt-text-${id}`;
-          altEditor.id = altEditorId;
-          altEditor.classList.add(EDIT_CLASS);
-          altEditor.value = altTextContent ?? "";
+          const altEditor = createElement({
+            tag: "input",
+            type: "text",
+            id: `alt-text-${id}`,
+            classList: [EDIT_CLASS],
+            value: altTextContent ?? "",
+          });
           altEditor.addEventListener(
             "input",
             makeEditorChangeListener(id, confirmButtonLabel)
           );
           const altEditorLabel = createEditorLabel(
-            altEditorId,
+            altEditor.id,
             EDITOR_TYPES.IMAGE_ALT_TEXT
           );
 
-          const alignEditorId = `align-${id}`;
-          const editAlignElement = createElement("fieldset");
-          editAlignElement.id = alignEditorId;
-          editAlignElement.classList.add(EDIT_CLASS);
-          const alignLegend = createElement("legend");
-          alignLegend.innerHTML = STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN];
+          const editAlignElement = createElement({
+            tag: "fieldset",
+            id: `align-${id}`,
+            classList: [EDIT_CLASS],
+          });
+          const alignLegend = createElement({
+            tag: "legend",
+            innerHTML: STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN],
+          });
           editAlignElement.insertAdjacentElement("beforeend", alignLegend);
           const alignOptions = ["Right", "Center", "Left", "Default"];
           let foundCurrent = false;
           alignOptions.forEach((labelText, index, array) => {
-            const container = createElement("div");
-            const input = createElement("input");
+            const container = createElement();
             const value = labelText.toLowerCase();
-            const id = `${alignEditorId}-option-${value}`;
-            input.id = id;
-            input.type = "radio";
-            input.name = alignEditorId;
-            input.value = value;
+            const input = createElement({
+              tag: "input",
+              value,
+              id: `${editAlignElement.id}-option-${value}`,
+              type: "radio",
+              name: editAlignElement.id,
+              value,
+            });
             const { alignSelf } = style;
             if (
               (alignSelf === "flex-start" &&
@@ -1216,7 +1233,7 @@
               input.checked = true;
               foundCurrent = true;
             }
-            const label = createEditorLabel(id, null, labelText);
+            const label = createEditorLabel(input.id, null, labelText);
             container.insertAdjacentElement("afterbegin", label);
             container.insertAdjacentElement("afterbegin", input);
             editAlignElement.insertAdjacentElement("afterbegin", container);
@@ -1256,11 +1273,12 @@
         }
 
         function createEditorLabel(editorId, type, text = null) {
-          let editElementLabel = createElement("label");
-          editElementLabel.innerHTML = STRINGS?.EDITOR_LABELS?.[type] ?? text;
-          editElementLabel.htmlFor = editorId;
-          editElementLabel.classList.add(EDIT_CLASS);
-          return editElementLabel;
+          return createElement({
+            tag: "label",
+            innerHTML: STRINGS?.EDITOR_LABELS?.[type] ?? text,
+            htmlFor: editorId,
+            classList: [EDIT_CLASS],
+          });
         }
 
         function onUpdateFaviconPicker(changeEvent) {
@@ -1310,7 +1328,7 @@
         async function insertFavicon(file) {
           const oldElement = document.querySelector(FAVICON_QUERY_SELECTOR);
           oldElement.remove();
-          const newElement = document.createElement("link");
+          const newElement = createElement({ tag: "link" });
           const dataURL = await getDataURLFromFile(file);
           newElement.rel = "icon";
           newElement.href = dataURL;
@@ -1397,10 +1415,10 @@
           const { value } = changeEvent.target;
           const { tagName } = element;
           if (value === "default") {
-            elementClone.style.removeProperty("text-align");
+            elementClone?.style?.removeProperty("text-align");
             element.style.removeProperty("text-align");
             const { alignItems } = document.body.style;
-            elementClone.style.alignSelf = alignItems;
+            elementClone?.style && (elementClone.style.alignSelf = alignItems);
             element.style.removeProperty("align-self");
           } else {
             if (tagName.toLowerCase() === IMG_ELEMENT) {
@@ -1411,26 +1429,49 @@
                   : value === "right"
                   ? "flex-end"
                   : value;
-              elementClone.style.alignSelf = flexValue;
+              elementClone?.style && (elementClone.style.alignSelf = flexValue);
               element.style.alignSelf = flexValue;
             } else if (
               [...HEADING_ELEMENTS, PARAGRAPH_ELEMENT].some(
                 (i) => i === tagName.toLowerCase()
               )
             ) {
-              elementClone.style.textAlign = value;
+              elementClone?.style && (elementClone.style.textAlign = value);
               element.style.textAlign = value;
             }
           }
           editingStateDirty = true;
         }
 
-        function uniqueId(readableString) {
+        function getUniqueId(readableString) {
           return `${readableString}-${Math.random().toString().slice(2, 12)}`;
         }
 
-        function createElement(type) {
-          return document.createElement(type);
+        function createElement({
+          tag = "div",
+          id = null,
+          uniqueId = false,
+          classList = [],
+          style = {},
+          innerHTML = null,
+          value = null,
+          type = null,
+          name = null,
+          htmlFor = null,
+        } = {}) {
+          const element = document.createElement(tag);
+          if (id) {
+            element.id = `${id}${uniqueId ? `-${getUniqueId()}` : ""}`;
+          }
+          classList.forEach((htmlClass) => element.classList.add(htmlClass));
+          Object.keys(style).forEach(
+            (key) => (element.style[key] = style[key])
+          );
+          const properties = { innerHTML, value, type, name, htmlFor };
+          Object.keys(properties).forEach((p) => {
+            if (properties[p] !== null) element[p] = properties[p];
+          });
+          return element;
         }
 
         function slugify(string) {
