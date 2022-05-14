@@ -867,28 +867,18 @@
 
         addLocalControls();
 
+        function activate(id, callback, type = "change") {
+          document.getElementById(id).addEventListener(type, callback);
+        }
+
         /* Activate Controls on Existing Elements */
-        document
-          .getElementById(UPDATE_BACKGROUND_COLOR_ID)
-          .addEventListener("change", onUpdateBackgroundColor);
-        document
-          .getElementById(FULL_WIDTH_CHECKBOX_ID)
-          .addEventListener("change", onUpdateFullWidth);
-        document
-          .getElementById(WIDTH_SLIDER_ID)
-          .addEventListener("input", onUpdateWidth);
-        document
-          .getElementById(UPDATE_BODY_ALIGN_ID)
-          .addEventListener("change", onUpdateBodyAlign);
-        document
-          .getElementById(UPDATE_TEXT_ALIGN_ID)
-          .addEventListener("change", onUpdateTextAlign);
-        document
-          .getElementById(UPDATE_FAVICON_ID)
-          .addEventListener("change", onUpdateFaviconPicker);
-        document
-          .getElementById(UPDATE_SOCIAL_IMAGE_ID)
-          .addEventListener("input", onUpdateSocialImage);
+        activate(UPDATE_BACKGROUND_COLOR_ID, onUpdateBackgroundColor);
+        activate(FULL_WIDTH_CHECKBOX_ID, onUpdateFullWidth);
+        activate(WIDTH_SLIDER_ID, onUpdateWidth, "input");
+        activate(UPDATE_BODY_ALIGN_ID, onUpdateBodyAlign);
+        activate(UPDATE_TEXT_ALIGN_ID, onUpdateTextAlign);
+        activate(UPDATE_FAVICON_ID, onUpdateFaviconPicker);
+        activate(UPDATE_SOCIAL_IMAGE_ID, onUpdateSocialImage, "input");
 
         /* Add Content */
         function showNewContentModal() {
