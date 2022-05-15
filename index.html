@@ -837,16 +837,14 @@
           document.getElementById(id).addEventListener(type, callback);
         }
 
-        function activateHeading(element) {
+        function activateText(element) {
           element.addEventListener("click", textEventListener);
         }
-        const headingElements = HEADING_ELEMENTS.join(", ");
-        document.querySelectorAll(headingElements).forEach(activateHeading);
 
-        function activateParagraph(element) {
-          element.addEventListener("click", textEventListener);
-        }
-        document.querySelectorAll(PARAGRAPH_ELEMENT).forEach(activateParagraph);
+        [
+          ...document.querySelectorAll(HEADING_ELEMENTS.join(", ")),
+          ...document.querySelectorAll(PARAGRAPH_ELEMENT),
+        ].forEach(activateText);
 
         function activateImage(element) {
           element.addEventListener("click", imageEventListener);
