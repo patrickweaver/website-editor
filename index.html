@@ -733,9 +733,8 @@
 
             let editorContainerElement = createElement({
               classList: [EDIT_CONTAINER_CLASS],
+              id: getEditorContainerId(editorId),
             });
-            editorContainerElement.classList.add();
-            editorContainerElement.id = getEditorContainerId(editorId);
 
             if (isExistingElement) {
               const elementCloneContainer = createElement({
