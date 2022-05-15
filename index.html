@@ -577,7 +577,7 @@
           </div>
         `;
 
-        function makeEditorEventListener(editorType) {
+        function makeElementEventListener(editorType) {
           return function (event, isExistingElement = true) {
             const element = event.currentTarget;
             let elementClone;
@@ -827,8 +827,8 @@
             editor.select();
           };
         }
-        const textEventListener = makeEditorEventListener(EDITOR_TYPES.TEXT);
-        const imageEventListener = makeEditorEventListener(EDITOR_TYPES.IMAGE);
+        const textEventListener = makeElementEventListener(EDITOR_TYPES.TEXT);
+        const imageEventListener = makeElementEventListener(EDITOR_TYPES.IMAGE);
 
         function insertAdj(id, element, pos = "afterbegin") {
           document.getElementById(id).insertAdjacentElement(pos, element);
