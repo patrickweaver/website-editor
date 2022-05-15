@@ -577,7 +577,7 @@
           </div>
         `;
 
-        function makeElementEventListener(editorType) {
+        function makeEditorEventListener(editorType) {
           return function (event, isExistingElement = true) {
             const element = event.currentTarget;
             let elementClone;
@@ -625,58 +625,65 @@
               ? STRINGS.BUTTON_UPDATE
               : STRINGS.BUTTON_SAVE;
 
+            const updateTextCallback = ({
+              editorElement,
+              tagNameSelect,
+              originalElement,
+            }) => {
+              const updatedTextElement = addText(
+                editorElement.id,
+                tagNameSelect.value,
+                editorElement.value
+              );
+              return elementUpdateCleanup(updatedTextElement, originalElement, [
+                // 🚸 TODO check alignment dirty
+                "innerHTML",
+                "tagName",
+              ]);
+            };
+
+            const updateImageCallback = async ({
+              editorElement: imagePicker,
+              altTextEditor,
+              originalElement,
+            }) => {
+              const updatedImageElement = await addImage(
+                imagePicker.id,
+                altTextEditor?.value,
+                originalElement
+              );
+              return elementUpdateCleanup(
+                updatedImageElement,
+                originalElement,
+                // 🚸 TODO check alignment dirty
+                ["src", "alt"]
+              );
+            };
+
+            function elementUpdateCleanup(
+              updatedElement,
+              originalElement,
+              propertyArray
+            ) {
+              if (!updatedElement) return false;
+              const _editingStateDirty = propertyArray.some(
+                (p) => updatedElement?.[p] !== originalElement?.[p]
+              );
+              originalElement.remove();
+              editingStateDirty = editingStateDirty || _editingStateDirty;
+              return true;
+            }
+
             const updateTextButton = {
               label: updateButtonLabel,
               initiallyDisabled: false,
-              updateElement: ({
-                editorElement,
-                tagNameSelect,
-                originalElement,
-              }) => {
-                let updatedElement = originalElement;
-                const newContent = editorElement.value;
-                if (!newContent) return false;
-                const tagChanged =
-                  tagNameSelect &&
-                  tagName !== tagNameSelect.value.toLowerCase();
-                if (tagChanged) {
-                  updatedElement = createElement({ tag: tagNameSelect.value });
-                  originalElement.insertAdjacentElement(
-                    "beforebegin",
-                    updatedElement
-                  );
-                  originalElement.remove();
-                  activateHeading(updatedElement);
-                }
-                const contentChanged = newContent !== originalContent;
-                updatedElement.innerHTML = newContent;
-                editingStateDirty =
-                  editingStateDirty || tagChanged || contentChanged;
-                return true;
-              },
+              updateElement: updateTextCallback,
             };
 
             const upateImageButton = {
               label: updateButtonLabel,
               initiallyDisabled: true,
-              updateElement: async ({
-                editorElement: imagePicker,
-                altTextEditor,
-                originalElement,
-              }) => {
-                const updatedImage = await addImage(
-                  imagePicker.id,
-                  altTextEditor?.value,
-                  originalElement
-                );
-                const _editingStateDirty =
-                  updatedImage?.src !== originalElement?.src ||
-                  updatedImage?.alt !== originalElement?.alt;
-                if (!updatedImage) return false;
-                originalElement.remove();
-                editingStateDirty = editingStateDirty || _editingStateDirty;
-                return true;
-              },
+              updateElement: updateImageCallback,
             };
 
             const defaultButtons = [deleteButton];
@@ -704,7 +711,6 @@
 
             const editElements = type.createEditor({
               id: editorId,
-              type: editorType,
               confirmButtonLabel: updateButtonLabel,
               content: originalContent,
               tagName,
@@ -821,6 +827,8 @@
             editor.select();
           };
         }
+        const textEventListener = makeEditorEventListener(EDITOR_TYPES.TEXT);
+        const imageEventListener = makeEditorEventListener(EDITOR_TYPES.IMAGE);
 
         function insertAdj(id, element, pos = "afterbegin") {
           document.getElementById(id).insertAdjacentElement(pos, element);
@@ -830,26 +838,19 @@
           document.getElementById(id).addEventListener(type, callback);
         }
 
-        /* Activate existing elements for editing */
-        function makeActivator(type) {
-          return function (element) {
-            element.addEventListener("click", makeElementEventListener(type));
-          };
-        }
-
         function activateHeading(element) {
-          makeActivator(EDITOR_TYPES.HEADING)(element);
+          element.addEventListener("click", textEventListener);
         }
         const headingElements = HEADING_ELEMENTS.join(", ");
         document.querySelectorAll(headingElements).forEach(activateHeading);
 
         function activateParagraph(element) {
-          makeActivator(EDITOR_TYPES.PARAGRAPH)(element);
+          element.addEventListener("click", textEventListener);
         }
         document.querySelectorAll(PARAGRAPH_ELEMENT).forEach(activateParagraph);
 
         function activateImage(element) {
-          makeActivator(EDITOR_TYPES.IMAGE)(element);
+          element.addEventListener("click", imageEventListener);
         }
         document.querySelectorAll(IMG_ELEMENT).forEach(activateImage);
 
@@ -906,7 +907,7 @@
           ];
           addTextItemButtonIds.forEach((buttonId) => {
             const callback = (event) => {
-              addItem(
+              addNewElement(
                 event.currentTarget.id.slice(
                   ADD_ITEM_ID_PREFIX.length,
                   event.currentTarget.id.length
@@ -922,9 +923,7 @@
         }
 
         async function addImage(filePickerId, altText, originalElement) {
-          const update = filePickerId !== ADD_ITEM_IMAGE_ID;
-          const filePicker = document.getElementById(filePickerId);
-          const file = filePicker.files[0];
+          const file = document.getElementById(filePickerId).files[0];
           if (file && !isImageFile(file)) {
             // This won't happen because button is disabled
             // unless file is an image
@@ -932,18 +931,10 @@
             return null;
           }
           const newElement = createElement({ tag: "img" });
-          if (update) {
-            // Add image above current image
-            filePicker.parentElement.insertAdjacentElement(
-              "afterend",
-              newElement
-            );
-          } else {
-            // Add image at the end of the document
-            addAtEndOfDocument(newElement);
-          }
+          insertAdj(getEditorContainerId(filePickerId), newElement, "afterend");
           scrollToNewElement(newElement);
 
+          // 🚸 TODO Better logic around not changing src
           // Set img src to file contents as Data URL
           if (file) {
             newElement.src = await getDataURLFromFile(file);
@@ -956,25 +947,31 @@
 
           if (altText) newElement.alt = altText;
 
-          newElement.addEventListener(
-            "click",
-            makeElementEventListener(EDITOR_TYPES.IMAGE)
-          );
+          newElement.addEventListener("click", imageEventListener);
           return newElement;
         }
 
-        function addItem(type) {
+        function addText(editorId, tag, value) {
+          const newElement = createElement({ tag, innerHTML: value });
+          insertAdj(getEditorContainerId(editorId), newElement, "afterend");
+          scrollToNewElement(newElement);
+          newElement.addEventListener("click", textEventListener);
+          return newElement;
+        }
+
+        function addNewElement(type) {
           let elementType;
+          let editCallback = textEventListener;
           if (type === EDITOR_TYPES.HEADING) {
             elementType = HEADING_ELEMENTS[1];
           } else if (type === EDITOR_TYPES.PARAGRAPH) {
             elementType = PARAGRAPH_ELEMENT;
           } else if (type === EDITOR_TYPES.IMAGE) {
             elementType = IMG_ELEMENT;
+            editCallback = imageEventListener;
           }
 
           const newElement = createElement({ tag: elementType });
-          const editCallback = makeElementEventListener(type);
           if (
             type === EDITOR_TYPES.HEADING ||
             type === EDITOR_TYPES.PARAGRAPH
@@ -1075,14 +1072,16 @@
 
         function createTextEditor({
           id,
-          type,
           confirmButtonLabel,
           content,
           tagName,
           style,
         }) {
           let levelEditorId, editLevelLabel;
-          if (type === EDITOR_TYPES.HEADING) {
+          const isHeading = HEADING_ELEMENTS.some(
+            (i) => i === tagName.toLowerCase()
+          );
+          if (isHeading) {
             var editLevelElement = createElement({
               tag: "select",
               id: `level-${id}`,
@@ -1155,7 +1154,10 @@
             editAlignElement.children[0].children[0].checked = true;
           }
 
-          const editElementLabel = createEditorLabel(id, type);
+          const editElementLabel = createEditorLabel(
+            id,
+            isHeading ? EDITOR_TYPES.HEADING : EDITOR_TYPES.PARAGRAPH
+          );
           return {
             editor: editElement,
             editorLabel: editElementLabel,
@@ -1167,7 +1169,6 @@
 
         function createImageEditor({
           id,
-          type,
           confirmButtonLabel,
           altTextContent,
           style,
@@ -1182,7 +1183,7 @@
             "change",
             makeEditorChangeListener(id, confirmButtonLabel)
           );
-          const imagePickerLabel = createEditorLabel(id, type);
+          const imagePickerLabel = createEditorLabel(id, EDITOR_TYPES.IMAGE);
           const altEditor = createElement({
             tag: "input",
             type: "text",
