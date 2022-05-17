@@ -589,10 +589,14 @@
             element.style.display = "none";
             const {
               tagName: _tagName,
-              innerHTML: originalContent,
+              innerHTML: _originalContent,
               alt: altTextContent,
             } = element;
             const tagName = _tagName.toLowerCase();
+            const originalContent = _originalContent
+              .split(/(\n|\s)+/)
+              .filter((i) => ![" ", "", "\n"].some((j) => j === i))
+              .join(" ");
 
             const deleteButton = {
               label: STRINGS.BUTTON_DELETE,
@@ -632,7 +636,7 @@
             }) => {
               const updatedTextElement = addText(
                 editorElement.id,
-                tagNameSelect.value,
+                tagNameSelect?.value,
                 editorElement.value
               );
               return elementUpdateCleanup(updatedTextElement, originalElement, [
