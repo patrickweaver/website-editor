@@ -632,16 +632,19 @@
             const updateTextCallback = ({
               editorElement,
               tagNameSelect,
+              alignSelectElement,
               originalElement,
             }) => {
-              const updatedTextElement = addText(
-                editorElement.id,
-                tagNameSelect?.value,
-                editorElement.value
-              );
+              const updatedTextElement = addText({
+                editorId: editorElement.id,
+                tagName: tagNameSelect?.value,
+                alignSelectElement,
+                text: editorElement.value,
+              });
               return elementUpdateCleanup(updatedTextElement, originalElement, [
                 // 🚸 TODO check alignment dirty
                 "innerHTML",
+                "style",
                 "tagName",
               ]);
             };
@@ -660,7 +663,7 @@
                 updatedImageElement,
                 originalElement,
                 // 🚸 TODO check alignment dirty
-                ["src", "alt"]
+                ["alt", "src", "style"]
               );
             };
 
@@ -670,9 +673,12 @@
               propertyArray
             ) {
               if (!updatedElement) return false;
-              const _editingStateDirty = propertyArray.some(
-                (p) => updatedElement?.[p] !== originalElement?.[p]
-              );
+              const _editingStateDirty = propertyArray.some((p) => {
+                const updatedValue = updatedElement?.[p];
+                const originalValue = originalElement?.[p];
+                // 🚸 TODO only check relevant sub properties for style
+                return updatedValue !== originalValue;
+              });
               originalElement.remove();
               editingStateDirty = editingStateDirty || _editingStateDirty;
               return true;
@@ -788,6 +794,7 @@
                 const success = i.updateElement({
                   editorElement: editor,
                   tagNameSelect: tagPicker,
+                  alignSelectElement: alignSelect,
                   altTextEditor: altEditor,
                   originalElement: element,
                   editorId,
@@ -821,10 +828,6 @@
                 editorElement
               );
             });
-
-            alignSelect?.addEventListener("change", (e) =>
-              onUpdateElementAlign(e, element, elementClone)
-            );
 
             editor.focus();
             editor.select();
@@ -884,7 +887,7 @@
         activate(FULL_WIDTH_CHECKBOX_ID, onUpdateFullWidth);
         activate(WIDTH_SLIDER_ID, onUpdateWidth, "input");
         activate(UPDATE_BODY_ALIGN_ID, onUpdateBodyAlign);
-        activate(UPDATE_TEXT_ALIGN_ID, onUpdateTextAlign);
+        activate(UPDATE_TEXT_ALIGN_ID, onUpdateBodyTextAlign);
         activate(UPDATE_FAVICON_ID, onUpdateFaviconPicker);
         activate(UPDATE_SOCIAL_IMAGE_ID, onUpdateSocialImage, "input");
 
@@ -952,8 +955,20 @@
           return newElement;
         }
 
-        function addText(editorId, tag, value) {
-          const newElement = createElement({ tag, innerHTML: value });
+        // 🚸 TODO maybe not necessary?
+        function addText({ editorId, tagName, alignSelectElement, text }) {
+          const selected = Array.from(alignSelectElement.children)
+            .map((container) => Array.from(container.children)[0])
+            .filter((element) => {
+              return element?.checked;
+            })[0];
+          const { value: textAlign } = selected;
+          const style = textAlign === "default" ? {} : { textAlign };
+          const newElement = createElement({
+            tag: tagName,
+            innerHTML: text,
+            style,
+          });
           insertAdj(getEditorContainerId(editorId), newElement, "afterend");
           scrollToNewElement(newElement);
           newElement.addEventListener("click", textEventListener);
@@ -1141,7 +1156,7 @@
               name: editAlignElement.id,
               value: value,
             });
-            if (style.textAlign === labelText.toLowerCase()) {
+            if (!foundCurrent && style.textAlign === labelText.toLowerCase()) {
               input.checked = true;
               foundCurrent = true;
             }
@@ -1401,7 +1416,7 @@
           }
         }
 
-        function onUpdateTextAlign(changeEvent) {
+        function onUpdateBodyTextAlign(changeEvent) {
           const { value } = changeEvent.target;
           const flexClasses = {
             left: "flex-start",
@@ -1413,36 +1428,20 @@
           editingStateDirty = true;
         }
 
-        function onUpdateElementAlign(changeEvent, element, elementClone) {
-          const { value } = changeEvent.target;
-          const { tagName } = element;
+        // 🚸 TODO unused
+        function handleUpdateImgElementAlign(value) {
           if (value === "default") {
-            elementClone?.style?.removeProperty("text-align");
-            element.style.removeProperty("text-align");
-            const { alignItems } = document.body.style;
-            elementClone?.style && (elementClone.style.alignSelf = alignItems);
-            element.style.removeProperty("align-self");
+            return {};
           } else {
-            if (tagName.toLowerCase() === IMG_ELEMENT) {
-              let flexValue = value;
-              flexValue =
-                value === "left"
-                  ? "flex-start"
-                  : value === "right"
-                  ? "flex-end"
-                  : value;
-              elementClone?.style && (elementClone.style.alignSelf = flexValue);
-              element.style.alignSelf = flexValue;
-            } else if (
-              [...HEADING_ELEMENTS, PARAGRAPH_ELEMENT].some(
-                (i) => i === tagName.toLowerCase()
-              )
-            ) {
-              elementClone?.style && (elementClone.style.textAlign = value);
-              element.style.textAlign = value;
-            }
+            let flexValue = value;
+            flexValue =
+              value === "left"
+                ? "flex-start"
+                : value === "right"
+                ? "flex-end"
+                : value;
+            return { alignSelf: flexValue };
           }
-          editingStateDirty = true;
         }
 
         function getUniqueId(readableString) {
