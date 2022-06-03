@@ -1,0 +1,235 @@
+:root {
+  --button-del-bg: #ffbfbf;
+  --button-del-border: #ff0000;
+  --button-del-hover-bg: #ffafaf;
+  --button-del-hover-border: #ff2f2f;
+  --local-controls-bg: #dfdfe8;
+  --local-controls-bg-2: #f8f8ff;
+  --local-controls-bg-3: #f4f4f4;
+  --local-controls-border-3: #2f2f2f;
+  --modal-shadow-bg: #4f4f4fdf;
+  --new-element-highlight: #00ffff;
+  --edit-element-highlight: #ffff00;
+  --note-border: #ffe8b8;
+  --note-bg: #fffce8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 2rem;
+}
+
+input,
+textarea {
+  font-size: 1rem;
+  line-height: 1.2rem;
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  width: 100%;
+}
+
+input.text-input {
+  width: Calc(100% - 1rem - 4px);
+  /* padding 0.5rem, border 2px */
+}
+
+textarea {
+  width: Calc(100% - 1rem - 2px);
+  /* padding 0.5rem, border 1px */
+  min-height: 6rem;
+  font-family: "Arial", sans-serif;
+}
+
+img {
+  display: block;
+  margin: 1rem 0;
+}
+
+.color-picker {
+  height: 2rem;
+  padding: 2px;
+}
+
+.edit-container {
+  border-radius: 3px;
+  text-align: left;
+}
+
+.edit-container {
+  border: 2px solid var(--edit-element-highlight);
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: var(--local-controls-bg);
+}
+
+.edit-container select {
+  display: block;
+}
+
+.clone-container {
+  border: 1px solid var(--local-controls-border-3);
+  background-color: var(--local-controls-bg-3);
+  padding: 1rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.clone {
+  opacity: 50%;
+  margin: 0;
+}
+
+label.edit,
+input.edit,
+fieldset.edit,
+textarea.edit {
+  width: Calc(100% - 1rem);
+}
+
+fieldset.edit>div {
+  line-height: 2rem;
+}
+
+fieldset.edit>div>label {
+  margin: 0 5px;
+}
+
+select.edit {
+  padding: 0.25rem;
+  min-width: 4rem;
+}
+
+label.edit,
+input.edit,
+select.edit,
+fieldset.edit {
+  margin-bottom: 0.5rem;
+}
+
+.note {
+  border: 1px solid var(--note-border);
+  background-color: var(--note-bg);
+  padding: 0.5rem;
+}
+
+#local-controls-container {
+  width: 100%;
+  text-align: left;
+  margin-top: 3rem;
+}
+
+#local-controls {
+  background-color: var(--local-controls-bg);
+  text-align: left;
+  margin: 1rem;
+  padding: 0.5rem 1rem;
+  max-width: 600px;
+  outline: 1px dashed var(--local-controls-border-3);
+}
+
+#local-controls fieldset label,
+#local-controls fieldset input {
+  display: inline-block;
+}
+
+#local-controls figure {
+  margin: 0 0 1rem;
+}
+
+#local-controls figure figcaption,
+#local-controls figure img {
+  display: inline;
+  margin: 0;
+}
+
+#local-controls figure img {
+  width: 16px;
+  position: relative;
+  top: 3px;
+}
+
+#local-controls button,
+.edit-buttons button {
+  margin: 0 0.25rem;
+  display: inline-block;
+  font-size: 1.125rem;
+}
+
+.controls-section {
+  width: 100%;
+  margin: 0.5em 0 2rem;
+}
+
+.controls-section label,
+.controls-section input,
+.controls-section textarea,
+.controls-section button {
+  display: block;
+}
+
+.controls-section input,
+.controls-section textarea,
+.controls-section button {
+  margin: 0.5rem 0 1rem;
+}
+
+.controls-section .below-label {
+  margin: -0.5rem 0 1rem;
+}
+
+#update-favicon {
+  margin-bottom: 0.25rem;
+}
+
+.edit-buttons {
+  background-color: var(--local-controls-bg);
+  margin: 0.5rem 0;
+  display: inline-block;
+}
+
+.edit-buttons button.delete-button {
+  border: 2px outset var(--button-del-border);
+  background-color: var(--button-del-bg);
+}
+
+.edit-buttons button.delete-button:hover {
+  border: 2px outset var(--button-del-hover-border);
+  background-color: var(--button-del-hover-bg);
+}
+
+.controls-section label {
+  margin: 0.25rem 0;
+}
+
+#new-content-modal-wrapper {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: var(--modal-shadow-bg);
+}
+
+#new-content-modal {
+  margin: 5rem 10% 0;
+  background-color: var(--local-controls-bg-2);
+  padding: 1rem 2rem;
+  width: Calc(80% - 2rem - 2rem);
+  /* 2rem is body margin */
+}
+
+#new-content-modal li {
+  margin: 0.5rem;
+}
