@@ -1124,22 +1124,25 @@
             );
           }
 
+          const editorChangeListener = makeEditorChangeListener(
+            id,
+            confirmButtonLabel
+          );
+
           let editElement = createElement({
             tag: "textarea",
             id,
             classList: [EDIT_CLASS],
             innerHTML: content,
           });
-          editElement.addEventListener(
-            "input",
-            makeEditorChangeListener(id, confirmButtonLabel)
-          );
+          editElement.addEventListener("input", editorChangeListener);
 
           const editAlignElement = createElement({
             tag: "fieldset",
             id: `align-${id}`,
             classList: [EDIT_CLASS],
           });
+          editAlignElement.addEventListener("change", editorChangeListener);
           const alignLegend = createElement({
             tag: "legend",
             innerHTML: STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN],
@@ -1190,16 +1193,17 @@
           altTextContent,
           style,
         }) {
+          const editorChangeListener = makeEditorChangeListener(
+            id,
+            confirmButtonLabel
+          );
           const imagePicker = createElement({
             tag: "input",
             type: "file",
             id,
             classList: [EDIT_CLASS],
           });
-          imagePicker.addEventListener(
-            "change",
-            makeEditorChangeListener(id, confirmButtonLabel)
-          );
+          imagePicker.addEventListener("change", editorChangeListener);
           const imagePickerLabel = createEditorLabel(id, EDITOR_TYPES.IMAGE);
           const altEditor = createElement({
             tag: "input",
@@ -1208,10 +1212,7 @@
             classList: [EDIT_CLASS],
             value: altTextContent ?? "",
           });
-          altEditor.addEventListener(
-            "input",
-            makeEditorChangeListener(id, confirmButtonLabel)
-          );
+          altEditor.addEventListener("input", editorChangeListener);
           const altEditorLabel = createEditorLabel(
             altEditor.id,
             EDITOR_TYPES.IMAGE_ALT_TEXT
@@ -1222,6 +1223,7 @@
             id: `align-${id}`,
             classList: [EDIT_CLASS],
           });
+          editAlignElement.addEventListener("change", editorChangeListener);
           const alignLegend = createElement({
             tag: "legend",
             innerHTML: STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN],
@@ -1276,15 +1278,22 @@
             const updateButton = document.getElementById(updateButtonId);
             const { tagName: _tagName, type, files } = event.currentTarget;
             const tagName = _tagName.toLowerCase();
-            if (tagName === "textarea" && updateButton) {
+            const isParagraphEditor = tagName === "textarea";
+            const isHeadingOrAltEditor = tagName === "input" && type === "text";
+            const isImageEditor = tagName === "input" && type === "file";
+            const isAlignEditor = tagName === "fieldset";
+            if (isParagraphEditor) {
+              // 🚸 TODO shouldn't be able to update if empty text but other branches here can enable it.
               updateButton.disabled = !event.currentTarget.value;
-            } else if (tagName === "input" && type === "file") {
+            } else if (isImageEditor) {
               const validFile = isImageFile(files[0]);
               updateButton.disabled = !validFile;
               if (!validFile) {
                 alert(STRINGS.ERROR_IMAGE_ONLY);
               }
-            } else if (tagName === "input" && type === "text") {
+            } else if (isHeadingOrAltEditor) {
+              updateButton.disabled = false;
+            } else if (isAlignEditor) {
               updateButton.disabled = false;
             }
           };
