@@ -72,6 +72,7 @@
         margin: 0.25rem 0;
       }
 
+      p,
       h1,
       h2,
       h3,
@@ -635,9 +636,10 @@
               alignSelectElement,
               originalElement,
             }) => {
+              const tagName = tagNameSelect?.value ?? PARAGRAPH_ELEMENT;
               const updatedTextElement = addText({
                 editorId: editorElement.id,
-                tagName: tagNameSelect?.value,
+                tagName,
                 alignSelectElement,
                 text: editorElement.value,
               });
@@ -963,6 +965,7 @@
         }
 
         function addText({ editorId, tagName, alignSelectElement, text }) {
+          console.log({ tagName });
           const textAlign = getAlignValueFromFieldset(alignSelectElement);
           const style = textAlign === "default" ? {} : { textAlign };
           const newElement = createElement({
