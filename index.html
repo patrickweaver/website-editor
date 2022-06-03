@@ -652,13 +652,15 @@
             const updateImageCallback = async ({
               editorElement: imagePicker,
               altTextEditor,
+              alignSelectElement,
               originalElement,
             }) => {
-              const updatedImageElement = await addImage(
-                imagePicker.id,
-                altTextEditor?.value,
-                originalElement
-              );
+              const updatedImageElement = await addImage({
+                filePickerId: imagePicker.id,
+                altText: altTextEditor?.value,
+                alignSelectElement,
+                originalElement,
+              });
               return elementUpdateCleanup(
                 updatedImageElement,
                 originalElement,
@@ -926,7 +928,14 @@
           activate(ADD_ITEM_CANCEL_ID, clearAddItemModal, "click");
         }
 
-        async function addImage(filePickerId, altText, originalElement) {
+        async function addImage({
+          filePickerId,
+          altText,
+          alignSelectElement,
+          originalElement,
+        }) {
+          const imageAlign = getAlignValueFromFieldset(alignSelectElement);
+          const style = handleUpdateImgElementAlign(imageAlign);
           const file = document.getElementById(filePickerId).files[0];
           if (file && !isImageFile(file)) {
             // This won't happen because button is disabled
@@ -934,7 +943,7 @@
             alert(STRINGS.ERROR_IMAGE_ONLY);
             return null;
           }
-          const newElement = createElement({ tag: "img" });
+          const newElement = createElement({ tag: "img", style, altText });
           insertAdj(getEditorContainerId(filePickerId), newElement, "afterend");
           scrollToNewElement(newElement);
 
@@ -949,20 +958,12 @@
             return null;
           }
 
-          if (altText) newElement.alt = altText;
-
           newElement.addEventListener("click", imageEventListener);
           return newElement;
         }
 
-        // 🚸 TODO maybe not necessary?
         function addText({ editorId, tagName, alignSelectElement, text }) {
-          const selected = Array.from(alignSelectElement.children)
-            .map((container) => Array.from(container.children)[0])
-            .filter((element) => {
-              return element?.checked;
-            })[0];
-          const { value: textAlign } = selected;
+          const textAlign = getAlignValueFromFieldset(alignSelectElement);
           const style = textAlign === "default" ? {} : { textAlign };
           const newElement = createElement({
             tag: tagName,
@@ -1428,7 +1429,15 @@
           editingStateDirty = true;
         }
 
-        // 🚸 TODO unused
+        function getAlignValueFromFieldset(alignSelectElement) {
+          const selectedAlign = Array.from(alignSelectElement.children)
+            .map((container) => Array.from(container.children)[0])
+            .filter((element) => {
+              return element?.checked;
+            })[0];
+          return selectedAlign?.value;
+        }
+
         function handleUpdateImgElementAlign(value) {
           if (value === "default") {
             return {};
@@ -1459,6 +1468,7 @@
           type = null,
           name = null,
           htmlFor = null,
+          altText = null,
         } = {}) {
           const element = document.createElement(tag);
           if (id) {
@@ -1468,7 +1478,14 @@
           Object.keys(style).forEach(
             (key) => (element.style[key] = style[key])
           );
-          const properties = { innerHTML, value, type, name, htmlFor };
+          const properties = {
+            innerHTML,
+            value,
+            type,
+            name,
+            htmlFor,
+            alt: altText,
+          };
           Object.keys(properties).forEach((p) => {
             if (properties[p] !== null) element[p] = properties[p];
           });
