@@ -680,6 +680,7 @@
                 const updatedValue = updatedElement?.[p];
                 const originalValue = originalElement?.[p];
                 // 🚸 TODO only check relevant sub properties for style
+                // https://github.com/patrickweaver/website-editor/issues/87
                 return updatedValue !== originalValue;
               });
               originalElement.remove();
@@ -948,8 +949,6 @@
           insertAdj(getEditorContainerId(filePickerId), newElement, "afterend");
           scrollToNewElement(newElement);
 
-          // 🚸 TODO Better logic around not changing src
-          // Set img src to file contents as Data URL
           if (file) {
             newElement.src = await getDataURLFromFile(file);
           } else if (originalElement.src) {
@@ -1288,6 +1287,7 @@
             const isAlignEditor = tagName === "fieldset";
             if (isParagraphEditor) {
               // 🚸 TODO shouldn't be able to update if empty text but other branches here can enable it.
+              // https://github.com/patrickweaver/website-editor/issues/86
               updateButton.disabled = !event.currentTarget.value;
             } else if (isImageEditor) {
               const validFile = isImageFile(files[0]);
