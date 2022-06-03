@@ -964,7 +964,6 @@
         }
 
         function addText({ editorId, tagName, alignSelectElement, text }) {
-          console.log({ tagName });
           const textAlign = getAlignValueFromFieldset(alignSelectElement);
           const style = textAlign === "default" ? {} : { textAlign };
           const newElement = createElement({
@@ -1136,6 +1135,9 @@
             id,
             classList: [EDIT_CLASS],
             innerHTML: content,
+            style: {
+              minHeight: `${content.length / 65}rem`,
+            },
           });
           editElement.addEventListener("input", editorChangeListener);
 
