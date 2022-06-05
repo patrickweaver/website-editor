@@ -1,6 +1,6 @@
 import { createElement } from "..";
 import { makeEditorChangeListener } from "../events/listeners";
-import { createEditorLabel } from "../../strings";
+import { createEditorLabel } from "./label";
 import {
   EDIT_CLASS,
   EDITOR_TYPES,

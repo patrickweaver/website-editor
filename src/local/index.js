@@ -1,5 +1,6 @@
 import { onUpdateBodyAlign, onUpdateBodyTextAlign } from "./util/dom/align";
 import {
+  onClickSaveChanges,
   onUpdateBackgroundColor,
   onUpdateFaviconPicker,
   onUpdateFullWidth,
@@ -13,7 +14,6 @@ import {
   textEventListener,
 } from "./util/dom/events/listeners";
 import { enableLocalControls } from "./enable";
-import { onClickSaveChanges } from "./save";
 import {
   HEADING_ELEMENTS,
   PARAGRAPH_ELEMENT,
