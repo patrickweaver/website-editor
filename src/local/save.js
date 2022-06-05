@@ -1,7 +1,7 @@
-import { saveFile } from "../util/files";
-import { getBodyBackgroundColor } from "../util/dom";
+import { saveFile } from "./util/files";
+import { getBodyBackgroundColor } from "./util/dom";
 import { enableLocalControls } from "./enable";
-import { LOCAL_CONTROLS_ID } from "../constants";
+import { LOCAL_CONTROLS_ID } from "./constants";
 
 export async function handleSaveChanges(_event) {
   const localControls = document.getElementById(LOCAL_CONTROLS_ID);

@@ -1,7 +1,7 @@
 import { GLOBALS } from "../globals";
-import { createElement, insertAdj } from "../util/dom";
-import { addListenerById } from "../util/dom/events/listeners";
-import { LOCAL_CONTROLS_HTML, NEW_CONTENT_MODAL_HTML } from "../templates";
+import { createElement, insertAdj } from "./util/dom";
+import { addListenerById } from "./util/dom/events/listeners";
+import { LOCAL_CONTROLS_HTML, NEW_CONTENT_MODAL_HTML } from "./templates";
 import {
   ADD_ITEM_HEADING_ID,
   ADD_ITEM_ID,
@@ -12,7 +12,7 @@ import {
   LOCAL_CONTROLS_CONTAINER_ID,
   LOCAL_CONTROLS_ID,
   NEW_CONTENT_MODAL_WRAPPER,
-} from "../constants";
+} from "./constants";
 
 let localControls = createElement({
   id: LOCAL_CONTROLS_ID,

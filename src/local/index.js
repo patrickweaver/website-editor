@@ -1,17 +1,17 @@
-import { onUpdateBodyAlign, onUpdateBodyTextAlign } from "../util/dom/align";
+import { onUpdateBodyAlign, onUpdateBodyTextAlign } from "./util/dom/align";
 import {
   onUpdateBackgroundColor,
   onUpdateFaviconPicker,
   onUpdateFullWidth,
   onUpdateSocialImage,
   onUpdateWidth,
-} from "../util/dom/events/handlers";
+} from "./util/dom/events/handlers";
 import {
   addListenerById,
   addListenerToMetaDataEditor,
   imageEventListener,
   textEventListener,
-} from "../util/dom/events/listeners";
+} from "./util/dom/events/listeners";
 import { enableLocalControls } from "./enable";
 import { handleSaveChanges } from "./save";
 import {
@@ -29,7 +29,7 @@ import {
   PAGE_DESC_INPUT_ID,
   PAGE_LANG_INPUT_ID,
   SAVE_CHANGES_ID,
-} from "../constants";
+} from "./constants";
 
 /* JavaScript enabling editing only runs locally */
 export function localEditingMode() {

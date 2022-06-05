@@ -1,4 +1,4 @@
-import { GLOBALS } from "../../globals";
+import { GLOBALS } from "../../../globals";
 
 export function getAlignValueFromFieldset(alignSelectElement) {
   const selectedAlign = Array.from(alignSelectElement.children)

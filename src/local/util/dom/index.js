@@ -1,4 +1,4 @@
-import { GLOBALS } from "../../globals";
+import { GLOBALS } from "../../../globals";
 import { getDataURLFromFile } from "../files";
 import { getUniqueId } from "../random";
 import { rgb2hex } from "../color";

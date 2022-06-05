@@ -1,4 +1,4 @@
-import { GLOBALS } from "../../../globals";
+import { GLOBALS } from "../../../../globals";
 import { insertFavicon } from "..";
 import { onUpdateBodyAlign } from "../align";
 import { isImageFile } from "../../files";

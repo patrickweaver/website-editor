@@ -1,4 +1,4 @@
-import { GLOBALS } from "../../../globals";
+import { GLOBALS } from "../../../../globals";
 import { addLinkAroundSelection, addImage, addText, createElement } from "..";
 import { getButtonId, getEditorContainerId, slugify } from "../../strings";
 import { createImageEditor } from "../editors/image";
