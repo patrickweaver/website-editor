@@ -2,12 +2,9 @@ const DEV_MODE = false;
 var editingStateDirty = false;
 
 /* Check for local file */
-const protocol = window.location.protocol;
-if (protocol === "file:") {
-  localEditingMode();
-}
+if (window.location.protocol === "file:") localEditingMode();
 
-/* Editng JavaScript only runs locally */
+/* JavaScript enabling editing only runs locally */
 function localEditingMode() {
   // Constants
   const PAGE_TITLE_INPUT_ID = "edit-page-title";
@@ -1208,9 +1205,8 @@ function localEditingMode() {
   }
 
   function getBodyBackgroundColor() {
-    return rgb2hex(
-      document.body?.style?.backgroundColor ?? "rgb(255, 255, 255)"
-    );
+    const inlineBgColor = document.body?.style?.backgroundColor;
+    return rgb2hex(inlineBgColor ?? "rgb(255, 255, 255)");
   }
 
   // https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
