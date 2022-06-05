@@ -13,7 +13,7 @@ import {
   textEventListener,
 } from "./util/dom/events/listeners";
 import { enableLocalControls } from "./enable";
-import { handleSaveChanges } from "./save";
+import { onClickSaveChanges } from "./save";
 import {
   HEADING_ELEMENTS,
   PARAGRAPH_ELEMENT,
@@ -73,5 +73,5 @@ export function localEditingMode() {
 
   /* Save Changes */
 
-  addListenerById(SAVE_CHANGES_ID, handleSaveChanges, "click");
+  addListenerById(SAVE_CHANGES_ID, onClickSaveChanges, "click");
 }
