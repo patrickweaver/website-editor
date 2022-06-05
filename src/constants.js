@@ -37,6 +37,7 @@ export const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
 export const END_OF_DOC_ID = "end-of-document";
 export const LOCAL_CONTROLS_CONTAINER_ID = "local-controls-container";
 export const LOCAL_CONTROLS_ID = "local-controls";
+export const NEW_CONTENT_MODAL_ID = "new-content-modal";
 export const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
 export const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
 export const PARAGRAPH_ELEMENT = "p";
