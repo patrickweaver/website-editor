@@ -2,11 +2,10 @@ export const PAGE_TITLE_INPUT_ID = "edit-page-title";
 export const PAGE_DESC_INPUT_ID = "edit-page-description";
 export const PAGE_LANG_INPUT_ID = "edit-page-language";
 export const ADD_ITEM_ID = "add-item";
-export const ADD_ITEM_ID_PREFIX = "add-item-";
-export const ADD_ITEM_HEADING_ID = `${ADD_ITEM_ID_PREFIX}heading`;
-export const ADD_ITEM_IMAGE_ID = `${ADD_ITEM_ID_PREFIX}image`;
-export const ADD_ITEM_PARAGRAPH_ID = `${ADD_ITEM_ID_PREFIX}paragraph`;
-export const ADD_ITEM_CANCEL_ID = `${ADD_ITEM_ID_PREFIX}cancel`;
+export const ADD_ITEM_HEADING_ID = "add-item-heading";
+export const ADD_ITEM_IMAGE_ID = "add-item-image";
+export const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
+export const ADD_ITEM_CANCEL_BUTTON_ID = "add-item-cancel";
 export const CURRENT_FAVICON_PREVIEW_ID = "current-favicon-preview";
 export const UPDATE_FAVICON_ID = "update-favicon";
 export const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
@@ -39,9 +38,12 @@ export const LOCAL_CONTROLS_CONTAINER_ID = "local-controls-container";
 export const LOCAL_CONTROLS_ID = "local-controls";
 export const NEW_CONTENT_MODAL_ID = "new-content-modal";
 export const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
+export const BUTTON_ELEMENT = "button";
 export const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
 export const PARAGRAPH_ELEMENT = "p";
 export const IMG_ELEMENT = "img";
+export const LIST_ELEMENTS = { UNORDERED: "ul", ORDERED: "ol" };
+export const LIST_ITEM_ELEMENT = "li";
 
 export const EDITOR_TYPES = {
   TEXT: "text",
@@ -57,6 +59,9 @@ export const STRINGS = {
   BUTTON_CANCEL: "Cancel",
   BUTTON_DELETE: "Delete",
   BUTTON_LINK: "Make Link From Selection",
+  BUTTON_ADD_HEADING: "Heading",
+  BUTTON_ADD_PARAGRAPH: "Paragraph",
+  BUTTON_ADD_IMAGE: "Image",
   BUTTON_SAVE: "Save",
   BUTTON_UPDATE: "Update",
   CONFIRM_DELETE: "Are you sure you want to delete this element?",
@@ -74,4 +79,5 @@ export const STRINGS = {
   PLACEHOLDER_TEXT: "Your text here",
   PROMPT_LINK_URL: "URL:",
   MISSING_SOCIAL_IMAGE_ALT: "&nbsp;Social Image is not set.",
+  NEW_CONTENT_HEADER: "Add New Content",
 };

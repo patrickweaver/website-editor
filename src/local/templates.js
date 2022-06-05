@@ -5,7 +5,7 @@ import {
 } from "./util/dom";
 
 import {
-  ADD_ITEM_CANCEL_ID,
+  ADD_ITEM_CANCEL_BUTTON_ID,
   ADD_ITEM_HEADING_ID,
   ADD_ITEM_ID,
   ADD_ITEM_IMAGE_ID,
@@ -45,7 +45,7 @@ export const NEW_CONTENT_MODAL_HTML = `
       <li><button id="${ADD_ITEM_PARAGRAPH_ID}">Paragraph</button></li>
       <li><button id="${ADD_ITEM_IMAGE_ID}">Image</button></li>
     </ul>
-    <button id="${ADD_ITEM_CANCEL_ID}">Cancel</button>
+    <button id="${ADD_ITEM_CANCEL_BUTTON_ID}">Cancel</button>
   </div>
 `;
 
