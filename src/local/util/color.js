@@ -1,6 +1,6 @@
-export // https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
+// https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
 // Hex is needed for <input type="color" />
-function rgb2hex(rgb) {
+export function rgb2hex(rgb) {
   return `#${rgb
     .match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/)
     .slice(1)
