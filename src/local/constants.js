@@ -25,7 +25,6 @@ export const UPDATE_BODY_ALIGN_ID = "update-body-align";
 export const UPDATE_TEXT_ALIGN_ID = "update-text-align";
 export const COLOR_PICKER_CLASS = "color-picker";
 export const SAVE_CHANGES_ID = "save-changes";
-export const CLONE_LABEL = "Original Element";
 export const CLONE_CLASS = "clone";
 export const CLONE_CONTAINER_CLASS = "clone-container";
 export const EDIT_CLASS = "edit";
@@ -64,6 +63,7 @@ export const STRINGS = {
   BUTTON_ADD_IMAGE: "Image",
   BUTTON_SAVE: "Save",
   BUTTON_UPDATE: "Update",
+  CLONE_LABEL: "Original Element",
   CONFIRM_DELETE: "Are you sure you want to delete this element?",
   ERROR_IMAGE_ONLY: "Error: Please choose an image file",
   ERROR_NO_IMAGE: "Error: No image found",

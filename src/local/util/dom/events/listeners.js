@@ -8,7 +8,6 @@ import { isImageFile } from "../../files";
 import {
   CLONE_CLASS,
   CLONE_CONTAINER_CLASS,
-  CLONE_LABEL,
   EDIT_BUTTONS_CLASS,
   EDIT_CONTAINER_CLASS,
   EDITOR_TYPES,
@@ -270,7 +269,7 @@ function makeElementEventListener(editorType) {
 
       const elementCloneLabel = createElement({
         tag: "label",
-        innerHTML: CLONE_LABEL,
+        innerHTML: STRINGS.CLONE_LABEL,
       });
       elementCloneContainer.insertAdjacentElement(
         "beforebegin",
