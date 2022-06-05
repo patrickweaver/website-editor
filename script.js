@@ -1071,7 +1071,7 @@ function localEditingMode() {
   }
 
   function onUpdateWidth(inputEvent) {
-    const value = `${event.target.value}px`;
+    const value = `${inputEvent.target.value}px`;
     document.body.style.width = value;
     document.getElementById(WIDTH_SLIDER_VALUE_ID).innerHTML = value;
   }
