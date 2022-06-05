@@ -4,11 +4,13 @@
   "description": "An in-browser website editor for creating HTML files",
   "scripts": {
     "dev": "vite --config ./src/vite.config.js",
-    "build": "vite build --config ./src/vite.config.js",
+    "build": "vite build --config ./src/vite.config.js && rm -rf dist/assets",
     "preview": "vite preview --config ./src/vite.config.js"
   },
+  "type": "module",
   "devDependencies": {
-    "vite": "^2.9.9"
+    "vite": "^2.9.9",
+    "vite-plugin-singlefile": "^0.9.0"
   },
   "repository": {
     "type": "git",
