@@ -39,7 +39,7 @@
 
     <!-- CSS -->
     <style></style>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body
     style="
@@ -52,6 +52,7 @@
       justify-content: flex-start;
     "
   >
+  <div id="app">
     <h1>Website</h1>
 
     <h2>About Me</h2>
@@ -85,9 +86,12 @@
     />
 
     <hr id="end-of-document" style="display: none" />
-
+    </div>
     <!-- JS -->
     <script type="text/javascript" id="js"></script>
-    <script src="script.js"></script>
+    <!--
+      <script src="script.js"></script>
+    -->
+    <script type="module" src="/main.js"></script>
   </body>
 </html>
