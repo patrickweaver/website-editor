@@ -5,11 +5,7 @@ import {
 } from "./util/dom";
 
 import {
-  ADD_ITEM_CANCEL_BUTTON_ID,
-  ADD_ITEM_HEADING_ID,
   ADD_ITEM_ID,
-  ADD_ITEM_IMAGE_ID,
-  ADD_ITEM_PARAGRAPH_ID,
   CANCEL_FAVICON_UPDATE_ID,
   COLOR_PICKER_CLASS,
   CONFIRM_FAVICON_UPDATE_ID,
@@ -20,7 +16,6 @@ import {
   PAGE_DESC_INPUT_ID,
   PAGE_LANG_INPUT_ID,
   PAGE_TITLE_INPUT_ID,
-  NEW_CONTENT_MODAL_ID,
   STRINGS,
   UPDATE_BACKGROUND_COLOR_ID,
   UPDATE_BODY_ALIGN_CONTAINER,
@@ -36,18 +31,6 @@ import {
 
 const { url: currentSocialImageURL, alt: currentSocialImageAlt } =
   getCurrentSocialImage();
-
-export const NEW_CONTENT_MODAL_HTML = `
-  <div id="${NEW_CONTENT_MODAL_ID}">
-    <h2>Add New Content</h2>
-    <ul>
-      <li><button id="${ADD_ITEM_HEADING_ID}">Heading</button></li>
-      <li><button id="${ADD_ITEM_PARAGRAPH_ID}">Paragraph</button></li>
-      <li><button id="${ADD_ITEM_IMAGE_ID}">Image</button></li>
-    </ul>
-    <button id="${ADD_ITEM_CANCEL_BUTTON_ID}">Cancel</button>
-  </div>
-`;
 
 const ADD_CONTENT = `
   <div class="controls-section">
@@ -230,15 +213,15 @@ const SAVE_CHANGES = `
 `;
 
 export const LOCAL_CONTROLS_HTML = `
-  <h2>Local Controls</h2>
+  <h2>${STRINGS.LOCAL_CONTROLS_HEADER}</h2>
   <p>
-    This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on a computer.
+    ${STRINGS.LOCAL_CONTROLS_INSTRUCTIONS}
   </p>
   <hr/>
 
   ${ADD_CONTENT}
 
-  <h3>Metadata</h3>
+  <h3>${STRINGS.LOCAL_CONTROLS_METADATA_SUBHEADER}</h3>
 
   ${METADATA_EDITOR}
 

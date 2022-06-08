@@ -53,6 +53,10 @@ textarea {
   font-family: "Arial", sans-serif;
 }
 
+textarea.text-textarea {
+  min-height: 2rem;
+}
+
 img {
   display: block;
   margin: 1rem 0;

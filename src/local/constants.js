@@ -20,9 +20,13 @@ export const FULL_WIDTH_CHECKBOX_ID = "update-full-width";
 export const WIDTH_SLIDER_CONTAINER_ID = "update-body-width-container";
 export const WIDTH_SLIDER_ID = "update-body-width";
 export const WIDTH_SLIDER_VALUE_ID = "update-body-width-value";
+export const WIDTH_SLIDER_DATALIST_ID = "body-width-tickmarks";
 export const UPDATE_BODY_ALIGN_CONTAINER = "udpate-body-align-container";
 export const UPDATE_BODY_ALIGN_ID = "update-body-align";
+export const UPDATE_BODY_ALIGN_OPTION_NAME = "body-align";
 export const UPDATE_TEXT_ALIGN_ID = "update-text-align";
+export const UPDATE_TEXT_ALIGN_OPTION_NAME = "text-align";
+export const CONTROLS_SECTION_CLASS = "controls-section";
 export const COLOR_PICKER_CLASS = "color-picker";
 export const SAVE_CHANGES_ID = "save-changes";
 export const CLONE_CLASS = "clone";
@@ -30,6 +34,9 @@ export const CLONE_CONTAINER_CLASS = "clone-container";
 export const EDIT_CLASS = "edit";
 export const EDIT_CONTAINER_CLASS = "edit-container";
 export const EDIT_BUTTONS_CLASS = "edit-buttons";
+export const INPUT_TYPE_TEXT_CLASS = "text-input";
+export const INPUT_TYPE_TEXTAREA_CLASS = "text-textarea";
+export const INPUT_BELOW_LABEL_CLASS = "below-label";
 export const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
 export const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
 export const END_OF_DOC_ID = "end-of-document";
@@ -38,11 +45,20 @@ export const LOCAL_CONTROLS_ID = "local-controls";
 export const NEW_CONTENT_MODAL_ID = "new-content-modal";
 export const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
 export const BUTTON_ELEMENT = "button";
+export const DATALIST_ELEMENT = "datalist";
 export const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
+export const FIELDSET_ELEMENT = "fieldset";
+export const INPUT_ELEMENT = "input";
+export const LABEL_ELEMENT = "label";
+export const LEGEND_ELEMENT = "legend";
+export const OPTION_ELEMENT = "option";
 export const PARAGRAPH_ELEMENT = "p";
 export const IMG_ELEMENT = "img";
 export const LIST_ELEMENTS = { UNORDERED: "ul", ORDERED: "ol" };
 export const LIST_ITEM_ELEMENT = "li";
+export const HOZ_RULE_ELEMENT = "hr";
+export const SPAN_ELEMENT = "span";
+export const TEXTAREA_ELEMENT = "textarea";
 
 export const EDITOR_TYPES = {
   TEXT: "text",
@@ -54,7 +70,26 @@ export const EDITOR_TYPES = {
   IMAGE_ALT_TEXT: "image-alt",
 };
 
+export const INPUT_TYPES = {
+  TEXT: "text",
+  TEXTAREA: "textarea",
+  COLOR: "color",
+  CHECKBOX: "checkbox",
+  RADIO: "radio",
+  RANGE: "range",
+};
+
+export const SETTINGS = {
+  BODY_WIDTH: 800,
+  BODY_WIDTHS: [200, 300, 400, 500, 640, 800, 1000, 1200, 1500, 1920],
+};
+
 export const STRINGS = {
+  ALIGNMENT_LABELS: {
+    LEFT: "Left",
+    CENTER: "Center",
+    RIGHT: "Right",
+  },
   BUTTON_CANCEL: "Cancel",
   BUTTON_DELETE: "Delete",
   BUTTON_LINK: "Make Link From Selection",
@@ -76,6 +111,30 @@ export const STRINGS = {
     [EDITOR_TYPES.IMAGE_ALT_TEXT]: "Image alt text",
     [EDITOR_TYPES.ALIGN]: "Edit alignment",
   },
+  LC_BG_COLOR_SUBHEADER: "Background Color",
+  LC_BG_COLOR_LABEL: "Select a color",
+  LC_BODY_ALIGNMENT_LEGEND:
+    "Select an option for aligning the body of the page on the window",
+  LC_BODY_ALIGNMENT_RIGHT_MESSAGE: "Right aligned body is not supported.",
+  LC_BODY_ALIGNMENT_SUBHEADER: "Body Alignment",
+  LC_BODY_WIDTH_SUBHEADER: "Body Width",
+  LC_BODY_WIDTH_FIXED_LABEL: "Fixed Body Width: ",
+  LC_BODY_WIDTH_FULL_LABEL: "Use Full Window Width",
+  LC_TEXT_ALIGNMENT_LEGEND:
+    "Select an option for aligning the text within the body",
+  LC_TEXT_ALIGNMENT_SUBHEADER: "Text Alignment",
+  LC_CONTENT_SUBHEADER: "Add Content",
+  LC_CONTENT_BUTTON: "Add Item",
+  LC_GENERAL_PAGE_DESC_LABEL: "Page Description",
+  LC_GENERAL_PAGE_LANG_LABEL: "Page Language",
+  LC_GENERAL_PAGE_LANG_BELOW_LABEL: `See list of valid language tags <a href="https://en.wikipedia.org/wiki/IETF_language_tag#List_of_subtags" target="_blank">here</a>.`,
+  LC_GENERAL_PAGE_TITLE_LABEL: "Page Title",
+  LC_GENERAL_SUBHEADER: "General",
+  LC_HEADER: "Local Controls",
+  LC_INSTRUCTIONS:
+    "This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on a computer.",
+  LC_METADATA_SUBHEADER: "Metadata",
+  LC_STYLES_SUBHEADER: "Styles",
   PLACEHOLDER_TEXT: "Your text here",
   PROMPT_LINK_URL: "URL:",
   MISSING_SOCIAL_IMAGE_ALT: "&nbsp;Social Image is not set.",
