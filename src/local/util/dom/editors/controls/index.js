@@ -124,11 +124,11 @@ function getControlsInput(id, _type, labelText, value, _classList = []) {
 function getControlsAlignmentInput(fieldsetId, legendText, options) {
   const fieldset = createElement({
     tag: FIELDSET_ELEMENT,
-    id: UPDATE_BODY_ALIGN_ID,
+    id: fieldsetId,
   });
   const legend = createElement({
     tag: LEGEND_ELEMENT,
-    innerHTML: LC_BODY_ALIGNMENT_LEGEND,
+    innerHTML: legendText,
   });
   const optionElements = options.map((option) => {
     const { id, name, value, checked, labelText } = option;
