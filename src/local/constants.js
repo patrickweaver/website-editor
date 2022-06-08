@@ -6,6 +6,7 @@ export const ADD_ITEM_HEADING_ID = "add-item-heading";
 export const ADD_ITEM_IMAGE_ID = "add-item-image";
 export const ADD_ITEM_PARAGRAPH_ID = "add-item-paragraph";
 export const ADD_ITEM_CANCEL_BUTTON_ID = "add-item-cancel";
+export const CURRENT_FAVICON_FIGURE_ID = "favicon-preview";
 export const CURRENT_FAVICON_PREVIEW_ID = "current-favicon-preview";
 export const UPDATE_FAVICON_ID = "update-favicon";
 export const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
@@ -29,6 +30,7 @@ export const UPDATE_TEXT_ALIGN_OPTION_NAME = "text-align";
 export const CONTROLS_SECTION_CLASS = "controls-section";
 export const COLOR_PICKER_CLASS = "color-picker";
 export const SAVE_CHANGES_ID = "save-changes";
+export const SOCIAL_IMAGE_FIGURE_ID = "social-image-preview";
 export const CLONE_CLASS = "clone";
 export const CLONE_CONTAINER_CLASS = "clone-container";
 export const EDIT_CLASS = "edit";
@@ -44,10 +46,13 @@ export const LOCAL_CONTROLS_CONTAINER_ID = "local-controls-container";
 export const LOCAL_CONTROLS_ID = "local-controls";
 export const NEW_CONTENT_MODAL_ID = "new-content-modal";
 export const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
+export const NOTE_CLASS = "note";
 export const BUTTON_ELEMENT = "button";
 export const DATALIST_ELEMENT = "datalist";
 export const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
 export const FIELDSET_ELEMENT = "fieldset";
+export const FIGCAPTION_ELEMENT = "figcaption";
+export const FIGURE_ELEMENT = "figure";
 export const INPUT_ELEMENT = "input";
 export const LABEL_ELEMENT = "label";
 export const LEGEND_ELEMENT = "legend";
@@ -75,6 +80,7 @@ export const INPUT_TYPES = {
   TEXTAREA: "textarea",
   COLOR: "color",
   CHECKBOX: "checkbox",
+  FILE: "file",
   RADIO: "radio",
   RANGE: "range",
 };
@@ -120,11 +126,11 @@ export const STRINGS = {
   LC_BODY_WIDTH_SUBHEADER: "Body Width",
   LC_BODY_WIDTH_FIXED_LABEL: "Fixed Body Width: ",
   LC_BODY_WIDTH_FULL_LABEL: "Use Full Window Width",
-  LC_TEXT_ALIGNMENT_LEGEND:
-    "Select an option for aligning the text within the body",
-  LC_TEXT_ALIGNMENT_SUBHEADER: "Text Alignment",
   LC_CONTENT_SUBHEADER: "Add Content",
   LC_CONTENT_BUTTON: "Add Item",
+  LC_CURRENT_FAVICON_CAPTION: "Current Favicon:",
+  LC_CURRENT_FAVICON_ALT_TEXT: "The current favicon",
+  LC_FAVICON_SUBHEADER: "Favicon",
   LC_GENERAL_PAGE_DESC_LABEL: "Page Description",
   LC_GENERAL_PAGE_LANG_LABEL: "Page Language",
   LC_GENERAL_PAGE_LANG_BELOW_LABEL: `See list of valid language tags <a href="https://en.wikipedia.org/wiki/IETF_language_tag#List_of_subtags" target="_blank">here</a>.`,
@@ -134,9 +140,20 @@ export const STRINGS = {
   LC_INSTRUCTIONS:
     "This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on a computer.",
   LC_METADATA_SUBHEADER: "Metadata",
+  LC_SAVE_CHANGES_BUTTON_LABEL: "Save All Changes to Local File",
+  LC_SAVE_CHANGES_SUBHEADER: "Save Changes",
+  LC_SOCIAL_IMAGE_INPUT_BELOW_LABEL:
+    "Social Image must be a full URL including the domain name and cannot be included inline as a data URL like other images. You will likely need to upload the image to your web host, then update your page again with the hosted image URL. The social image is configured for a square image at least 144px x 144px large.",
+  LC_SOCIAL_IMAGE_INPUT_LABEL: "Update Social Image",
+  LC_SOCIAL_IMAGE_LABEL: "Current Social Image:",
+  LC_SOCIAL_IMAGE_SUBHEADER: "Social Image",
   LC_STYLES_SUBHEADER: "Styles",
+  LC_TEXT_ALIGNMENT_LEGEND:
+    "Select an option for aligning the text within the body",
+  LC_TEXT_ALIGNMENT_SUBHEADER: "Text Alignment",
+  LC_UPDATE_FAVICON_LABEL: "Update Favicon",
   PLACEHOLDER_TEXT: "Your text here",
   PROMPT_LINK_URL: "URL:",
-  MISSING_SOCIAL_IMAGE_ALT: "&nbsp;Social Image is not set.",
+  MISSING_SOCIAL_IMAGE_ALT: "Social Image is not set.",
   NEW_CONTENT_HEADER: "Add New Content",
 };

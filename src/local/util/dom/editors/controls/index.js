@@ -1,4 +1,3 @@
-import { LOCAL_CONTROLS_HTML } from "../../../../templates";
 import {
   createElement,
   getBodyBackgroundColor,
@@ -8,13 +7,22 @@ import {
 import {
   ADD_ITEM_ID,
   BUTTON_ELEMENT,
+  CANCEL_FAVICON_UPDATE_ID,
   COLOR_PICKER_CLASS,
+  CONFIRM_FAVICON_UPDATE_ID,
   CONTROLS_SECTION_CLASS,
+  CURRENT_FAVICON_FIGURE_ID,
+  CURRENT_FAVICON_PREVIEW_ID,
+  CURRENT_SOCIAL_IMAGE_PREVIEW_ID,
   DATALIST_ELEMENT,
+  EDIT_BUTTONS_CLASS,
   FIELDSET_ELEMENT,
+  FIGCAPTION_ELEMENT,
+  FIGURE_ELEMENT,
   FULL_WIDTH_CHECKBOX_ID,
   HEADING_ELEMENTS,
   HOZ_RULE_ELEMENT,
+  IMG_ELEMENT,
   INPUT_BELOW_LABEL_CLASS,
   INPUT_ELEMENT,
   INPUT_TYPES,
@@ -22,18 +30,23 @@ import {
   LABEL_ELEMENT,
   LEGEND_ELEMENT,
   LOCAL_CONTROLS_ID,
+  NOTE_CLASS,
   OPTION_ELEMENT,
   PAGE_DESC_INPUT_ID,
   PAGE_LANG_INPUT_ID,
   PAGE_TITLE_INPUT_ID,
   PARAGRAPH_ELEMENT,
+  SAVE_CHANGES_ID,
   SETTINGS,
+  SOCIAL_IMAGE_FIGURE_ID,
   SPAN_ELEMENT,
   STRINGS,
   TEXTAREA_ELEMENT,
   UPDATE_BACKGROUND_COLOR_ID,
   UPDATE_BODY_ALIGN_ID,
   UPDATE_BODY_ALIGN_OPTION_NAME,
+  UPDATE_FAVICON_ID,
+  UPDATE_SOCIAL_IMAGE_ID,
   UPDATE_TEXT_ALIGN_ID,
   UPDATE_TEXT_ALIGN_OPTION_NAME,
   WIDTH_SLIDER_CONTAINER_ID,
@@ -44,6 +57,8 @@ import {
 
 const {
   ALIGNMENT_LABELS,
+  BUTTON_CANCEL,
+  BUTTON_UPDATE,
   LC_BG_COLOR_SUBHEADER,
   LC_BG_COLOR_LABEL,
   LC_BODY_ALIGNMENT_LEGEND,
@@ -56,6 +71,9 @@ const {
   LC_TEXT_ALIGNMENT_SUBHEADER,
   LC_CONTENT_SUBHEADER,
   LC_CONTENT_BUTTON,
+  LC_CURRENT_FAVICON_CAPTION,
+  LC_CURRENT_FAVICON_ALT_TEXT,
+  LC_FAVICON_SUBHEADER,
   LC_GENERAL_PAGE_DESC_LABEL,
   LC_GENERAL_PAGE_LANG_LABEL,
   LC_GENERAL_PAGE_LANG_BELOW_LABEL,
@@ -64,7 +82,15 @@ const {
   LC_HEADER,
   LC_INSTRUCTIONS,
   LC_METADATA_SUBHEADER,
+  LC_SAVE_CHANGES_BUTTON_LABEL,
+  LC_SAVE_CHANGES_SUBHEADER,
+  LC_SOCIAL_IMAGE_INPUT_BELOW_LABEL,
+  LC_SOCIAL_IMAGE_INPUT_LABEL,
+  LC_SOCIAL_IMAGE_LABEL,
+  LC_SOCIAL_IMAGE_SUBHEADER,
   LC_STYLES_SUBHEADER,
+  LC_UPDATE_FAVICON_LABEL,
+  MISSING_SOCIAL_IMAGE_ALT,
 } = STRINGS;
 const [_H1, H2, H3, H4] = HEADING_ELEMENTS;
 
@@ -124,6 +150,29 @@ function getControlsAlignmentInput(fieldsetId, legendText, options) {
     fieldset.insertAdjacentElement("beforeend", optionElement);
   });
   return [fieldset];
+}
+
+function getFigureWithCaption(
+  figureId,
+  captionText,
+  imageId,
+  imageSrc,
+  imageAlt
+) {
+  const figure = createElement({ tag: FIGURE_ELEMENT, id: figureId });
+  const caption = createElement({
+    tag: FIGCAPTION_ELEMENT,
+    innerHTML: captionText,
+  });
+  const image = createElement({
+    tag: IMG_ELEMENT,
+    id: imageId,
+    imageSrc,
+    altText: imageAlt,
+  });
+  figure.insertAdjacentElement("beforeend", caption);
+  figure.insertAdjacentElement("beforeend", image);
+  return figure;
 }
 
 export function getLocalControls() {
@@ -283,12 +332,84 @@ export function getLocalControls() {
     ]),
     H4
   );
-  const faviconEditor = createElement();
-  const socialImageEditor = createElement();
-  const saveChanges = createElement();
+
+  const faviconEditorButtons = createElement({
+    classList: [EDIT_BUTTONS_CLASS],
+  });
+  const faviconEditorCancelButton = createElement({
+    tag: BUTTON_ELEMENT,
+    id: CANCEL_FAVICON_UPDATE_ID,
+    innerHTML: BUTTON_CANCEL,
+  });
+  faviconEditorCancelButton.disabled = true;
+  const faviconEditorUpdateButton = createElement({
+    tag: BUTTON_ELEMENT,
+    id: CONFIRM_FAVICON_UPDATE_ID,
+    innerHTML: BUTTON_UPDATE,
+  });
+  faviconEditorUpdateButton.disabled = true;
+  faviconEditorButtons.insertAdjacentElement(
+    "beforeend",
+    faviconEditorCancelButton
+  );
+  faviconEditorButtons.insertAdjacentElement(
+    "beforeend",
+    faviconEditorUpdateButton
+  );
+  const faviconEditor = getControlsSection(
+    LC_FAVICON_SUBHEADER,
+    [
+      getFigureWithCaption(
+        CURRENT_FAVICON_FIGURE_ID,
+        LC_CURRENT_FAVICON_CAPTION,
+        CURRENT_FAVICON_PREVIEW_ID,
+        getCurrentFaviconURL(),
+        LC_CURRENT_FAVICON_ALT_TEXT
+      ),
+      ...getControlsInput(
+        UPDATE_FAVICON_ID,
+        INPUT_TYPES.FILE,
+        LC_UPDATE_FAVICON_LABEL
+      ),
+      faviconEditorButtons,
+    ],
+    H4
+  );
 
   const { url: currentSocialImageURL, alt: currentSocialImageAlt } =
     getCurrentSocialImage();
+  const socialImageEditor = getControlsSection(
+    LC_SOCIAL_IMAGE_SUBHEADER,
+    [
+      getFigureWithCaption(
+        SOCIAL_IMAGE_FIGURE_ID,
+        LC_SOCIAL_IMAGE_LABEL,
+        CURRENT_SOCIAL_IMAGE_PREVIEW_ID,
+        currentSocialImageURL ?? "",
+        currentSocialImageAlt ??
+          (currentSocialImageURL ? "" : MISSING_SOCIAL_IMAGE_ALT)
+      ),
+      ...getControlsInput(
+        UPDATE_SOCIAL_IMAGE_ID,
+        INPUT_TYPES.TEXT,
+        LC_SOCIAL_IMAGE_INPUT_LABEL
+      ),
+      createElement({
+        tag: LABEL_ELEMENT,
+        htmlFor: UPDATE_SOCIAL_IMAGE_ID,
+        classList: [NOTE_CLASS],
+        innerHTML: LC_SOCIAL_IMAGE_INPUT_BELOW_LABEL,
+      }),
+    ],
+    H4
+  );
+  const saveChanges = getControlsSection(LC_SAVE_CHANGES_SUBHEADER, [
+    createElement({
+      tag: BUTTON_ELEMENT,
+      id: SAVE_CHANGES_ID,
+      innerHTML: LC_SAVE_CHANGES_BUTTON_LABEL,
+    }),
+  ]);
 
   const wrapper = createElement({ id: LOCAL_CONTROLS_ID });
   const children = [

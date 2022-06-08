@@ -130,6 +130,7 @@ export function createElement({
   type = null,
   name = null,
   htmlFor = null,
+  imageSrc = null,
   altText = null,
 } = {}) {
   const element = document.createElement(tag);
@@ -144,6 +145,7 @@ export function createElement({
     type,
     name,
     htmlFor,
+    src: imageSrc,
     alt: altText,
   };
   Object.keys(properties).forEach((p) => {
