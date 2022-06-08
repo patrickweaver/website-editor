@@ -43,6 +43,7 @@ import {
   STRINGS,
   TEXTAREA_ELEMENT,
   UPDATE_BACKGROUND_COLOR_ID,
+  UPDATE_BODY_ALIGN_CONTAINER,
   UPDATE_BODY_ALIGN_ID,
   UPDATE_BODY_ALIGN_OPTION_NAME,
   UPDATE_FAVICON_ID,
@@ -94,8 +95,14 @@ const {
 } = STRINGS;
 const [_H1, H2, H3, H4] = HEADING_ELEMENTS;
 
-function getControlsSection(headerText, children = [], headerTag = H3) {
+function getControlsSection(
+  headerText,
+  children = [],
+  headerTag = H3,
+  id = null
+) {
   const section = createElement({ classList: [CONTROLS_SECTION_CLASS] });
+  if (id) section.id = id;
   const header = createElement({ tag: headerTag, innerHTML: headerText });
   [header, ...children].forEach((element) => {
     section.insertAdjacentElement("beforeend", element);
@@ -302,7 +309,8 @@ export function getLocalControls() {
         innerHTML: LC_BODY_ALIGNMENT_RIGHT_MESSAGE,
       }),
     ],
-    H4
+    H4,
+    UPDATE_BODY_ALIGN_CONTAINER
   );
   const textAlignmentEditor = getControlsSection(
     LC_TEXT_ALIGNMENT_SUBHEADER,
