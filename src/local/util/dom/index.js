@@ -1,4 +1,4 @@
-import { GLOBALS } from "../../globals";
+import { GLOBALS } from "../../../globals";
 import { getDataURLFromFile } from "../files";
 import { getUniqueId } from "../random";
 import { rgb2hex } from "../color";
@@ -14,6 +14,8 @@ import {
   END_OF_DOC_ID,
   FAVICON_QUERY_SELECTOR,
   HEADING_ELEMENTS,
+  IMG_ELEMENT,
+  PARAGRAPH_ELEMENT,
   STRINGS,
 } from "../../constants";
 
@@ -55,22 +57,31 @@ export async function addImage({
   return newElement;
 }
 
-export function addNewElement(type) {
-  let elementType;
-  let editCallback = textEventListener;
-  if (type === EDITOR_TYPES.HEADING) {
-    elementType = HEADING_ELEMENTS[1];
-  } else if (type === EDITOR_TYPES.PARAGRAPH) {
-    elementType = PARAGRAPH_ELEMENT;
-  } else if (type === EDITOR_TYPES.IMAGE) {
-    elementType = IMG_ELEMENT;
-    editCallback = imageEventListener;
-  }
+export function addNewTextElementEditor(type = EDITOR_TYPES.PARAGRAPH) {
+  const tag =
+    type === EDITOR_TYPES.HEADING
+      ? HEADING_ELEMENTS[1] // h2
+      : PARAGRAPH_ELEMENT;
+  const innerHTML = STRINGS.PLACEHOLDER_TEXT;
+  const newElement = createElement({ tag, innerHTML });
+  addNewEditorCleanup(newElement, textEventListener);
+}
 
-  const newElement = createElement({ tag: elementType });
-  if (type === EDITOR_TYPES.HEADING || type === EDITOR_TYPES.PARAGRAPH) {
-    newElement.innerHTML = STRINGS.PLACEHOLDER_TEXT;
-  }
+export function addNewHeadingEditor() {
+  return addNewTextElementEditor(EDITOR_TYPES.HEADING);
+}
+
+export function addNewParagraphEditor() {
+  return addNewTextElementEditor();
+}
+
+export function addNewImageEditor() {
+  const tag = IMG_ELEMENT;
+  const newElement = createElement({ tag });
+  addNewEditorCleanup(newElement, imageEventListener);
+}
+
+function addNewEditorCleanup(newElement, editCallback) {
   addAtEndOfDocument(newElement);
   scrollToNewElement(newElement);
   const fakeEvent = { currentTarget: newElement };
@@ -119,6 +130,7 @@ export function createElement({
   type = null,
   name = null,
   htmlFor = null,
+  imageSrc = null,
   altText = null,
 } = {}) {
   const element = document.createElement(tag);
@@ -133,6 +145,7 @@ export function createElement({
     type,
     name,
     htmlFor,
+    src: imageSrc,
     alt: altText,
   };
   Object.keys(properties).forEach((p) => {

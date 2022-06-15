@@ -1,13 +1,28 @@
-import { GLOBALS } from "../../../globals";
-import { insertFavicon } from "..";
-import { onUpdateBodyAlign } from "../align";
-import { isImageFile } from "../../files";
+import { GLOBALS } from "../../../../globals";
 import {
+  addNewHeadingEditor,
+  addNewParagraphEditor,
+  addNewImageEditor,
+  insertAdj,
+  insertFavicon,
+  getBodyBackgroundColor,
+} from "..";
+import { onUpdateBodyAlign } from "../align";
+import { isImageFile, saveFile } from "../../files";
+import { enableLocalControls } from "../../../enable";
+import { getNewContentModal } from "../editors/addElement";
+import { addListenerById } from "./listeners";
+import {
+  ADD_ITEM_CANCEL_BUTTON_ID,
+  ADD_ITEM_HEADING_ID,
+  ADD_ITEM_IMAGE_ID,
+  ADD_ITEM_PARAGRAPH_ID,
   CANCEL_FAVICON_UPDATE_ID,
   CONFIRM_FAVICON_UPDATE_ID,
   CURRENT_SOCIAL_IMAGE_ID,
   CURRENT_SOCIAL_IMAGE_PREVIEW_ID,
   CURRENT_TWITTER_IMAGE_ID,
+  LOCAL_CONTROLS_ID,
   STRINGS,
   UPDATE_BODY_ALIGN_CONTAINER,
   UPDATE_BODY_ALIGN_ID,
@@ -15,6 +30,62 @@ import {
   WIDTH_SLIDER_ID,
   WIDTH_SLIDER_VALUE_ID,
 } from "../../../constants";
+
+export function onClickNewContentButton() {
+  const newContentModal = getNewContentModal();
+  insertAdj(LOCAL_CONTROLS_ID, newContentModal, "beforeend");
+
+  function clearAddItemModal() {
+    newContentModal.remove();
+  }
+
+  const addElementEditorOptions = [
+    { id: ADD_ITEM_HEADING_ID, callback: addNewHeadingEditor },
+    { id: ADD_ITEM_PARAGRAPH_ID, callback: addNewParagraphEditor },
+    { id: ADD_ITEM_IMAGE_ID, callback: addNewImageEditor },
+  ];
+
+  addElementEditorOptions.forEach((option) => {
+    const callback = (_event) => {
+      option.callback();
+      clearAddItemModal();
+    };
+    addListenerById(option.id, callback, "click");
+  });
+
+  addListenerById(ADD_ITEM_CANCEL_BUTTON_ID, clearAddItemModal, "click");
+}
+
+export async function onClickSaveChanges(_event) {
+  const localControls = document.getElementById(LOCAL_CONTROLS_ID);
+  localControls.remove();
+  const htmlSourceCode = `
+            <!DOCTYPE html>
+            <html lang="${document.documentElement.lang}"  id="html-element">
+              <head>
+                ${document.head.innerHTML}
+              </head>
+              <body
+                style="
+                  background-color: ${getBodyBackgroundColor()};
+                  text-align: ${document.body.style.textAlign};
+                  align-items: ${document.body.style.alignItems};
+                ">
+                ${document.body.innerHTML}
+              </body>
+            </html>
+          `;
+  try {
+    await saveFile(htmlSourceCode);
+  } catch (error) {
+    if (error?.message === "The user aborted a request.") {
+      // Error is just cancel button
+    } else {
+      alert(error?.message ?? "Error saving file.");
+    }
+  }
+  enableLocalControls();
+}
 
 export function onUpdateImgElementAlign(value) {
   if (value === "default") {
