@@ -1,7 +1,15 @@
 import { createElement } from "..";
 import { makeEditorChangeListener } from "../events/listeners";
 import { createEditorLabel } from "./label";
-import { EDIT_CLASS, EDITOR_TYPES, STRINGS } from "../../constants";
+import {
+  EDIT_CLASS,
+  EDITOR_TYPES,
+  STRINGS,
+  INPUT_ELEMENT,
+  INPUT_TYPES,
+  IMG_ELEMENT,
+  IMAGE_PREVIEW_ID_PREFIX,
+} from "../../constants";
 
 export function createImageEditor({
   id,
@@ -11,19 +19,23 @@ export function createImageEditor({
 }) {
   const editorChangeListener = makeEditorChangeListener(id, confirmButtonLabel);
   const imagePicker = createElement({
-    tag: "input",
-    type: "file",
+    tag: INPUT_ELEMENT,
+    type: INPUT_TYPES.FILE,
     id,
     classList: [EDIT_CLASS],
   });
   imagePicker.addEventListener("change", editorChangeListener);
   const imagePickerLabel = createEditorLabel(id, EDITOR_TYPES.IMAGE);
   const altEditor = createElement({
-    tag: "input",
-    type: "text",
+    tag: INPUT_ELEMENT,
+    type: INPUT_TYPES.TEXT,
     id: `alt-text-${id}`,
     classList: [EDIT_CLASS],
     value: altTextContent ?? "",
+  });
+  const imagePreview = createElement({
+    tag: IMG_ELEMENT,
+    id: `${IMAGE_PREVIEW_ID_PREFIX}${id}`,
   });
   altEditor.addEventListener("input", editorChangeListener);
   const altEditorLabel = createEditorLabel(
@@ -80,5 +92,6 @@ export function createImageEditor({
     altEditor,
     altEditorLabel,
     alignSelect: editAlignElement,
+    imagePreview,
   };
 }

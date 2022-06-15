@@ -4,7 +4,7 @@ import { getButtonId, getEditorContainerId, slugify } from "../../util/strings";
 import { createImageEditor } from "../editors/image";
 import { createTextEditor } from "../editors/text";
 import { getUniqueId } from "../../util/random";
-import { isImageFile } from "../../util/files";
+import { getDataURLFromFile, isImageFile } from "../../util/files";
 import {
   CLONE_CLASS,
   CLONE_CONTAINER_CLASS,
@@ -15,6 +15,7 @@ import {
   PARAGRAPH_ELEMENT,
   STRINGS,
   TEXT_EDITOR_ID_READABLE_STRING,
+  IMAGE_PREVIEW_ID_PREFIX,
 } from "../../constants";
 
 export const textEventListener = makeElementEventListener(EDITOR_TYPES.TEXT);
@@ -47,28 +48,30 @@ export function addListenerToMetaDataEditor(
 }
 
 export function makeEditorChangeListener(id, confirmButtonLabel) {
-  return function (event) {
+  return async function (event) {
     const updateButtonId = getButtonId(confirmButtonLabel, id);
     const updateButton = document.getElementById(updateButtonId);
     const { tagName: _tagName, type, files } = event.currentTarget;
     const tagName = _tagName.toLowerCase();
     const isParagraphEditor = tagName === "textarea";
-    const isHeadingOrAltEditor = tagName === "input" && type === "text";
     const isImageEditor = tagName === "input" && type === "file";
-    const isAlignEditor = tagName === "fieldset";
     if (isParagraphEditor) {
       // 🚸 TODO shouldn't be able to update if empty text but other branches here can enable it.
       // https://github.com/patrickweaver/website-editor/issues/86
       updateButton.disabled = !event.currentTarget.value;
-    } else if (isImageEditor) {
-      const validFile = isImageFile(files[0]);
-      updateButton.disabled = !validFile;
-      if (!validFile) {
-        alert(STRINGS.ERROR_IMAGE_ONLY);
+    } else {
+      if (isImageEditor) {
+        const validFile = isImageFile(files[0]);
+        if (!validFile) {
+          alert(STRINGS.ERROR_IMAGE_ONLY);
+          return;
+        }
+        const url = await getDataURLFromFile(files[0]);
+        const imagePreview = document.getElementById(
+          `${IMAGE_PREVIEW_ID_PREFIX}${id}`
+        );
+        imagePreview.src = url;
       }
-    } else if (isHeadingOrAltEditor) {
-      updateButton.disabled = false;
-    } else if (isAlignEditor) {
       updateButton.disabled = false;
     }
   };
@@ -237,6 +240,7 @@ function makeElementEventListener(editorType) {
       altEditor,
       altEditorLabel,
       alignSelect,
+      imagePreview,
     } = editElements;
 
     let buttonsContainerElement = createElement({
@@ -310,6 +314,7 @@ function makeElementEventListener(editorType) {
       alignSelect,
       editorLabel,
       editor,
+      imagePreview,
       altEditorLabel,
       altEditor,
       buttonsContainerElement,

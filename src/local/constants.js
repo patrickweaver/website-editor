@@ -41,6 +41,7 @@ export const INPUT_TYPE_TEXTAREA_CLASS = "text-textarea";
 export const INPUT_BELOW_LABEL_CLASS = "below-label";
 export const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
 export const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
+export const IMAGE_PREVIEW_ID_PREFIX = `image-preview-`;
 export const END_OF_DOC_ID = "end-of-document";
 export const LOCAL_CONTROLS_CONTAINER_ID = "local-controls-container";
 export const LOCAL_CONTROLS_ID = "local-controls";
