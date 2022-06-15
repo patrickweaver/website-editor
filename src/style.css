@@ -102,11 +102,11 @@ textarea.edit {
   width: Calc(100% - 1rem);
 }
 
-fieldset.edit>div {
+fieldset.edit > div {
   line-height: 2rem;
 }
 
-fieldset.edit>div>label {
+fieldset.edit > div > label {
   margin: 0 5px;
 }
 
@@ -146,6 +146,11 @@ fieldset.edit {
 #local-controls fieldset label,
 #local-controls fieldset input {
   display: inline-block;
+}
+
+#local-controls fieldset label {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
 }
 
 #local-controls figure {
