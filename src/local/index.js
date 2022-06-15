@@ -33,8 +33,6 @@ import {
 
 /* JavaScript enabling editing only runs locally */
 export function localEditingMode() {
-  console.log("Local edit mode");
-
   [
     ...document.querySelectorAll(HEADING_ELEMENTS.join(", ")),
     ...document.querySelectorAll(PARAGRAPH_ELEMENT),
