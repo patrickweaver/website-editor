@@ -1,10 +1,10 @@
-import { GLOBALS } from "../../../../globals";
+import { GLOBALS } from "../../../globals";
 import { addLinkAroundSelection, addImage, addText, createElement } from "..";
-import { getButtonId, getEditorContainerId, slugify } from "../../strings";
+import { getButtonId, getEditorContainerId, slugify } from "../../util/strings";
 import { createImageEditor } from "../editors/image";
 import { createTextEditor } from "../editors/text";
-import { getUniqueId } from "../../random";
-import { isImageFile } from "../../files";
+import { getUniqueId } from "../../util/random";
+import { isImageFile } from "../../util/files";
 import {
   CLONE_CLASS,
   CLONE_CONTAINER_CLASS,
@@ -15,7 +15,7 @@ import {
   PARAGRAPH_ELEMENT,
   STRINGS,
   TEXT_EDITOR_ID_READABLE_STRING,
-} from "../../../constants";
+} from "../../constants";
 
 export const textEventListener = makeElementEventListener(EDITOR_TYPES.TEXT);
 export const imageEventListener = makeElementEventListener(EDITOR_TYPES.IMAGE);

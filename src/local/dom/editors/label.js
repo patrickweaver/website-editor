@@ -1,5 +1,5 @@
 import { createElement } from "..";
-import { EDIT_CLASS, STRINGS } from "../../../constants";
+import { EDIT_CLASS, STRINGS } from "../../constants";
 
 export function createEditorLabel(editorId, type, text = null) {
   return createElement({

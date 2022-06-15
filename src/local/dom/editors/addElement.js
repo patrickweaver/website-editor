@@ -11,7 +11,7 @@ import {
   NEW_CONTENT_MODAL_ID,
   NEW_CONTENT_MODAL_WRAPPER,
   STRINGS,
-} from "../../../constants";
+} from "../../constants";
 
 const sectionHeading = HEADING_ELEMENTS[1];
 

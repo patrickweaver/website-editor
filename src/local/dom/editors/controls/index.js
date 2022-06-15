@@ -54,7 +54,7 @@ import {
   WIDTH_SLIDER_DATALIST_ID,
   WIDTH_SLIDER_ID,
   WIDTH_SLIDER_VALUE_ID,
-} from "../../../../constants";
+} from "../../../constants";
 
 const {
   ALIGNMENT_LABELS,

@@ -1,12 +1,12 @@
-import { GLOBALS } from "../../../globals";
-import { getDataURLFromFile } from "../files";
-import { getUniqueId } from "../random";
-import { rgb2hex } from "../color";
+import { GLOBALS } from "../../globals";
+import { getDataURLFromFile } from "../util/files";
+import { getUniqueId } from "../util/random";
+import { rgb2hex } from "../util/color";
 import { getAlignValueFromFieldset } from "./align";
 import { imageEventListener, textEventListener } from "./events/listeners";
 import { onUpdateImgElementAlign } from "./events/handlers";
-import { getEditorContainerId } from "../strings";
-import { isImageFile } from "../files";
+import { getEditorContainerId } from "../util/strings";
+import { isImageFile } from "../util/files";
 import {
   CURRENT_FAVICON_PREVIEW_ID,
   CURRENT_SOCIAL_IMAGE_ID,
@@ -17,7 +17,7 @@ import {
   IMG_ELEMENT,
   PARAGRAPH_ELEMENT,
   STRINGS,
-} from "../../constants";
+} from "../constants";
 
 export function addAtEndOfDocument(element) {
   document

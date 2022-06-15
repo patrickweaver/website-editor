@@ -1,8 +1,8 @@
 import { GLOBALS } from "../globals";
-import { createElement, insertAdj } from "./util/dom";
-import { getLocalControls } from "./util/dom/editors/controls";
-import { addListenerById } from "./util/dom/events/listeners";
-import { onClickNewContentButton } from "./util/dom/events/handlers";
+import { createElement, insertAdj } from "./dom";
+import { getLocalControls } from "./dom/editors/controls";
+import { addListenerById } from "./dom/events/listeners";
+import { onClickNewContentButton } from "./dom/events/handlers";
 import {
   ADD_ITEM_ID,
   END_OF_DOC_ID,

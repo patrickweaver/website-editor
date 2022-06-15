@@ -1,4 +1,4 @@
-import { GLOBALS } from "../../../../globals";
+import { GLOBALS } from "../../../globals";
 import {
   addNewHeadingEditor,
   addNewParagraphEditor,
@@ -8,8 +8,8 @@ import {
   getBodyBackgroundColor,
 } from "..";
 import { onUpdateBodyAlign } from "../align";
-import { isImageFile, saveFile } from "../../files";
-import { enableLocalControls } from "../../../enable";
+import { isImageFile, saveFile } from "../../util/files";
+import { enableLocalControls } from "../../enable";
 import { getNewContentModal } from "../editors/addElement";
 import { addListenerById } from "./listeners";
 import {
@@ -29,7 +29,7 @@ import {
   WIDTH_SLIDER_CONTAINER_ID,
   WIDTH_SLIDER_ID,
   WIDTH_SLIDER_VALUE_ID,
-} from "../../../constants";
+} from "../../constants";
 
 export function onClickNewContentButton() {
   const newContentModal = getNewContentModal();

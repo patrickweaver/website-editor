@@ -1,4 +1,4 @@
-import { onUpdateBodyAlign, onUpdateBodyTextAlign } from "./util/dom/align";
+import { onUpdateBodyAlign, onUpdateBodyTextAlign } from "./dom/align";
 import {
   onClickSaveChanges,
   onUpdateBackgroundColor,
@@ -6,13 +6,13 @@ import {
   onUpdateFullWidth,
   onUpdateSocialImage,
   onUpdateWidth,
-} from "./util/dom/events/handlers";
+} from "./dom/events/handlers";
 import {
   addListenerById,
   addListenerToMetaDataEditor,
   imageEventListener,
   textEventListener,
-} from "./util/dom/events/listeners";
+} from "./dom/events/listeners";
 import { enableLocalControls } from "./enable";
 import {
   HEADING_ELEMENTS,
