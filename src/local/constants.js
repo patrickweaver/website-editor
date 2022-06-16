@@ -27,6 +27,7 @@ export const UPDATE_BODY_ALIGN_ID = "update-body-align";
 export const UPDATE_BODY_ALIGN_OPTION_NAME = "body-align";
 export const UPDATE_TEXT_ALIGN_ID = "update-text-align";
 export const UPDATE_TEXT_ALIGN_OPTION_NAME = "text-align";
+export const UPDATE_TEXT_SIZE_ID = "update-text-size";
 export const CONTROLS_SECTION_CLASS = "controls-section";
 export const COLOR_PICKER_CLASS = "color-picker";
 export const SAVE_CHANGES_ID = "save-changes";
@@ -87,6 +88,7 @@ export const INPUT_TYPES = {
   FILE: "file",
   RADIO: "radio",
   RANGE: "range",
+  NUMBER: "number",
 };
 
 export const SETTINGS = {
@@ -157,6 +159,8 @@ export const STRINGS = {
   LC_TEXT_ALIGNMENT_LEGEND:
     "Select an option for aligning the text within the body",
   LC_TEXT_ALIGNMENT_SUBHEADER: "Text Alignment",
+  LC_TEXT_SIZE_LABEL: "Font Size (%)",
+  LC_TEXT_STYLE_SUBHEADER: "Text Style",
   LC_UPDATE_FAVICON_LABEL: "Update Favicon",
   PLACEHOLDER_TEXT: "Your text here",
   PROMPT_LINK_URL: "URL:",

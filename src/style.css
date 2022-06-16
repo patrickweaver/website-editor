@@ -3,10 +3,10 @@
   --button-del-border: #ff0000;
   --button-del-hover-bg: #ffafaf;
   --button-del-hover-border: #ff2f2f;
-  --local-controls-bg: #dfdfe8;
-  --local-controls-bg-2: #f8f8ff;
-  --local-controls-bg-3: #f4f4f4;
-  --local-controls-border-3: #2f2f2f;
+  --lc-bg: #dfdfe8;
+  --lc-bg-2: #f8f8ff;
+  --lc-bg-3: #f4f4f4;
+  --lc-border-3: #2f2f2f;
   --modal-shadow-bg: #4f4f4fdf;
   --new-element-highlight: #00ffff;
   --edit-element-highlight: #ffff00;
@@ -77,7 +77,7 @@ img {
   border: 2px solid var(--edit-element-highlight);
   margin: 1rem 0;
   padding: 0.5rem;
-  background-color: var(--local-controls-bg);
+  background-color: var(--lc-bg);
 }
 
 .edit-container select {
@@ -85,8 +85,8 @@ img {
 }
 
 .clone-container {
-  border: 1px solid var(--local-controls-border-3);
-  background-color: var(--local-controls-bg-3);
+  border: 1px solid var(--lc-border-3);
+  background-color: var(--lc-bg-3);
   padding: 1rem;
   margin: 0.5rem 0 1rem;
 }
@@ -133,15 +133,17 @@ fieldset.edit {
   width: 100%;
   text-align: left;
   margin-top: 3rem;
+  font-size: 16px;
+  line-height: 18.5px;
 }
 
 #local-controls {
-  background-color: var(--local-controls-bg);
+  background-color: var(--lc-bg);
   text-align: left;
   margin: 1rem;
   padding: 0.5rem 1rem;
   max-width: 600px;
-  outline: 1px dashed var(--local-controls-border-3);
+  outline: 1px dashed var(--lc-border-3);
 }
 
 #local-controls fieldset label,
@@ -204,7 +206,7 @@ fieldset.edit {
 }
 
 .edit-buttons {
-  background-color: var(--local-controls-bg);
+  background-color: var(--lc-bg);
   margin: 0.5rem 0;
   display: inline-block;
 }
@@ -234,7 +236,7 @@ fieldset.edit {
 
 #new-content-modal {
   margin: 5rem 10% 0;
-  background-color: var(--local-controls-bg-2);
+  background-color: var(--lc-bg-2);
   padding: 1rem 2rem;
   width: Calc(80% - 2rem - 2rem);
   /* 2rem is body margin */
@@ -245,7 +247,7 @@ fieldset.edit {
 }
 
 .image-preview {
-  border: 1px dashed var(--local-controls-border-3);
+  border: 1px dashed var(--lc-border-3);
   background-color: white;
   max-width: 150px;
 }

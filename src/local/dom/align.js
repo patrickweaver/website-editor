@@ -31,3 +31,9 @@ export function onUpdateBodyTextAlign(changeEvent) {
   document.body.style.alignItems = flexClasses[value];
   GLOBALS.EDITING_STATE_DIRTY = true;
 }
+
+export function onUpdateBodyTextSize(changeEvent) {
+  const { value } = changeEvent.target;
+  document.body.style.fontSize = `${value}%`;
+  document.body.style.lineHeight = `${value}%`;
+}
