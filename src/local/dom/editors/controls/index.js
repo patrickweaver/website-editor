@@ -55,7 +55,7 @@ import {
   WIDTH_SLIDER_ID,
   WIDTH_SLIDER_VALUE_ID,
 } from "../../../constants";
-import { makeImagePreview } from "../imagePreview";
+import { IMAGE_PREVIEW_TYPES, makeImagePreview } from "../imagePreview";
 
 const {
   ALIGNMENT_LABELS,
@@ -342,7 +342,10 @@ export function getLocalControls() {
     H4
   );
 
-  const faviconImagePreivew = makeImagePreview(UPDATE_FAVICON_ID);
+  const faviconImagePreivew = makeImagePreview(
+    UPDATE_FAVICON_ID,
+    IMAGE_PREVIEW_TYPES.FAVICON
+  );
 
   const faviconEditorButtons = createElement({
     classList: [EDIT_BUTTONS_CLASS],

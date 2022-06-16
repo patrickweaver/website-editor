@@ -11,15 +11,21 @@ import {
   STRINGS,
 } from "../../constants";
 
-export function makeImagePreview(id) {
+export const IMAGE_PREVIEW_TYPES = {
+  IMAGE: { caption: STRINGS.IMAGE_PREVIEW_CAPTION },
+  FAVICON: { caption: STRINGS.FAVICON_PREVIEW_CAPTION },
+};
+
+export function makeImagePreview(id, type = IMAGE_PREVIEW_TYPES.IMAGE) {
   const imagePreviewImg = createElement({
     tag: IMG_ELEMENT,
     id: `${IMAGE_PREVIEW_ID_PREFIX}${id}`,
     classList: [IMAGE_PREVIEW_CLASS],
   });
+  const captionText = type.caption;
   const imagePreviewCaption = createElement({
     tag: FIGCAPTION_ELEMENT,
-    innerHTML: STRINGS.IMAGE_PREVIEW_CAPTION,
+    innerHTML: captionText,
   });
   const imagePreviewFigure = createElement({
     tag: FIGURE_ELEMENT,
