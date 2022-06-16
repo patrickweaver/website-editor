@@ -50,6 +50,7 @@ import {
   UPDATE_SOCIAL_IMAGE_ID,
   UPDATE_TEXT_ALIGN_ID,
   UPDATE_TEXT_ALIGN_OPTION_NAME,
+  UPDATE_TEXT_SIZE_ID,
   WIDTH_SLIDER_CONTAINER_ID,
   WIDTH_SLIDER_DATALIST_ID,
   WIDTH_SLIDER_ID,
@@ -71,6 +72,7 @@ const {
   LC_BODY_WIDTH_FULL_LABEL,
   LC_TEXT_ALIGNMENT_LEGEND,
   LC_TEXT_ALIGNMENT_SUBHEADER,
+  LC_TEXT_STYLE_SUBHEADER,
   LC_CONTENT_SUBHEADER,
   LC_CONTENT_BUTTON,
   LC_CURRENT_FAVICON_CAPTION,
@@ -342,6 +344,17 @@ export function getLocalControls() {
     H4
   );
 
+  const textSizeControls = getControlsInput(
+    UPDATE_TEXT_SIZE_ID,
+    INPUT_TYPES.NUMBER,
+    STRINGS.LC_TEXT_SIZE_LABEL,
+    100
+  );
+  textSizeControls[1].step = 10;
+  const textStyleEditor = getControlsSection(LC_TEXT_STYLE_SUBHEADER, [
+    ...textSizeControls,
+  ]);
+
   const faviconImagePreivew = makeImagePreview(
     UPDATE_FAVICON_ID,
     IMAGE_PREVIEW_TYPES.FAVICON
@@ -439,6 +452,7 @@ export function getLocalControls() {
     bodyWidthEditor,
     bodyAlignmentEditor,
     textAlignmentEditor,
+    textStyleEditor,
     faviconEditor,
     socialImageEditor,
     saveChanges,

@@ -1,4 +1,8 @@
-import { onUpdateBodyAlign, onUpdateBodyTextAlign } from "./dom/align";
+import {
+  onUpdateBodyAlign,
+  onUpdateBodyTextAlign,
+  onUpdateBodyTextSize,
+} from "./dom/align";
 import {
   onClickSaveChanges,
   onUpdateBackgroundColor,
@@ -25,6 +29,7 @@ import {
   UPDATE_TEXT_ALIGN_ID,
   UPDATE_FAVICON_ID,
   UPDATE_SOCIAL_IMAGE_ID,
+  UPDATE_TEXT_SIZE_ID,
   PAGE_TITLE_INPUT_ID,
   PAGE_DESC_INPUT_ID,
   PAGE_LANG_INPUT_ID,
@@ -52,6 +57,7 @@ export function localEditingMode() {
   addListenerById(WIDTH_SLIDER_ID, onUpdateWidth, "input");
   addListenerById(UPDATE_BODY_ALIGN_ID, onUpdateBodyAlign);
   addListenerById(UPDATE_TEXT_ALIGN_ID, onUpdateBodyTextAlign);
+  addListenerById(UPDATE_TEXT_SIZE_ID, onUpdateBodyTextSize);
   addListenerById(UPDATE_FAVICON_ID, onUpdateFaviconPicker);
   addListenerById(UPDATE_SOCIAL_IMAGE_ID, onUpdateSocialImage, "input");
 
