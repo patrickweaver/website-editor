@@ -242,3 +242,13 @@ fieldset.edit {
 #new-content-modal li {
   margin: 0.5rem;
 }
+
+.image-preview {
+  border: 1px dashed var(--local-controls-border-3);
+  background-color: white;
+  max-width: 150px;
+}
+
+.hidden {
+  display: none;
+}

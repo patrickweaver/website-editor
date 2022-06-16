@@ -1,6 +1,11 @@
 import { GLOBALS } from "../../../globals";
 import { addLinkAroundSelection, addImage, addText, createElement } from "..";
-import { getButtonId, getEditorContainerId, slugify } from "../../util/strings";
+import {
+  getButtonId,
+  getEditorContainerId,
+  slugify,
+  trimHTML,
+} from "../../util/strings";
 import { createImageEditor } from "../editors/image";
 import { createTextEditor } from "../editors/text";
 import { getUniqueId } from "../../util/random";
@@ -16,6 +21,8 @@ import {
   STRINGS,
   TEXT_EDITOR_ID_READABLE_STRING,
   IMAGE_PREVIEW_ID_PREFIX,
+  HIDDEN_CLASS,
+  IMAGE_PREVIEW_FIGURE_ID_PREFIX,
 } from "../../constants";
 
 export const textEventListener = makeElementEventListener(EDITOR_TYPES.TEXT);
@@ -61,16 +68,23 @@ export function makeEditorChangeListener(id, confirmButtonLabel) {
       updateButton.disabled = !event.currentTarget.value;
     } else {
       if (isImageEditor) {
+        const imagePreviewImg = document.getElementById(
+          `${IMAGE_PREVIEW_ID_PREFIX}${id}`
+        );
+        const imagePreviewFigure = document.getElementById(
+          `${IMAGE_PREVIEW_FIGURE_ID_PREFIX}${id}`
+        );
         const validFile = isImageFile(files[0]);
         if (!validFile) {
+          event.currentTarget.value = null;
+          imagePreviewImg.src = null;
+          imagePreviewFigure.classList.add(HIDDEN_CLASS);
           alert(STRINGS.ERROR_IMAGE_ONLY);
           return;
         }
         const url = await getDataURLFromFile(files[0]);
-        const imagePreview = document.getElementById(
-          `${IMAGE_PREVIEW_ID_PREFIX}${id}`
-        );
-        imagePreview.src = url;
+        imagePreviewImg.src = url;
+        imagePreviewFigure.classList.remove(HIDDEN_CLASS);
       }
       updateButton.disabled = false;
     }
@@ -93,10 +107,7 @@ function makeElementEventListener(editorType) {
       alt: altTextContent,
     } = element;
     const tagName = _tagName.toLowerCase();
-    const originalContent = _originalContent
-      .split(/(\n|\s)+/)
-      .filter((i) => ![" ", "", "\n"].some((j) => j === i))
-      .join(" ");
+    const originalContent = trimHTML(_originalContent);
 
     const deleteButton = {
       label: STRINGS.BUTTON_DELETE,
