@@ -8,7 +8,7 @@ import {
   getBodyBackgroundColor,
 } from "..";
 import { onUpdateBodyAlign } from "../align";
-import { isImageFile, saveFile } from "../../util/files";
+import { isImageFile, saveFile, getDataURLFromFile } from "../../util/files";
 import { enableLocalControls } from "../../enable";
 import { getNewContentModal } from "../editors/addElement";
 import { addListenerById } from "./listeners";
@@ -22,10 +22,14 @@ import {
   CURRENT_SOCIAL_IMAGE_ID,
   CURRENT_SOCIAL_IMAGE_PREVIEW_ID,
   CURRENT_TWITTER_IMAGE_ID,
+  HIDDEN_CLASS,
+  IMAGE_PREVIEW_FIGURE_ID_PREFIX,
+  IMAGE_PREVIEW_ID_PREFIX,
   LOCAL_CONTROLS_ID,
   STRINGS,
   UPDATE_BODY_ALIGN_CONTAINER,
   UPDATE_BODY_ALIGN_ID,
+  UPDATE_FAVICON_ID,
   WIDTH_SLIDER_CONTAINER_ID,
   WIDTH_SLIDER_ID,
   WIDTH_SLIDER_VALUE_ID,
@@ -112,34 +116,48 @@ export function onUpdateFaviconPicker(changeEvent) {
     ADD: "addEventListener",
   };
 
+  const imagePreviewImg = document.getElementById(
+    `${IMAGE_PREVIEW_ID_PREFIX}${UPDATE_FAVICON_ID}`
+  );
+  const imagePreviewFigure = document.getElementById(
+    `${IMAGE_PREVIEW_FIGURE_ID_PREFIX}${UPDATE_FAVICON_ID}`
+  );
+
   const updateButtons = [
     {
       id: CANCEL_FAVICON_UPDATE_ID,
       onClick: (_clickEvent) => {
-        updateHandler(true, UPDATE_METHODS.REMOVE);
+        updateHandler(false, UPDATE_METHODS.REMOVE);
       },
     },
     {
       id: CONFIRM_FAVICON_UPDATE_ID,
       onClick: (_clickEvent) => {
-        updateHandler(true, UPDATE_METHODS.REMOVE);
+        updateHandler(false, UPDATE_METHODS.REMOVE);
         insertFavicon(file);
       },
     },
   ];
 
-  function updateHandler(disabled, method) {
-    if (disabled) {
-      changeEvent.target.value = "";
-    }
+  const url = getDataURLFromFile(file);
+
+  async function updateHandler(valid, method) {
     updateButtons.forEach((i) => {
       const button = document.getElementById(i.id);
-      button.disabled = disabled;
+      button.disabled = !valid;
       button[method]("click", i.onClick);
     });
+    if (!valid) {
+      changeEvent.target.value = null;
+      imagePreviewImg.src = null;
+      imagePreviewFigure.classList.add(HIDDEN_CLASS);
+    } else {
+      imagePreviewImg.src = await url;
+      imagePreviewFigure.classList.remove(HIDDEN_CLASS);
+    }
   }
 
-  updateHandler(!validFile, UPDATE_METHODS.ADD);
+  updateHandler(validFile, UPDATE_METHODS.ADD);
 
   if (!validFile) {
     alert(STRINGS.ERROR_IMAGE_ONLY);

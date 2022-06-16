@@ -9,3 +9,10 @@ export function getEditorContainerId(editorId) {
 export function slugify(string) {
   return string.split(" ").join("-").toLowerCase();
 }
+
+export function trimHTML(string) {
+  return string
+    .split(/(\n|\s)+/)
+    .filter((i) => ![" ", "", "\n"].some((j) => j === i))
+    .join(" ");
+}

@@ -41,6 +41,10 @@ export const INPUT_TYPE_TEXTAREA_CLASS = "text-textarea";
 export const INPUT_BELOW_LABEL_CLASS = "below-label";
 export const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
 export const IMAGE_PICKER_ID_READABLE_STRING = "image-picker";
+export const IMAGE_PREVIEW_FIGURE_ID_PREFIX = "image-preview-figure-";
+export const IMAGE_PREVIEW_ID_PREFIX = "image-preview-";
+export const IMAGE_PREVIEW_CLASS = "image-preview";
+export const HIDDEN_CLASS = "hidden";
 export const END_OF_DOC_ID = "end-of-document";
 export const LOCAL_CONTROLS_CONTAINER_ID = "local-controls-container";
 export const LOCAL_CONTROLS_ID = "local-controls";
@@ -117,6 +121,8 @@ export const STRINGS = {
     [EDITOR_TYPES.IMAGE_ALT_TEXT]: "Image alt text",
     [EDITOR_TYPES.ALIGN]: "Edit alignment",
   },
+  FAVICON_PREVIEW_CAPTION: "New favicon preview:",
+  IMAGE_PREVIEW_CAPTION: "Image preview:",
   LC_BG_COLOR_SUBHEADER: "Background Color",
   LC_BG_COLOR_LABEL: "Select a color",
   LC_BODY_ALIGNMENT_LEGEND:
