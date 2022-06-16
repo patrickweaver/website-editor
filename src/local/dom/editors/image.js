@@ -1,19 +1,13 @@
-import { createElement, insertAdj } from "..";
+import { createElement } from "..";
 import { makeEditorChangeListener } from "../events/listeners";
 import { createEditorLabel } from "./label";
+import { makeImagePreview } from "./imagePreview";
 import {
   EDIT_CLASS,
   EDITOR_TYPES,
   STRINGS,
   INPUT_ELEMENT,
   INPUT_TYPES,
-  IMG_ELEMENT,
-  IMAGE_PREVIEW_ID_PREFIX,
-  HIDDEN_CLASS,
-  IMAGE_PREVIEW_CLASS,
-  FIGCAPTION_ELEMENT,
-  FIGURE_ELEMENT,
-  IMAGE_PREVIEW_FIGURE_ID_PREFIX,
 } from "../../constants";
 
 export function createImageEditor({
@@ -31,22 +25,8 @@ export function createImageEditor({
   });
   imagePicker.addEventListener("change", editorChangeListener);
   const imagePickerLabel = createEditorLabel(id, EDITOR_TYPES.IMAGE);
-  const imagePreviewImg = createElement({
-    tag: IMG_ELEMENT,
-    id: `${IMAGE_PREVIEW_ID_PREFIX}${id}`,
-    classList: [IMAGE_PREVIEW_CLASS],
-  });
-  const imagePreviewCaption = createElement({
-    tag: FIGCAPTION_ELEMENT,
-    innerHTML: STRINGS.IMAGE_PREVIEW_CAPTION,
-  });
-  const imagePreviewFigure = createElement({
-    tag: FIGURE_ELEMENT,
-    id: `${IMAGE_PREVIEW_FIGURE_ID_PREFIX}${id}`,
-    classList: [HIDDEN_CLASS],
-  });
-  imagePreviewFigure.insertAdjacentElement("beforeend", imagePreviewCaption);
-  imagePreviewFigure.insertAdjacentElement("beforeend", imagePreviewImg);
+
+  const imagePreviewFigure = makeImagePreview(id);
   const altEditor = createElement({
     tag: INPUT_ELEMENT,
     type: INPUT_TYPES.TEXT,
