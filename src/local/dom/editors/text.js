@@ -7,6 +7,7 @@ import {
   HEADING_ELEMENTS,
   STRINGS,
 } from "../../constants";
+import { countLinebreaks, renderWhitespaceForEditor } from "../../util/strings";
 
 export function createTextEditor({
   id,
@@ -42,13 +43,17 @@ export function createTextEditor({
 
   const editorChangeListener = makeEditorChangeListener(id, confirmButtonLabel);
 
+  const contentWithWhitespace = renderWhitespaceForEditor(content);
+
   let editElement = createElement({
     tag: "textarea",
     id,
     classList: [EDIT_CLASS],
-    innerHTML: content,
+    innerHTML: contentWithWhitespace,
     style: {
-      minHeight: `${content.length / 65}rem`,
+      minHeight: `${
+        content.length / 65 + countLinebreaks(contentWithWhitespace) + 3
+      }rem`,
     },
   });
   editElement.addEventListener("input", editorChangeListener);
