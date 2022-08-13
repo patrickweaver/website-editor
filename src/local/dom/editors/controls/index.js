@@ -248,11 +248,12 @@ export function getLocalControls() {
     id: WIDTH_SLIDER_ID,
     tag: INPUT_ELEMENT,
     type: INPUT_TYPES.RANGE,
-    value: SETTINGS.BODY_WIDTH,
   });
   bodyWidthFixedInput.min = SETTINGS.BODY_WIDTHS[0];
   bodyWidthFixedInput.max =
     SETTINGS.BODY_WIDTHS[SETTINGS.BODY_WIDTHS.length - 1];
+  // value must be after min/max to prevent overwrites
+  bodyWidthFixedInput.value = SETTINGS.BODY_WIDTH;
 
   const bodyWidthFixedDatalist = createElement({
     id: WIDTH_SLIDER_DATALIST_ID,
