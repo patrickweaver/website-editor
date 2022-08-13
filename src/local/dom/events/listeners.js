@@ -3,6 +3,7 @@ import { addLinkAroundSelection, addImage, addText, createElement } from "..";
 import {
   getButtonId,
   getEditorContainerId,
+  renderWhitespaceForHTML,
   slugify,
   trimHTML,
 } from "../../util/strings";
@@ -63,9 +64,7 @@ export function makeEditorChangeListener(id, confirmButtonLabel) {
     const isParagraphEditor = tagName === "textarea";
     const isImageEditor = tagName === "input" && type === "file";
     if (isParagraphEditor) {
-      // 🚸 TODO shouldn't be able to update if empty text but other branches here can enable it.
-      // https://github.com/patrickweaver/website-editor/issues/86
-      updateButton.disabled = !event.currentTarget.value;
+      updateButton.disabled = !trimHTML(event.currentTarget.value);
     } else {
       if (isImageEditor) {
         const imagePreviewImg = document.getElementById(
@@ -151,7 +150,7 @@ function makeElementEventListener(editorType) {
         editorId: editorElement.id,
         tagName,
         alignSelectElement,
-        text: editorElement.value,
+        text: renderWhitespaceForHTML(editorElement.value),
       });
       return elementUpdateCleanup(updatedTextElement, originalElement, [
         // 🚸 TODO check alignment dirty
