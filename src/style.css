@@ -6,6 +6,7 @@
   --lc-bg: #dfdfe8;
   --lc-bg-2: #f8f8ff;
   --lc-bg-3: #f4f4f4;
+  --lc-color: #000000;
   --lc-border-3: #2f2f2f;
   --modal-shadow-bg: #4f4f4fdf;
   --new-element-highlight: #00ffff;
@@ -139,6 +140,7 @@ fieldset.edit {
 
 #local-controls {
   background-color: var(--lc-bg);
+  color: var(--lc-color);
   text-align: left;
   margin: 1rem;
   padding: 0.5rem 1rem;

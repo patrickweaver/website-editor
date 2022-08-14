@@ -5,7 +5,7 @@ import {
   addNewImageEditor,
   insertAdj,
   insertFavicon,
-  getBodyBackgroundColor,
+  getCurrentStyle,
 } from "..";
 import { onUpdateBodyAlign } from "../align";
 import { isImageFile, saveFile, getDataURLFromFile } from "../../util/files";
@@ -71,9 +71,11 @@ export async function onClickSaveChanges(_event) {
               </head>
               <body
                 style="
-                  background-color: ${getBodyBackgroundColor()};
+                  background-color: ${getCurrentStyle("backgroundColor")};
+                  color: ${getCurrentStyle("color")};
                   text-align: ${document.body.style.textAlign};
                   align-items: ${document.body.style.alignItems};
+                  /* 🚧 TODO do the other inline properties need to be here? */
                 ">
                 ${document.body.innerHTML}
               </body>
@@ -102,9 +104,11 @@ export function onUpdateImgElementAlign(value) {
   }
 }
 
-export function onUpdateBackgroundColor(changeEvent) {
-  document.body.style.backgroundColor = changeEvent.target.value;
-  GLOBALS.EDITING_STATE_DIRTY = true;
+export function getHandleStyleChange(property) {
+  return (changeEvent) => {
+    document.body.style[property] = changeEvent.target.value;
+    GLOBALS.EDITING_STATE_DIRTY = true;
+  };
 }
 
 export function onUpdateFaviconPicker(changeEvent) {
