@@ -17,6 +17,7 @@ export const CURRENT_TWITTER_IMAGE_ID = "twitter-image";
 export const CURRENT_SOCIAL_IMAGE_PREVIEW_ID = "current-social-image-preview";
 export const UPDATE_SOCIAL_IMAGE_ID = "update-social-image";
 export const UPDATE_BACKGROUND_COLOR_ID = "update-background-color";
+export const UPDATE_TEXT_COLOR_ID = "update-text-color";
 export const FULL_WIDTH_CHECKBOX_ID = "update-full-width";
 export const WIDTH_SLIDER_CONTAINER_ID = "update-body-width-container";
 export const WIDTH_SLIDER_ID = "update-body-width";
@@ -126,7 +127,8 @@ export const STRINGS = {
   FAVICON_PREVIEW_CAPTION: "New favicon preview:",
   IMAGE_PREVIEW_CAPTION: "Image preview:",
   LC_BG_COLOR_SUBHEADER: "Background Color",
-  LC_BG_COLOR_LABEL: "Select a color",
+  LC_TEXT_COLOR_SUBHEADER: "Text Color",
+  LC_COLOR_LABEL: "Select a color",
   LC_BODY_ALIGNMENT_LEGEND:
     "Select an option for aligning the body of the page on the window",
   LC_BODY_ALIGNMENT_RIGHT_MESSAGE: "Right aligned body is not supported.",

@@ -5,7 +5,7 @@ import {
 } from "./dom/align";
 import {
   onClickSaveChanges,
-  onUpdateBackgroundColor,
+  getHandleStyleChange,
   onUpdateFaviconPicker,
   onUpdateFullWidth,
   onUpdateSocialImage,
@@ -23,6 +23,7 @@ import {
   PARAGRAPH_ELEMENT,
   IMG_ELEMENT,
   UPDATE_BACKGROUND_COLOR_ID,
+  UPDATE_TEXT_COLOR_ID,
   FULL_WIDTH_CHECKBOX_ID,
   WIDTH_SLIDER_ID,
   UPDATE_BODY_ALIGN_ID,
@@ -52,7 +53,11 @@ export function localEditingMode() {
   enableLocalControls();
 
   /* Activate Controls on Controls Elements */
-  addListenerById(UPDATE_BACKGROUND_COLOR_ID, onUpdateBackgroundColor);
+  addListenerById(
+    UPDATE_BACKGROUND_COLOR_ID,
+    getHandleStyleChange("backgroundColor")
+  );
+  addListenerById(UPDATE_TEXT_COLOR_ID, getHandleStyleChange("color"));
   addListenerById(FULL_WIDTH_CHECKBOX_ID, onUpdateFullWidth);
   addListenerById(WIDTH_SLIDER_ID, onUpdateWidth, "input");
   addListenerById(UPDATE_BODY_ALIGN_ID, onUpdateBodyAlign);

@@ -154,9 +154,11 @@ export function createElement({
   return element;
 }
 
-export function getBodyBackgroundColor() {
-  const inlineBgColor = document.body?.style?.backgroundColor;
-  return rgb2hex(inlineBgColor ?? "rgb(255, 255, 255)");
+export function getCurrentStyle(property) {
+  const currentStyle = document.body?.style?.[property];
+  if (property.toLowerCase().indexOf("color") >= 0)
+    return rgb2hex(currentStyle || "rgb(255, 255, 255)");
+  return property;
 }
 
 export function getCurrentFaviconURL() {

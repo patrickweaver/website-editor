@@ -1,6 +1,6 @@
 import {
   createElement,
-  getBodyBackgroundColor,
+  getCurrentStyle,
   getCurrentFaviconURL,
   getCurrentSocialImage,
 } from "../..";
@@ -43,6 +43,7 @@ import {
   STRINGS,
   TEXTAREA_ELEMENT,
   UPDATE_BACKGROUND_COLOR_ID,
+  UPDATE_TEXT_COLOR_ID,
   UPDATE_BODY_ALIGN_CONTAINER,
   UPDATE_BODY_ALIGN_ID,
   UPDATE_BODY_ALIGN_OPTION_NAME,
@@ -63,7 +64,8 @@ const {
   BUTTON_CANCEL,
   BUTTON_UPDATE,
   LC_BG_COLOR_SUBHEADER,
-  LC_BG_COLOR_LABEL,
+  LC_TEXT_COLOR_SUBHEADER,
+  LC_COLOR_LABEL,
   LC_BODY_ALIGNMENT_LEGEND,
   LC_BODY_ALIGNMENT_RIGHT_MESSAGE,
   LC_BODY_ALIGNMENT_SUBHEADER,
@@ -217,13 +219,26 @@ export function getLocalControls() {
       innerHTML: LC_GENERAL_PAGE_LANG_BELOW_LABEL,
     }),
   ]);
+
   const backgroundColorEditor = getControlsSection(
     LC_BG_COLOR_SUBHEADER,
     getControlsInput(
       UPDATE_BACKGROUND_COLOR_ID,
       INPUT_TYPES.COLOR,
-      LC_BG_COLOR_LABEL,
-      getBodyBackgroundColor(),
+      LC_COLOR_LABEL,
+      getCurrentStyle("backgroundColor"),
+      [COLOR_PICKER_CLASS]
+    ),
+    H4
+  );
+
+  const textColorEditor = getControlsSection(
+    LC_TEXT_COLOR_SUBHEADER,
+    getControlsInput(
+      UPDATE_TEXT_COLOR_ID,
+      INPUT_TYPES.COLOR,
+      LC_COLOR_LABEL,
+      getCurrentStyle("color"),
       [COLOR_PICKER_CLASS]
     ),
     H4
@@ -450,6 +465,7 @@ export function getLocalControls() {
     generalMetaEditor,
     createElement({ tag: H3, innerHTML: LC_STYLES_SUBHEADER }),
     backgroundColorEditor,
+    textColorEditor,
     bodyWidthEditor,
     bodyAlignmentEditor,
     textAlignmentEditor,
