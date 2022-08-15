@@ -91,6 +91,22 @@ export function createTextEditor({
     editAlignElement.insertAdjacentElement("afterbegin", container);
   });
 
+  const optionsContainerElement = createElement({
+    tag: "details",
+    id: `${editAlignElement.id}-details`,
+  });
+
+  const optionsSummaryElement = createElement({
+    tag: "summary",
+    id: `${editAlignElement.id}-details-summary`,
+    innerHTML: STRINGS.EDITOR_DETAILS_SUMMARY,
+  });
+
+  optionsContainerElement.insertAdjacentElement(
+    "afterbegin",
+    optionsSummaryElement
+  );
+
   if (!foundCurrent) {
     editAlignElement.children[0].children[0].checked = true;
   }
@@ -105,5 +121,6 @@ export function createTextEditor({
     tagPicker: editLevelElement,
     tagPickerLabel: editLevelLabel,
     alignSelect: editAlignElement,
+    optionsContainer: optionsContainerElement,
   };
 }

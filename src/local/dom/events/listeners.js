@@ -250,6 +250,7 @@ function makeElementEventListener(editorType) {
       altEditor,
       altEditorLabel,
       alignSelect,
+      optionsContainer,
       imagePreview,
     } = editElements;
 
@@ -319,9 +320,10 @@ function makeElementEventListener(editorType) {
     element.insertAdjacentElement("beforebegin", editorContainerElement);
     // Reverse so labels are placed above inputs
     const editElementsArray = [
-      tagPickerLabel,
-      tagPicker,
-      alignSelect,
+      // tagPickerLabel,
+      // tagPicker,
+      // alignSelect,
+      optionsContainer,
       editorLabel,
       editor,
       imagePreview,

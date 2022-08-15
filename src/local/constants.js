@@ -116,6 +116,7 @@ export const STRINGS = {
   ERROR_IMAGE_ONLY: "Error: Please choose an image file",
   ERROR_NO_IMAGE: "Error: No image found",
   ERROR_NO_SELECTION: "Error: Nothing selected",
+  EDITOR_DETAILS_SUMMARY: "Options",
   EDITOR_LABELS: {
     [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph text",
     [EDITOR_TYPES.HEADING]: "Edit heading text",
