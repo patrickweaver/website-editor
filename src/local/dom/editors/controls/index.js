@@ -56,6 +56,7 @@ import {
   WIDTH_SLIDER_DATALIST_ID,
   WIDTH_SLIDER_ID,
   WIDTH_SLIDER_VALUE_ID,
+  ALERT_LIST,
 } from "../../../constants";
 import { IMAGE_PREVIEW_TYPES, makeImagePreview } from "../imagePreview";
 
@@ -457,6 +458,7 @@ export function getLocalControls() {
 
   const wrapper = createElement({ id: LOCAL_CONTROLS_ID });
   const children = [
+    createElement({ id: ALERT_LIST }),
     createElement({ tag: H2, innerHTML: LC_HEADER }),
     createElement({ tag: PARAGRAPH_ELEMENT, innerHTML: LC_INSTRUCTIONS }),
     createElement({ tag: HOZ_RULE_ELEMENT }),

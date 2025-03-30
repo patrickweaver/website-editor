@@ -29,6 +29,9 @@ export const UPDATE_BODY_ALIGN_OPTION_NAME = "body-align";
 export const UPDATE_TEXT_ALIGN_ID = "update-text-align";
 export const UPDATE_TEXT_ALIGN_OPTION_NAME = "text-align";
 export const UPDATE_TEXT_SIZE_ID = "update-text-size";
+export const ALERT_LIST = "local-controls-alert-list";
+export const ALERT_CLASS = "local-controls-alert";
+export const ALERT_REMOVED = "alert-removed";
 export const CONTROLS_SECTION_CLASS = "controls-section";
 export const COLOR_PICKER_CLASS = "color-picker";
 export const SAVE_CHANGES_ID = "save-changes";
@@ -169,3 +172,5 @@ export const STRINGS = {
   MISSING_SOCIAL_IMAGE_ALT: "Social Image is not set.",
   NEW_CONTENT_HEADER: "Add New Content",
 };
+
+export const ALERT_ANIMATION_DELAY = 250;

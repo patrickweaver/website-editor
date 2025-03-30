@@ -1,7 +1,7 @@
 import { GLOBALS } from "../../globals";
 import { getDataURLFromFile } from "../util/files";
 import { getUniqueId } from "../util/random";
-import { rgb2hex } from "../util/color";
+import { rgb2hex } from "../util/color.ts";
 import { getAlignValueFromFieldset } from "./align";
 import { imageEventListener, textEventListener } from "./events/listeners";
 import { onUpdateImgElementAlign } from "./events/handlers";
