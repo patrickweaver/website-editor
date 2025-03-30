@@ -3,7 +3,7 @@ import {
   ALERT_LIST,
   ALERT_REMOVED,
   ALERT_ANIMATION_DELAY,
-} from "../constants.js";
+} from "../constants.ts";
 import { getUniqueId } from "./random";
 
 export function showAlert(message: string) {

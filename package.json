@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/patrickweaver/website-editor/issues"
   },
-  "homepage": "https://github.com/patrickweaver/website-editor#readme"
+  "homepage": "https://github.com/patrickweaver/website-editor#readme",
+  "dependencies": {
+    "@types/wicg-file-system-access": "^2023.10.5"
+  }
 }

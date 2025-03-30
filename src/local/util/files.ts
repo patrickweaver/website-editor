@@ -1,4 +1,4 @@
-export async function getDataURLFromFile(file) {
+export async function getDataURLFromFile(file: File) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
@@ -7,7 +7,7 @@ export async function getDataURLFromFile(file) {
   });
 }
 
-export function isImageFile(file) {
+export function isImageFile(file: File) {
   if (!file.type.startsWith("image/")) {
     return false;
   }
@@ -16,7 +16,8 @@ export function isImageFile(file) {
 
 // Chromium only
 // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/write
-export async function saveFile(data) {
+export async function saveFile(data: string) {
+  console.log("**", typeof data);
   // create a new handle
   const newHandle = await window.showSaveFilePicker({
     startIn: "desktop",
