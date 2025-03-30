@@ -6,7 +6,7 @@ import { showAlert } from "./alert";
 export function rgb2hex(rgb: string) {
   const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
   if (!match) {
-    showAlert(`Error -  Invalid color: ${rgb}`);
+    showAlert(`Invalid color: ${rgb}`);
     return null;
   }
   return `#${match

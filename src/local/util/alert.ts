@@ -15,7 +15,7 @@ export function showAlert(message: string) {
     const alertCloseButton = document.createElement("button");
     alert.id = getUniqueId("alert");
     alertHeader.innerHTML = `Alert: ${alert.id}`;
-    alertMessage.innerHTML = message;
+    alertMessage.innerHTML = `Error -- ${message}`;
     alertCloseButton.innerHTML = "Close";
     alert.insertAdjacentElement("afterbegin", alertHeader);
     alert.insertAdjacentElement("beforeend", alertMessage);

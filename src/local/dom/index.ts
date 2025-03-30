@@ -1,12 +1,13 @@
-import { GLOBALS } from "../../globals";
-import { getDataURLFromFile } from "../util/files";
-import { getUniqueId } from "../util/random";
+import type * as CSS from "csstype";
+import { GLOBALS } from "../../globals.ts";
+import { getDataURLFromFile } from "../util/files.ts";
+import { getUniqueId } from "../util/random.ts";
 import { rgb2hex } from "../util/color.ts";
-import { getAlignValueFromFieldset } from "./align";
-import { imageEventListener, textEventListener } from "./events/listeners";
-import { onUpdateImgElementAlign } from "./events/handlers";
-import { getEditorContainerId } from "../util/strings";
-import { isImageFile } from "../util/files";
+import { getAlignValueFromFieldset } from "./align.ts";
+import { imageEventListener, textEventListener } from "./events/listeners.js";
+import { onUpdateImgElementAlign } from "./events/handlers.js";
+import { getEditorContainerId } from "../util/strings.ts";
+import { isImageFile } from "../util/files.ts";
 import {
   CURRENT_FAVICON_PREVIEW_ID,
   CURRENT_SOCIAL_IMAGE_ID,
@@ -17,12 +18,13 @@ import {
   IMG_ELEMENT,
   PARAGRAPH_ELEMENT,
   STRINGS,
-} from "../constants";
+} from "../constants.ts";
+import { showAlert } from "../util/alert.ts";
 
-export function addAtEndOfDocument(element) {
+export function addAtEndOfDocument(element: HTMLElement) {
   document
-    .getElementById(END_OF_DOC_ID)
-    .insertAdjacentElement("beforebegin", element);
+    ?.getElementById(END_OF_DOC_ID)
+    ?.insertAdjacentElement("beforebegin", element);
 }
 
 export async function addImage({
@@ -30,10 +32,16 @@ export async function addImage({
   altText,
   alignSelectElement,
   originalElement,
+}: {
+  filePickerId: string;
+  altText: string;
+  alignSelectElement: HTMLSelectElement;
+  originalElement: HTMLElement;
 }) {
   const imageAlign = getAlignValueFromFieldset(alignSelectElement);
   const style = onUpdateImgElementAlign(imageAlign);
-  const file = document.getElementById(filePickerId).files[0];
+  const file = (document?.getElementById(filePickerId) as HTMLInputElement)
+    ?.files?.[0];
   if (file && !isImageFile(file)) {
     // This won't happen because button is disabled
     // unless file is an image
@@ -154,8 +162,8 @@ export function createElement({
   return element;
 }
 
-export function getCurrentStyle(property) {
-  const currentStyle = document.body?.style?.[property];
+export function getCurrentStyle(property: keyof CSS.Properties) {
+  const currentStyle = document.body?.style?.[property] as string;
   if (property.toLowerCase().indexOf("color") >= 0)
     return rgb2hex(currentStyle || "rgb(255, 255, 255)");
   return property;
