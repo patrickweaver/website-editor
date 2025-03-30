@@ -13,6 +13,7 @@ export const CANCEL_FAVICON_UPDATE_ID = "cancel-favicon-update";
 export const CONFIRM_FAVICON_UPDATE_ID = "confirm-favicon-update";
 export const FAVICON_QUERY_SELECTOR = "link[rel~='icon']";
 export const CURRENT_SOCIAL_IMAGE_ID = "meta-image";
+export const CURRENT_SOCIAL_IMAGE_ALT_ID = "meta-image-alt";
 export const CURRENT_TWITTER_IMAGE_ID = "twitter-image";
 export const CURRENT_SOCIAL_IMAGE_PREVIEW_ID = "current-social-image-preview";
 export const UPDATE_SOCIAL_IMAGE_ID = "update-social-image";
