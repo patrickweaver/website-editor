@@ -49,7 +49,7 @@ export async function addImage({
     return null;
   }
   const newElement = createElement({ tag: "img", style, altText });
-  insertAdj(getEditorContainerId(filePickerId), newElement, "afterend");
+  insertElement(getEditorContainerId(filePickerId), newElement, "afterend");
   scrollToNewElement(newElement);
 
   if (file) {
@@ -104,7 +104,7 @@ export function addText({ editorId, tagName, alignSelectElement, text }) {
     innerHTML: text,
     style,
   });
-  insertAdj(getEditorContainerId(editorId), newElement, "afterend");
+  insertElement(getEditorContainerId(editorId), newElement, "afterend");
   scrollToNewElement(newElement);
   newElement.addEventListener("click", textEventListener);
   return newElement;
@@ -120,10 +120,10 @@ export function addLinkAroundSelection(selectableInput) {
   const url = window.prompt(STRINGS.PROMPT_LINK_URL);
   return `${value.slice(
     0,
-    start
+    start,
   )}<a href="${url}" target="_blank">${selection}</a>${value.slice(
     end,
-    value.length
+    value.length,
   )}`;
 }
 
@@ -178,7 +178,7 @@ export function getCurrentSocialImage() {
   return { url, alt };
 }
 
-export function insertAdj(id, element, pos = "afterbegin") {
+export function insertElement(id, element, pos = "afterbegin") {
   document.getElementById(id).insertAdjacentElement(pos, element);
 }
 
@@ -190,7 +190,7 @@ export async function insertFavicon(file) {
   newElement.rel = "icon";
   newElement.href = dataURL;
   const faviconPreviewElement = document.getElementById(
-    CURRENT_FAVICON_PREVIEW_ID
+    CURRENT_FAVICON_PREVIEW_ID,
   );
   faviconPreviewElement.src = dataURL;
   document.getElementsByTagName("head")[0].appendChild(newElement);

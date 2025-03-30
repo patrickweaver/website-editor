@@ -1,4 +1,4 @@
-import { INPUT_TYPES } from "../../../local/constants";
+import { INPUT_TYPES } from "../../constants";
 import { getUniqueId } from "../../util/random";
 
 export enum ElementTag {

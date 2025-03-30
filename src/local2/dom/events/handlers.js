@@ -37,7 +37,7 @@ import {
 
 export function onClickNewContentButton() {
   const newContentModal = getNewContentModal();
-  insertAdj(LOCAL_CONTROLS_ID, newContentModal, "beforeend");
+  insertElement(LOCAL_CONTROLS_ID, newContentModal, "beforeend");
 
   function clearAddItemModal() {
     newContentModal.remove();
@@ -121,10 +121,10 @@ export function onUpdateFaviconPicker(changeEvent) {
   };
 
   const imagePreviewImg = document.getElementById(
-    `${IMAGE_PREVIEW_ID_PREFIX}${UPDATE_FAVICON_ID}`
+    `${IMAGE_PREVIEW_ID_PREFIX}${UPDATE_FAVICON_ID}`,
   );
   const imagePreviewFigure = document.getElementById(
-    `${IMAGE_PREVIEW_FIGURE_ID_PREFIX}${UPDATE_FAVICON_ID}`
+    `${IMAGE_PREVIEW_FIGURE_ID_PREFIX}${UPDATE_FAVICON_ID}`,
   );
 
   const updateButtons = [

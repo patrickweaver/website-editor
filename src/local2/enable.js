@@ -16,8 +16,8 @@ export function enableLocalControls() {
   });
 
   const localControls = getLocalControls();
-  insertAdj(END_OF_DOC_ID, localControlsContainer, "afterend");
-  insertAdj(LOCAL_CONTROLS_CONTAINER_ID, localControls);
+  insertElement(END_OF_DOC_ID, localControlsContainer, "afterend");
+  insertElement(LOCAL_CONTROLS_CONTAINER_ID, localControls);
   addListenerById(ADD_ITEM_ID, onClickNewContentButton, "click");
 
   // TODO remove this
