@@ -14,7 +14,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["node", "vite/client", "@types/wicg-file-system-access"]
+    "types": ["node", "vite/client", "@types/wicg-file-system-access"],
+    "noErrorTruncation": true
   },
   "include": ["src"]
 } 
