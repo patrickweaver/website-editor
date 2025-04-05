@@ -1,3 +1,5 @@
+import { HeaderTag } from "./dom/util/createElement";
+
 export const PAGE_TITLE_INPUT_ID = "edit-page-title";
 export const PAGE_DESC_INPUT_ID = "edit-page-description";
 export const PAGE_LANG_INPUT_ID = "edit-page-language";
@@ -24,7 +26,7 @@ export const WIDTH_SLIDER_CONTAINER_ID = "update-body-width-container";
 export const WIDTH_SLIDER_ID = "update-body-width";
 export const WIDTH_SLIDER_VALUE_ID = "update-body-width-value";
 export const WIDTH_SLIDER_DATALIST_ID = "body-width-tickmarks";
-export const UPDATE_BODY_ALIGN_CONTAINER = "update-body-align-container";
+export const UPDATE_BODY_ALIGN_CONTAINER_ID = "update-body-align-container";
 export const UPDATE_BODY_ALIGN_ID = "update-body-align";
 export const UPDATE_BODY_ALIGN_OPTION_NAME = "body-align";
 export const UPDATE_TEXT_ALIGN_ID = "update-text-align";
@@ -55,11 +57,19 @@ export const END_OF_DOC_ID = "end-of-document";
 export const LOCAL_CONTROLS_CONTAINER_ID = "local-controls-container";
 export const LOCAL_CONTROLS_ID = "local-controls";
 export const NEW_CONTENT_MODAL_ID = "new-content-modal";
-export const NEW_CONTENT_MODAL_WRAPPER = "new-content-modal-wrapper";
+export const NEW_CONTENT_MODAL_WRAPPER_ID = "new-content-modal-wrapper";
 export const NOTE_CLASS = "note";
 export const BUTTON_ELEMENT = "button";
 export const DATALIST_ELEMENT = "datalist";
-export const HEADING_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6"];
+export const HEADING_ELEMENTS: Array<HeaderTag> = [
+  HeaderTag.H1,
+  HeaderTag.H1,
+  HeaderTag.H2,
+  HeaderTag.H3,
+  HeaderTag.H4,
+  HeaderTag.H5,
+  HeaderTag.H6,
+];
 export const FIELDSET_ELEMENT = "fieldset";
 export const FIGCAPTION_ELEMENT = "figcaption";
 export const FIGURE_ELEMENT = "figure";
@@ -97,8 +107,10 @@ export enum INPUT_TYPES {
 }
 
 export const SETTINGS = {
-  BODY_WIDTH: 800,
-  BODY_WIDTHS: [200, 300, 400, 500, 640, 800, 1000, 1200, 1500, 1920],
+  BODY_WIDTH: String(800),
+  BODY_WIDTHS: [200, 300, 400, 500, 640, 800, 1000, 1200, 1500, 1920].map((i) =>
+    String(i),
+  ),
 };
 
 export const STRINGS = {

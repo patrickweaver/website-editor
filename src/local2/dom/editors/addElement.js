@@ -9,14 +9,14 @@ import {
   LIST_ELEMENTS,
   LIST_ITEM_ELEMENT,
   NEW_CONTENT_MODAL_ID,
-  NEW_CONTENT_MODAL_WRAPPER,
+  NEW_CONTENT_MODAL_WRAPPER_ID,
   STRINGS,
 } from "../../constants";
 
 const sectionHeading = HEADING_ELEMENTS[1];
 
 export function getNewContentModal() {
-  const wrapper = createElement({ id: NEW_CONTENT_MODAL_WRAPPER });
+  const wrapper = createElement({ id: NEW_CONTENT_MODAL_WRAPPER_ID });
   const modal = createElement({ id: NEW_CONTENT_MODAL_ID });
   const heading = createElement({
     tag: sectionHeading,

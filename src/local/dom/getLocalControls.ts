@@ -1,49 +1,26 @@
 import {
-  createElement,
-  getCurrentStyle,
-  getCurrentFaviconURL,
-  getCurrentSocialImage,
-} from "../..";
-import {
   ADD_ITEM_ID,
-  BUTTON_ELEMENT,
+  ALERT_LIST,
   CANCEL_FAVICON_UPDATE_ID,
   COLOR_PICKER_CLASS,
   CONFIRM_FAVICON_UPDATE_ID,
-  CONTROLS_SECTION_CLASS,
   CURRENT_FAVICON_FIGURE_ID,
   CURRENT_FAVICON_PREVIEW_ID,
   CURRENT_SOCIAL_IMAGE_PREVIEW_ID,
-  DATALIST_ELEMENT,
   EDIT_BUTTONS_CLASS,
-  FIELDSET_ELEMENT,
-  FIGCAPTION_ELEMENT,
-  FIGURE_ELEMENT,
   FULL_WIDTH_CHECKBOX_ID,
-  HEADING_ELEMENTS,
-  HOZ_RULE_ELEMENT,
-  IMG_ELEMENT,
   INPUT_BELOW_LABEL_CLASS,
-  INPUT_ELEMENT,
   INPUT_TYPES,
-  INPUT_TYPE_TEXT_CLASS,
-  LABEL_ELEMENT,
-  LEGEND_ELEMENT,
   LOCAL_CONTROLS_ID,
   NOTE_CLASS,
-  OPTION_ELEMENT,
   PAGE_DESC_INPUT_ID,
   PAGE_LANG_INPUT_ID,
   PAGE_TITLE_INPUT_ID,
-  PARAGRAPH_ELEMENT,
   SAVE_CHANGES_ID,
   SETTINGS,
   SOCIAL_IMAGE_FIGURE_ID,
-  SPAN_ELEMENT,
   STRINGS,
-  TEXTAREA_ELEMENT,
   UPDATE_BACKGROUND_COLOR_ID,
-  UPDATE_TEXT_COLOR_ID,
   UPDATE_BODY_ALIGN_CONTAINER_ID,
   UPDATE_BODY_ALIGN_ID,
   UPDATE_BODY_ALIGN_OPTION_NAME,
@@ -51,14 +28,24 @@ import {
   UPDATE_SOCIAL_IMAGE_ID,
   UPDATE_TEXT_ALIGN_ID,
   UPDATE_TEXT_ALIGN_OPTION_NAME,
+  UPDATE_TEXT_COLOR_ID,
   UPDATE_TEXT_SIZE_ID,
   WIDTH_SLIDER_CONTAINER_ID,
   WIDTH_SLIDER_DATALIST_ID,
   WIDTH_SLIDER_ID,
   WIDTH_SLIDER_VALUE_ID,
-  ALERT_LIST,
-} from "../../../constants";
-import { IMAGE_PREVIEW, makeImagePreview } from "../imagePreview";
+} from "../constants";
+import { CSSProperties, IMAGE_PREVIEW } from "../types";
+import { addControlsInput } from "./controls/addControlsInput";
+import { addControlsSection } from "./controls/addControlsSection";
+import { _ElementTag, createElement, HeaderTag } from "./util/createElement";
+import { getCurrentStyle } from "./util/getCurrentStyle";
+import { insertElementWithinElement } from "./util/insertElementWithinElement";
+import { addControlsAlignmentInput } from "./controls/addControlsAlignmentInput";
+import { makeImagePreview } from "./util/makeImagePreview";
+import { getFigureWithCaption } from "./util/getFigureWithCaption";
+import { getCurrentFaviconURL } from "./util/getCurrentFaviconUrl";
+import { getCurrentSocialImage } from "./util/getCurrentSocialImage";
 
 const {
   ALIGNMENT_LABELS,
@@ -99,170 +86,76 @@ const {
   LC_UPDATE_FAVICON_LABEL,
   MISSING_SOCIAL_IMAGE_ALT,
 } = STRINGS;
-const [_H1, H2, H3, H4] = HEADING_ELEMENTS;
 
-function getControlsSection(
-  headerText,
-  children = [],
-  headerTag = H3,
-  id = null,
-) {
-  const section = createElement({ classList: [CONTROLS_SECTION_CLASS] });
-  if (id) section.id = id;
-  const header = createElement({ tag: headerTag, innerHTML: headerText });
-  [header, ...children].forEach((element) => {
-    section.insertAdjacentElement("beforeend", element);
-  });
-  return section;
-}
-
-function getControlsInput(id, _type, labelText, value, _classList = []) {
-  const label = createElement({
-    tag: LABEL_ELEMENT,
-    innerHTML: labelText,
-    htmlFor: id,
-  });
-  let classList = _classList;
-  _type === INPUT_TYPES.TEXT && classList.push(INPUT_TYPE_TEXT_CLASS);
-  let tag = INPUT_ELEMENT;
-  let type = _type;
-  if (_type === INPUT_TYPES.TEXTAREA) {
-    tag = TEXTAREA_ELEMENT;
-    type = undefined;
-  }
-  const input = createElement({ id, tag, type, value, classList });
-  return [label, input];
-}
-
-function getControlsAlignmentInput(fieldsetId, legendText, options) {
-  const fieldset = createElement({
-    tag: FIELDSET_ELEMENT,
-    id: fieldsetId,
-  });
-  const legend = createElement({
-    tag: LEGEND_ELEMENT,
-    innerHTML: legendText,
-  });
-  const optionElements = options.map((option) => {
-    const { id, name, value, checked, labelText } = option;
-    const container = createElement();
-    const [label, input] = getControlsInput(
-      id,
-      INPUT_TYPES.RADIO,
-      labelText,
-      value,
-    );
-    input.name = name;
-    input.checked = checked;
-    container.insertAdjacentElement("beforeend", input);
-    container.insertAdjacentElement("beforeend", label);
-    return container;
-  });
-  fieldset.insertAdjacentElement("beforeend", legend);
-  optionElements.forEach((optionElement) => {
-    fieldset.insertAdjacentElement("beforeend", optionElement);
-  });
-  return [fieldset];
-}
-
-function getFigureWithCaption(
-  figureId,
-  captionText,
-  imageId,
-  imageSrc,
-  imageAlt,
-) {
-  const figure = createElement({ tag: FIGURE_ELEMENT, id: figureId });
-  const caption = createElement({
-    tag: FIGCAPTION_ELEMENT,
-    innerHTML: captionText,
-  });
-  const image = createElement({
-    tag: IMG_ELEMENT,
-    id: imageId,
-    imageSrc,
-    altText: imageAlt,
-  });
-  figure.insertAdjacentElement("beforeend", caption);
-  figure.insertAdjacentElement("beforeend", image);
-  return figure;
-}
-
-export function getLocalControls() {
-  const addContent = getControlsSection(LC_CONTENT_SUBHEADER, [
+export function getLocalControls(): HTMLElement {
+  const addContent = addControlsSection(LC_CONTENT_SUBHEADER, [
     createElement({
       id: ADD_ITEM_ID,
-      tag: BUTTON_ELEMENT,
+      tag: _ElementTag.BUTTON,
       innerHTML: LC_CONTENT_BUTTON,
     }),
   ]);
 
-  const generalMetaEditor = getControlsSection(LC_GENERAL_SUBHEADER, [
-    ...getControlsInput(
+  const generalMetaEditor = addControlsSection(LC_GENERAL_SUBHEADER, [
+    ...addControlsInput(
       PAGE_TITLE_INPUT_ID,
       INPUT_TYPES.TEXT,
       LC_GENERAL_PAGE_TITLE_LABEL,
     ),
-    ...getControlsInput(
+    ...addControlsInput(
       PAGE_DESC_INPUT_ID,
       INPUT_TYPES.TEXTAREA,
       LC_GENERAL_PAGE_DESC_LABEL,
     ),
-    ...getControlsInput(
+    ...addControlsInput(
       PAGE_LANG_INPUT_ID,
       INPUT_TYPES.TEXT,
       LC_GENERAL_PAGE_LANG_LABEL,
     ),
     createElement({
-      tag: LABEL_ELEMENT,
+      tag: _ElementTag.LABEL,
       htmlFor: PAGE_LANG_INPUT_ID,
       classList: [INPUT_BELOW_LABEL_CLASS],
       innerHTML: LC_GENERAL_PAGE_LANG_BELOW_LABEL,
     }),
   ]);
 
-  const backgroundColorEditor = getControlsSection(
+  const backgroundColorEditor = addControlsSection(
     LC_BG_COLOR_SUBHEADER,
-    getControlsInput(
+    addControlsInput(
       UPDATE_BACKGROUND_COLOR_ID,
       INPUT_TYPES.COLOR,
       LC_COLOR_LABEL,
-      getCurrentStyle("backgroundColor"),
-      [COLOR_PICKER_CLASS],
+      getCurrentStyle(CSSProperties.BACKGROUND_COLOR),
     ),
-    H4,
   );
 
-  const textColorEditor = getControlsSection(
+  const textColorEditor = addControlsSection(
     LC_TEXT_COLOR_SUBHEADER,
-    getControlsInput(
+    addControlsInput(
       UPDATE_TEXT_COLOR_ID,
       INPUT_TYPES.COLOR,
       LC_COLOR_LABEL,
-      getCurrentStyle("color"),
+      getCurrentStyle(CSSProperties.COLOR),
       [COLOR_PICKER_CLASS],
     ),
-    H4,
   );
 
   const bodyWidthFixedEditor = createElement({ id: WIDTH_SLIDER_CONTAINER_ID });
   const bodyWidthFixedCurrentValue = createElement({
     id: WIDTH_SLIDER_VALUE_ID,
-    tag: SPAN_ELEMENT,
+    tag: _ElementTag.SPAN,
     innerHTML: `${SETTINGS.BODY_WIDTH}px`,
   });
   const bodyWidthFixedLabel = createElement({
-    tag: LABEL_ELEMENT,
+    tag: _ElementTag.LABEL,
     htmlFor: WIDTH_SLIDER_ID,
     innerHTML: LC_BODY_WIDTH_FIXED_LABEL,
   });
-  bodyWidthFixedLabel.insertAdjacentElement(
-    "beforeend",
-    bodyWidthFixedCurrentValue,
-  );
+  insertElementWithinElement(bodyWidthFixedLabel, bodyWidthFixedCurrentValue);
   const bodyWidthFixedInput = createElement({
     id: WIDTH_SLIDER_ID,
-    tag: INPUT_ELEMENT,
+    tag: _ElementTag.INPUT,
     type: INPUT_TYPES.RANGE,
   });
   bodyWidthFixedInput.min = SETTINGS.BODY_WIDTHS[0];
@@ -271,40 +164,37 @@ export function getLocalControls() {
   // value must be after min/max to prevent overwrites
   bodyWidthFixedInput.value = SETTINGS.BODY_WIDTH;
 
-  const bodyWidthFixedDatalist = createElement({
+  const bodyWidthFixedDataList = createElement({
     id: WIDTH_SLIDER_DATALIST_ID,
-    tag: DATALIST_ELEMENT,
+    tag: _ElementTag.DATALIST,
   });
   SETTINGS.BODY_WIDTHS.forEach((value) => {
-    const option = createElement({ tag: OPTION_ELEMENT, value });
+    const option = createElement({ tag: _ElementTag.OPTION, value });
     option.label = `${value}px`;
-    bodyWidthFixedDatalist.insertAdjacentElement("beforeend", option);
+    insertElementWithinElement(bodyWidthFixedDataList, option);
   });
   bodyWidthFixedInput.setAttribute("list", WIDTH_SLIDER_DATALIST_ID);
-  bodyWidthFixedEditor.insertAdjacentElement("beforeend", bodyWidthFixedLabel);
-  bodyWidthFixedEditor.insertAdjacentElement("beforeend", bodyWidthFixedInput);
-  bodyWidthFixedEditor.insertAdjacentElement(
-    "beforeend",
-    bodyWidthFixedDatalist,
-  );
+  insertElementWithinElement(bodyWidthFixedEditor, bodyWidthFixedLabel);
+  insertElementWithinElement(bodyWidthFixedEditor, bodyWidthFixedInput);
+  insertElementWithinElement(bodyWidthFixedEditor, bodyWidthFixedDataList);
 
-  const bodyWidthEditor = getControlsSection(
+  const bodyWidthEditor = addControlsSection(
     LC_BODY_WIDTH_SUBHEADER,
     [
-      ...getControlsInput(
+      ...addControlsInput(
         FULL_WIDTH_CHECKBOX_ID,
         INPUT_TYPES.CHECKBOX,
         LC_BODY_WIDTH_FULL_LABEL,
       ),
       bodyWidthFixedEditor,
     ],
-    H4,
+    HeaderTag.H4,
   );
-  const bodyAlignmentEditor = getControlsSection(
-    LC_BODY_ALIGNMENT_SUBHEADER,
 
+  const bodyAlignmentEditor = addControlsSection(
+    LC_BODY_ALIGNMENT_SUBHEADER,
     [
-      ...getControlsAlignmentInput(
+      ...addControlsAlignmentInput(
         UPDATE_BODY_ALIGN_ID,
         LC_BODY_ALIGNMENT_LEGEND,
         [
@@ -325,17 +215,17 @@ export function getLocalControls() {
         ],
       ),
       createElement({
-        tag: LABEL_ELEMENT,
+        tag: _ElementTag.LABEL,
         innerHTML: LC_BODY_ALIGNMENT_RIGHT_MESSAGE,
       }),
     ],
-    H4,
+    HeaderTag.H4,
     UPDATE_BODY_ALIGN_CONTAINER_ID,
   );
-  const textAlignmentEditor = getControlsSection(
-    LC_TEXT_ALIGNMENT_SUBHEADER,
 
-    getControlsAlignmentInput(UPDATE_TEXT_ALIGN_ID, LC_TEXT_ALIGNMENT_LEGEND, [
+  const textAlignmentEditor = addControlsSection(
+    LC_TEXT_ALIGNMENT_SUBHEADER,
+    addControlsAlignmentInput(UPDATE_TEXT_ALIGN_ID, LC_TEXT_ALIGNMENT_LEGEND, [
       {
         id: "text-left",
         name: UPDATE_TEXT_ALIGN_OPTION_NAME,
@@ -358,21 +248,21 @@ export function getLocalControls() {
         labelText: ALIGNMENT_LABELS.RIGHT,
       },
     ]),
-    H4,
+    HeaderTag.H4,
   );
 
-  const textSizeControls = getControlsInput(
+  const textSizeControls = addControlsInput(
     UPDATE_TEXT_SIZE_ID,
     INPUT_TYPES.NUMBER,
     STRINGS.LC_TEXT_SIZE_LABEL,
-    100,
+    String(100),
   );
-  textSizeControls[1].step = 10;
-  const textStyleEditor = getControlsSection(LC_TEXT_STYLE_SUBHEADER, [
+  textSizeControls[1].step = String(10);
+  const textStyleEditor = addControlsSection(LC_TEXT_STYLE_SUBHEADER, [
     ...textSizeControls,
   ]);
 
-  const faviconImagePreivew = makeImagePreview(
+  const faviconImagePreview = makeImagePreview(
     UPDATE_FAVICON_ID,
     IMAGE_PREVIEW.FAVICON,
   );
@@ -381,26 +271,20 @@ export function getLocalControls() {
     classList: [EDIT_BUTTONS_CLASS],
   });
   const faviconEditorCancelButton = createElement({
-    tag: BUTTON_ELEMENT,
+    tag: _ElementTag.BUTTON,
     id: CANCEL_FAVICON_UPDATE_ID,
     innerHTML: BUTTON_CANCEL,
   });
   faviconEditorCancelButton.disabled = true;
   const faviconEditorUpdateButton = createElement({
-    tag: BUTTON_ELEMENT,
+    tag: _ElementTag.BUTTON,
     id: CONFIRM_FAVICON_UPDATE_ID,
     innerHTML: BUTTON_UPDATE,
   });
   faviconEditorUpdateButton.disabled = true;
-  faviconEditorButtons.insertAdjacentElement(
-    "beforeend",
-    faviconEditorCancelButton,
-  );
-  faviconEditorButtons.insertAdjacentElement(
-    "beforeend",
-    faviconEditorUpdateButton,
-  );
-  const faviconEditor = getControlsSection(
+  insertElementWithinElement(faviconEditorButtons, faviconEditorCancelButton);
+  insertElementWithinElement(faviconEditorButtons, faviconEditorUpdateButton);
+  const faviconEditor = addControlsSection(
     LC_FAVICON_SUBHEADER,
     [
       getFigureWithCaption(
@@ -410,20 +294,20 @@ export function getLocalControls() {
         getCurrentFaviconURL(),
         LC_CURRENT_FAVICON_ALT_TEXT,
       ),
-      ...getControlsInput(
+      ...addControlsInput(
         UPDATE_FAVICON_ID,
         INPUT_TYPES.FILE,
         LC_UPDATE_FAVICON_LABEL,
       ),
-      faviconImagePreivew,
+      faviconImagePreview,
       faviconEditorButtons,
     ],
-    H4,
+    HeaderTag.H4,
   );
 
   const { url: currentSocialImageURL, alt: currentSocialImageAlt } =
     getCurrentSocialImage();
-  const socialImageEditor = getControlsSection(
+  const socialImageEditor = addControlsSection(
     LC_SOCIAL_IMAGE_SUBHEADER,
     [
       getFigureWithCaption(
@@ -434,23 +318,24 @@ export function getLocalControls() {
         currentSocialImageAlt ??
           (currentSocialImageURL ? "" : MISSING_SOCIAL_IMAGE_ALT),
       ),
-      ...getControlsInput(
+      ...addControlsInput(
         UPDATE_SOCIAL_IMAGE_ID,
         INPUT_TYPES.TEXT,
         LC_SOCIAL_IMAGE_INPUT_LABEL,
       ),
       createElement({
-        tag: LABEL_ELEMENT,
+        tag: _ElementTag.LABEL,
         htmlFor: UPDATE_SOCIAL_IMAGE_ID,
         classList: [NOTE_CLASS],
         innerHTML: LC_SOCIAL_IMAGE_INPUT_BELOW_LABEL,
       }),
     ],
-    H4,
+    HeaderTag.H4,
   );
-  const saveChanges = getControlsSection(LC_SAVE_CHANGES_SUBHEADER, [
+
+  const saveChanges = addControlsSection(LC_SAVE_CHANGES_SUBHEADER, [
     createElement({
-      tag: BUTTON_ELEMENT,
+      tag: _ElementTag.BUTTON,
       id: SAVE_CHANGES_ID,
       innerHTML: LC_SAVE_CHANGES_BUTTON_LABEL,
     }),
@@ -459,13 +344,13 @@ export function getLocalControls() {
   const wrapper = createElement({ id: LOCAL_CONTROLS_ID });
   const children = [
     createElement({ id: ALERT_LIST }),
-    createElement({ tag: H2, innerHTML: LC_HEADER }),
-    createElement({ tag: PARAGRAPH_ELEMENT, innerHTML: LC_INSTRUCTIONS }),
-    createElement({ tag: HOZ_RULE_ELEMENT }),
+    createElement({ tag: HeaderTag.H2, innerHTML: LC_HEADER }),
+    createElement({ tag: _ElementTag.P, innerHTML: LC_INSTRUCTIONS }),
+    createElement({ tag: _ElementTag.HR }),
     addContent,
-    createElement({ tag: H3, innerHTML: LC_METADATA_SUBHEADER }),
+    createElement({ tag: HeaderTag.H3, innerHTML: LC_METADATA_SUBHEADER }),
     generalMetaEditor,
-    createElement({ tag: H3, innerHTML: LC_STYLES_SUBHEADER }),
+    createElement({ tag: HeaderTag.H3, innerHTML: LC_STYLES_SUBHEADER }),
     backgroundColorEditor,
     textColorEditor,
     bodyWidthEditor,
@@ -478,7 +363,7 @@ export function getLocalControls() {
   ];
 
   children.forEach((element) => {
-    wrapper.insertAdjacentElement("beforeend", element);
+    insertElementWithinElement(wrapper, element);
   });
 
   return wrapper;

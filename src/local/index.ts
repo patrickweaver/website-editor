@@ -1,7 +1,15 @@
-import { HEADING_ELEMENTS, IMG_ELEMENT, PARAGRAPH_ELEMENT } from "./constants";
+import {
+  END_OF_DOC_ID,
+  HEADING_ELEMENTS,
+  IMG_ELEMENT,
+  PARAGRAPH_ELEMENT,
+} from "./constants";
+import { enableLocalControls } from "./dom/enableLocalControls";
 import { imageEventListener } from "./dom/events/imageEventListener";
 import { textEventListener } from "./dom/events/textEventListener";
-import { createElement, ElementTag } from "./dom/util/createElement";
+import { _ElementTag, createElement } from "./dom/util/createElement";
+import { insertElementToDOM } from "./dom/util/insertElementToDOM";
+import { InsertPosition } from "./types";
 
 /* JavaScript enabling editing only runs locally */
 export function localEditingMode() {
@@ -18,12 +26,12 @@ export function localEditingMode() {
     );
 
   const testElement = createElement({
-    tag: ElementTag.P,
+    tag: _ElementTag.P,
     innerHTML: "Test Element",
   });
 
   const testImage = createElement({
-    tag: ElementTag.IMG,
+    tag: _ElementTag.IMG,
     imageSrc: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAA
 AC0Ujn1AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAA
 DsMAAA7DAcdvqGQAAAEDSURBVEhLtZJBEoMwDAP7lr6nn+0LqUGChsVOwoG
@@ -36,10 +44,8 @@ qWsyPrizLD76QCPOHqP2cAAAAAElFTkSuQmCC`,
     altText: "An example image",
   });
 
-  document
-    .getElementById("end-of-document")
-    ?.insertAdjacentElement("afterend", testElement);
-  document
-    .getElementById("end-of-document")
-    ?.insertAdjacentElement("afterend", testImage);
+  insertElementToDOM(END_OF_DOC_ID, testElement, InsertPosition.AFTER_END);
+  insertElementToDOM(END_OF_DOC_ID, testImage, InsertPosition.AFTER_END);
+
+  enableLocalControls();
 }

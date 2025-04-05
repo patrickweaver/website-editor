@@ -27,7 +27,7 @@ import {
   IMAGE_PREVIEW_ID_PREFIX,
   LOCAL_CONTROLS_ID,
   STRINGS,
-  UPDATE_BODY_ALIGN_CONTAINER,
+  UPDATE_BODY_ALIGN_CONTAINER_ID,
   UPDATE_BODY_ALIGN_ID,
   UPDATE_FAVICON_ID,
   WIDTH_SLIDER_CONTAINER_ID,
@@ -176,9 +176,8 @@ export function onUpdateFullWidth(changeEvent) {
   document.getElementById(WIDTH_SLIDER_CONTAINER_ID).style.display = fullWidth
     ? "none"
     : "block";
-  document.getElementById(UPDATE_BODY_ALIGN_CONTAINER).style.display = fullWidth
-    ? "none"
-    : "block";
+  document.getElementById(UPDATE_BODY_ALIGN_CONTAINER_ID).style.display =
+    fullWidth ? "none" : "block";
   let bodyWidth;
   let bodyMargin;
   if (fullWidth) {
