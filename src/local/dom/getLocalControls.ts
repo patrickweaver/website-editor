@@ -13,6 +13,7 @@ import {
   INPUT_TYPES,
   LOCAL_CONTROLS_ID,
   NOTE_CLASS,
+  OPTIONS,
   PAGE_DESC_INPUT_ID,
   PAGE_LANG_INPUT_ID,
   PAGE_TITLE_INPUT_ID,
@@ -23,11 +24,9 @@ import {
   UPDATE_BACKGROUND_COLOR_ID,
   UPDATE_BODY_ALIGN_CONTAINER_ID,
   UPDATE_BODY_ALIGN_ID,
-  UPDATE_BODY_ALIGN_OPTION_NAME,
   UPDATE_FAVICON_ID,
   UPDATE_SOCIAL_IMAGE_ID,
   UPDATE_TEXT_ALIGN_ID,
-  UPDATE_TEXT_ALIGN_OPTION_NAME,
   UPDATE_TEXT_COLOR_ID,
   UPDATE_TEXT_SIZE_ID,
   WIDTH_SLIDER_CONTAINER_ID,
@@ -48,7 +47,6 @@ import { getCurrentFaviconURL } from "./util/getCurrentFaviconUrl";
 import { getCurrentSocialImage } from "./util/getCurrentSocialImage";
 
 const {
-  ALIGNMENT_LABELS,
   BUTTON_CANCEL,
   BUTTON_UPDATE,
   LC_BG_COLOR_SUBHEADER,
@@ -197,22 +195,7 @@ export function getLocalControls(): HTMLElement {
       ...addControlsAlignmentInput(
         UPDATE_BODY_ALIGN_ID,
         LC_BODY_ALIGNMENT_LEGEND,
-        [
-          {
-            id: "body-left",
-            name: UPDATE_BODY_ALIGN_OPTION_NAME,
-            value: "left",
-            checked: true,
-            labelText: ALIGNMENT_LABELS.LEFT,
-          },
-          {
-            id: "body-center",
-            name: UPDATE_BODY_ALIGN_OPTION_NAME,
-            value: "center",
-            checked: false,
-            labelText: ALIGNMENT_LABELS.CENTER,
-          },
-        ],
+        OPTIONS.LC_BODY_ALIGNMENT_OPTIONS,
       ),
       createElement({
         tag: _ElementTag.LABEL,
@@ -225,29 +208,11 @@ export function getLocalControls(): HTMLElement {
 
   const textAlignmentEditor = addControlsSection(
     LC_TEXT_ALIGNMENT_SUBHEADER,
-    addControlsAlignmentInput(UPDATE_TEXT_ALIGN_ID, LC_TEXT_ALIGNMENT_LEGEND, [
-      {
-        id: "text-left",
-        name: UPDATE_TEXT_ALIGN_OPTION_NAME,
-        value: "left",
-        checked: true,
-        labelText: ALIGNMENT_LABELS.LEFT,
-      },
-      {
-        id: "text-center",
-        name: UPDATE_TEXT_ALIGN_OPTION_NAME,
-        value: "center",
-        checked: false,
-        labelText: ALIGNMENT_LABELS.CENTER,
-      },
-      {
-        id: "text-right",
-        name: UPDATE_TEXT_ALIGN_OPTION_NAME,
-        value: "right",
-        checked: false,
-        labelText: ALIGNMENT_LABELS.RIGHT,
-      },
-    ]),
+    addControlsAlignmentInput(
+      UPDATE_TEXT_ALIGN_ID,
+      LC_TEXT_ALIGNMENT_LEGEND,
+      OPTIONS.LC_UPDATE_TEXT_ALIGN_OPTIONS,
+    ),
     HeaderTag.H4,
   );
 

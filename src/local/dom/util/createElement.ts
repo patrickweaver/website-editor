@@ -74,6 +74,7 @@ type ElementTagToType = {
   [_ElementTag.LABEL]: HTMLLabelElement;
   [_ElementTag.LEGEND]: HTMLLegendElement;
   [_ElementTag.LI]: HTMLLIElement;
+  [_ElementTag.LINK]: HTMLLinkElement;
   [_ElementTag.OL]: HTMLOListElement;
   [_ElementTag.OPTION]: HTMLOptionElement;
   [_ElementTag.P]: HTMLParagraphElement;

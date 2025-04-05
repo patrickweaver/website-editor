@@ -30,3 +30,26 @@ export enum EventType {
   CLICK = "click",
   INPUT = "input",
 }
+
+export enum TextAlignOptions {
+  LEFT = "LEFT",
+  CENTER = "CENTER",
+  RIGHT = "RIGHT",
+}
+
+export enum AlignItemsCssValues {
+  LEFT = "flex-start",
+  CENTER = "center",
+  RIGHT = "flex-end",
+}
+
+export enum TextAlignCssValues {
+  LEFT = "left",
+  CENTER = "center",
+  RIGHT = "right",
+}
+
+export enum UpdateMethod {
+  REMOVE = "removeEventListener",
+  ADD = "addEventListener",
+}

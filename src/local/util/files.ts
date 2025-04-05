@@ -1,7 +1,7 @@
-export async function getDataURLFromFile(file: File) {
+export async function getDataURLFromFile(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
+    reader.onload = () => resolve(String(reader.result));
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });

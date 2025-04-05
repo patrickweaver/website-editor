@@ -186,4 +186,52 @@ export const STRINGS = {
   NEW_CONTENT_HEADER: "Add New Content",
 };
 
+export const OPTIONS = {
+  LC_BODY_ALIGNMENT_OPTIONS: [
+    {
+      id: "body-left",
+      name: UPDATE_BODY_ALIGN_OPTION_NAME,
+      value: "left",
+      checked: true,
+      labelText: STRINGS.ALIGNMENT_LABELS.LEFT,
+      style: {
+        margin: "2rem",
+      },
+    },
+    {
+      id: "body-center",
+      name: UPDATE_BODY_ALIGN_OPTION_NAME,
+      value: "center",
+      checked: false,
+      labelText: STRINGS.ALIGNMENT_LABELS.CENTER,
+      style: {
+        margin: "2rem auto",
+      },
+    },
+  ],
+  LC_UPDATE_TEXT_ALIGN_OPTIONS: [
+    {
+      id: "text-left",
+      name: UPDATE_TEXT_ALIGN_OPTION_NAME,
+      value: "LEFT",
+      checked: true,
+      labelText: STRINGS.ALIGNMENT_LABELS.LEFT,
+    },
+    {
+      id: "text-center",
+      name: UPDATE_TEXT_ALIGN_OPTION_NAME,
+      value: "CENTER",
+      checked: false,
+      labelText: STRINGS.ALIGNMENT_LABELS.CENTER,
+    },
+    {
+      id: "text-right",
+      name: UPDATE_TEXT_ALIGN_OPTION_NAME,
+      value: "RIGHT",
+      checked: false,
+      labelText: STRINGS.ALIGNMENT_LABELS.RIGHT,
+    },
+  ],
+};
+
 export const ALERT_ANIMATION_DELAY = 250;

@@ -1,15 +1,31 @@
 import {
   END_OF_DOC_ID,
+  FULL_WIDTH_CHECKBOX_ID,
   HEADING_ELEMENTS,
   IMG_ELEMENT,
   PARAGRAPH_ELEMENT,
+  UPDATE_BACKGROUND_COLOR_ID,
+  UPDATE_BODY_ALIGN_ID,
+  UPDATE_FAVICON_ID,
+  UPDATE_TEXT_ALIGN_ID,
+  UPDATE_TEXT_COLOR_ID,
+  UPDATE_TEXT_SIZE_ID,
+  WIDTH_SLIDER_ID,
 } from "./constants";
 import { enableLocalControls } from "./dom/enableLocalControls";
+import { addListenerById } from "./dom/events/addListenerById";
+import { getHandleGlobalStyleChange } from "./dom/events/getHandleStyleChange";
+import { handleUpdateBodyAlignment } from "./dom/events/handleUpdateBodyAlignment";
+import { handleUpdateBodyTextAlign } from "./dom/events/handleUpdateBodyTextAlign";
+import { handleUpdateBodyTextSize } from "./dom/events/handleUpdateBodyTextSize";
+import { handleUpdateFavicon } from "./dom/events/handleUpdateFavicon";
+import { handleUpdateFullWidth } from "./dom/events/handleUpdateFullWidth";
+import { handleUpdateWidth } from "./dom/events/handleUpdateWidth";
 import { imageEventListener } from "./dom/events/imageEventListener";
 import { textEventListener } from "./dom/events/textEventListener";
 import { _ElementTag, createElement } from "./dom/util/createElement";
 import { insertElementToDOM } from "./dom/util/insertElementToDOM";
-import { InsertPosition } from "./types";
+import { CSSProperties, InsertPosition } from "./types";
 
 /* JavaScript enabling editing only runs locally */
 export function localEditingMode() {
@@ -48,4 +64,41 @@ qWsyPrizLD76QCPOHqP2cAAAAAElFTkSuQmCC`,
   insertElementToDOM(END_OF_DOC_ID, testImage, InsertPosition.AFTER_END);
 
   enableLocalControls();
+
+  const listeners = [
+    {
+      id: UPDATE_BACKGROUND_COLOR_ID,
+      eventHandler: getHandleGlobalStyleChange(CSSProperties.BACKGROUND_COLOR),
+    },
+    {
+      id: UPDATE_TEXT_COLOR_ID,
+      eventHandler: getHandleGlobalStyleChange(CSSProperties.COLOR),
+    },
+    {
+      id: FULL_WIDTH_CHECKBOX_ID,
+      eventHandler: handleUpdateFullWidth,
+    },
+    {
+      id: WIDTH_SLIDER_ID,
+      eventHandler: handleUpdateWidth,
+    },
+    {
+      id: UPDATE_BODY_ALIGN_ID,
+      eventHandler: handleUpdateBodyAlignment,
+    },
+    {
+      id: UPDATE_TEXT_ALIGN_ID,
+      eventHandler: handleUpdateBodyTextAlign,
+    },
+    {
+      id: UPDATE_TEXT_SIZE_ID,
+      eventHandler: handleUpdateBodyTextSize,
+    },
+    {
+      id: UPDATE_FAVICON_ID,
+      eventHandler: handleUpdateFavicon,
+    },
+  ];
+
+  listeners.forEach((i) => addListenerById(i.id, i.eventHandler));
 }
