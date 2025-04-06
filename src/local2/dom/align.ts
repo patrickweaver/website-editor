@@ -2,7 +2,7 @@ import { GLOBALS } from "../../globals";
 import { showAlert } from "../util/alert";
 
 export function getAlignValueFromFieldset(
-  alignSelectElement: HTMLSelectElement
+  alignSelectElement: HTMLFieldSetElement,
 ) {
   const selectedAlign = Array.from(alignSelectElement.children)
     .map((container) => Array.from(container.children)[0])
@@ -14,7 +14,7 @@ export function getAlignValueFromFieldset(
 
 export function onUpdateBodyAlign(_changeEvent: Event) {
   const { value } = document.querySelector(
-    "input[type='radio'][name='body-align']:checked"
+    "input[type='radio'][name='body-align']:checked",
   ) as HTMLInputElement;
   if (value === "left") {
     document.body.style.margin = "2rem";

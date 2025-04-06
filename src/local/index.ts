@@ -14,6 +14,7 @@ import {
   PAGE_TWITTER_DESC_ID,
   PAGE_TWITTER_TITLE_ID,
   PARAGRAPH_ELEMENT,
+  SAVE_CHANGES_ID,
   UPDATE_BACKGROUND_COLOR_ID,
   UPDATE_BODY_ALIGN_ID,
   UPDATE_FAVICON_ID,
@@ -29,6 +30,7 @@ import { addListenerToHtmlElementEditor } from "./dom/events/addListenerToHtmlEl
 import { addListenerToMetaEditor } from "./dom/events/addListenerToMetaEditor";
 import { addListenerToTitleEditor } from "./dom/events/addListenerToTitleEditor";
 import { getHandleGlobalStyleChange } from "./dom/events/getHandleStyleChange";
+import { handleSaveChanges } from "./dom/events/handleSaveChanges";
 import { handleUpdateBodyAlignment } from "./dom/events/handleUpdateBodyAlignment";
 import { handleUpdateBodyTextAlign } from "./dom/events/handleUpdateBodyTextAlign";
 import { handleUpdateBodyTextSize } from "./dom/events/handleUpdateBodyTextSize";
@@ -125,6 +127,11 @@ qWsyPrizLD76QCPOHqP2cAAAAAElFTkSuQmCC`,
       id: UPDATE_SOCIAL_IMAGE_ID,
       eventHandler: handleUpdateSocialImage,
       type: EventType.INPUT,
+    },
+    {
+      id: SAVE_CHANGES_ID,
+      eventHandler: handleSaveChanges,
+      type: EventType.CLICK,
     },
   ];
 

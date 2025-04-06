@@ -1,8 +1,8 @@
 import { GLOBALS } from "../../../globals";
 import {
-  AlignItemsCssValues,
+  FlexAlignCssValues,
   TextAlignCssValues,
-  TextAlignOptions,
+  AlignOptions,
 } from "../../types";
 
 export function handleUpdateBodyTextAlign(event: Event) {
@@ -10,12 +10,12 @@ export function handleUpdateBodyTextAlign(event: Event) {
   if (!(target instanceof HTMLInputElement)) return;
   const { value } = target;
   if (
-    value !== TextAlignOptions.LEFT &&
-    value !== TextAlignOptions.CENTER &&
-    value !== TextAlignOptions.RIGHT
+    value !== AlignOptions.LEFT &&
+    value !== AlignOptions.CENTER &&
+    value !== AlignOptions.RIGHT
   )
     return;
   document.body.style.setProperty("text-align", TextAlignCssValues[value]);
-  document.body.style.setProperty("align-items", AlignItemsCssValues[value]);
+  document.body.style.setProperty("align-items", FlexAlignCssValues[value]);
   GLOBALS.EDITING_STATE_DIRTY = true;
 }

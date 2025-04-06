@@ -38,10 +38,13 @@ export type ElementTag = HeaderTag | _ElementTag;
 
 export enum StyleProperty {
   ALIGN_ITEMS = "alignItems",
+  ALIGN_SELF = "alignSelf",
   DISPLAY = "display",
   MARGIN = "margin",
+  MIN_HEIGHT = "minHeight",
   TEXT_ALIGN = "textAlign",
   WIDTH = "width",
+  FLEX_DIRECTION = "flexDirection",
 }
 
 export enum ElementProperty {
@@ -80,6 +83,7 @@ type ElementTagToType = {
   [_ElementTag.P]: HTMLParagraphElement;
   [_ElementTag.SELECT]: HTMLSelectElement;
   [_ElementTag.SPAN]: HTMLSpanElement;
+  [_ElementTag.TEXTAREA]: HTMLTextAreaElement;
   [_ElementTag.UL]: HTMLUListElement;
 };
 
