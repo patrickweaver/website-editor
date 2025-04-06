@@ -1,7 +1,16 @@
 import { HeaderTag } from "./dom/util/createElement";
 
+export const HTML_ELEMENT_ID = "html-element";
 export const PAGE_TITLE_INPUT_ID = "edit-page-title";
+export const PAGE_TITLE_ID = "page-title";
+export const PAGE_OG_TITLE_ID = "og-title";
+export const PAGE_TWITTER_TITLE_ID = "twitter-title";
 export const PAGE_DESC_INPUT_ID = "edit-page-description";
+export const PAGE_DESC_ID = "page-description";
+export const PAGE_TWITTER_DESC_ID = "twitter-description";
+export const PAGE_OG_DESC_ID = "og-description";
+export const PAGE_OG_IMAGE_ID = "og-image";
+export const PAGE_OG_IMAGE_ALT_ID = "og-image-alt";
 export const PAGE_LANG_INPUT_ID = "edit-page-language";
 export const ADD_ITEM_ID = "add-item";
 export const ADD_ITEM_HEADING_ID = "add-item-heading";

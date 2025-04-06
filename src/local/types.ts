@@ -53,3 +53,15 @@ export enum UpdateMethod {
   REMOVE = "removeEventListener",
   ADD = "addEventListener",
 }
+
+export enum MetaProperty {
+  CONTENT = "content",
+}
+
+export enum HtmlProperty {
+  LANG = "lang",
+}
+
+export enum TitleProperty {
+  INNER_HTML = "innerHTML",
+}

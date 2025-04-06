@@ -47,7 +47,7 @@ export function localEditingMode() {
   document
     .querySelectorAll(IMG_ELEMENT)
     .forEach((element) =>
-      element.addEventListener("click", imageEventListener)
+      element.addEventListener("click", imageEventListener),
     );
 
   enableLocalControls();
@@ -55,7 +55,7 @@ export function localEditingMode() {
   /* Activate Controls on Controls Elements */
   addListenerById(
     UPDATE_BACKGROUND_COLOR_ID,
-    getHandleStyleChange("backgroundColor")
+    getHandleStyleChange("backgroundColor"),
   );
   addListenerById(UPDATE_TEXT_COLOR_ID, getHandleStyleChange("color"));
   addListenerById(FULL_WIDTH_CHECKBOX_ID, onUpdateFullWidth);
@@ -70,7 +70,7 @@ export function localEditingMode() {
     PAGE_TITLE_INPUT_ID,
     "page-title",
     ["meta-title", "twitter-title"],
-    "innerHTML"
+    "innerHTML",
   );
 
   addListenerToMetaDataEditor(PAGE_DESC_INPUT_ID, "page-description", [
