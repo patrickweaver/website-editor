@@ -38,7 +38,7 @@ export function addListenerToMetaDataEditor(
   mainElementId,
   secondaryElementIdArray,
   mainProperty = "content",
-  secondaryProperty = "content"
+  secondaryProperty = "content",
 ) {
   const editElement = document.getElementById(editElementId);
   const mainElement = document.getElementById(mainElementId);
@@ -68,10 +68,10 @@ export function makeEditorChangeListener(id, confirmButtonLabel) {
     } else {
       if (isImageEditor) {
         const imagePreviewImg = document.getElementById(
-          `${IMAGE_PREVIEW_ID_PREFIX}${id}`
+          `${IMAGE_PREVIEW_ID_PREFIX}${id}`,
         );
         const imagePreviewFigure = document.getElementById(
-          `${IMAGE_PREVIEW_FIGURE_ID_PREFIX}${id}`
+          `${IMAGE_PREVIEW_FIGURE_ID_PREFIX}${id}`,
         );
         const validFile = isImageFile(files[0]);
         if (!validFile) {
@@ -176,14 +176,14 @@ function makeElementEventListener(editorType) {
         updatedImageElement,
         originalElement,
         // 🚸 TODO check alignment dirty
-        ["alt", "src", "style"]
+        ["alt", "src", "style"],
       );
     };
 
     function elementUpdateCleanup(
       updatedElement,
       originalElement,
-      propertyArray
+      propertyArray,
     ) {
       if (!updatedElement) return false;
       const _editingStateDirty = propertyArray.some((p) => {
@@ -278,7 +278,7 @@ function makeElementEventListener(editorType) {
 
       editorContainerElement.insertAdjacentElement(
         "beforeend",
-        elementCloneContainer
+        elementCloneContainer,
       );
 
       const elementCloneLabel = createElement({
@@ -287,7 +287,7 @@ function makeElementEventListener(editorType) {
       });
       elementCloneContainer.insertAdjacentElement(
         "beforebegin",
-        elementCloneLabel
+        elementCloneLabel,
       );
     }
 

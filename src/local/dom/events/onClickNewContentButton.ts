@@ -3,6 +3,7 @@ import {
   ADD_ITEM_HEADING_ID,
   ADD_ITEM_IMAGE_ID,
   ADD_ITEM_PARAGRAPH_ID,
+  EDITOR_TYPES,
   END_OF_DOC_ID,
   LOCAL_CONTROLS_ID,
   NEW_CONTENT_MODAL_ID,
@@ -15,8 +16,7 @@ import { insertElementToDOM } from "../util/insertElementToDOM";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { scrollToElement } from "../util/scrollToElement";
 import { addListenerById } from "./addListenerById";
-import { imageEventListener } from "./imageEventListener";
-import { textEventListener } from "./textEventListener";
+import { makeElementEventListener } from "./makeElementEventListener";
 
 export function onClickNewContentButton() {
   const newContentModal = getNewContentModal();
@@ -92,13 +92,13 @@ function addNewTextElementEditor(type: EditorTypes = EditorTypes.PARAGRAPH) {
   const tag = type === EditorTypes.HEADING ? HeaderTag.H2 : _ElementTag.P;
   const innerHTML = STRINGS.PLACEHOLDER_TEXT;
   const newElement = createElement({ tag, innerHTML });
-  addNewEditorCleanup(newElement, textEventListener);
+  addNewEditorCleanup(newElement, makeElementEventListener(EDITOR_TYPES.TEXT));
 }
 
 function addNewImageEditor() {
   const tag = _ElementTag.IMG;
   const newElement = createElement({ tag });
-  addNewEditorCleanup(newElement, imageEventListener);
+  addNewEditorCleanup(newElement, makeElementEventListener(EDITOR_TYPES.IMAGE));
 }
 
 function addNewEditorCleanup(

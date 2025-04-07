@@ -1,13 +1,13 @@
 import { getAlignValueFromFieldset } from "../../../local2/dom/align";
-import { STRINGS } from "../../constants";
+import { EDITOR_TYPES, STRINGS } from "../../constants";
 import { AlignOptions, EventType, InsertPosition } from "../../types";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { handleUpdateImageAlign } from "../events/handleUpdateImageAlign";
-import { imageEventListener } from "../events/imageEventListener";
 import { _ElementTag, createElement } from "./createElement";
 import { insertElementToDOM } from "./insertElementToDOM";
 import { scrollToElement } from "./scrollToElement";
 import { getEditorContainerId } from "../../util/strings";
+import { makeElementEventListener } from "../events/makeElementEventListener";
 
 export async function prepareImageForEditor({
   filePickerId,
@@ -52,6 +52,9 @@ export async function prepareImageForEditor({
     return null;
   }
 
-  newElement.addEventListener(EventType.CLICK, imageEventListener);
+  newElement.addEventListener(
+    EventType.CLICK,
+    makeElementEventListener(EDITOR_TYPES.IMAGE),
+  );
   return newElement;
 }

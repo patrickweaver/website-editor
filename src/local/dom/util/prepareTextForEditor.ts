@@ -1,10 +1,11 @@
 import { getAlignValueFromFieldset } from "../../../local2/dom/align";
-import { InsertPosition } from "../../types";
-import { textEventListener } from "../events/textEventListener";
+import { EventType, InsertPosition } from "../../types";
 import { _ElementTag, createElement, HeaderTag } from "./createElement";
 import { insertElementToDOM } from "./insertElementToDOM";
 import { scrollToElement } from "./scrollToElement";
 import { getEditorContainerId } from "../../util/strings";
+import { makeElementEventListener } from "../events/makeElementEventListener";
+import { EDITOR_TYPES } from "../../constants";
 
 export function prepareTextForEditor({
   editorId,
@@ -23,6 +24,9 @@ export function prepareTextForEditor({
   const containerId = getEditorContainerId(editorId);
   insertElementToDOM(containerId, newElement, InsertPosition.AFTER_END);
   scrollToElement(newElement.id);
-  newElement.addEventListener("click", textEventListener);
+  newElement.addEventListener(
+    EventType.CLICK,
+    makeElementEventListener(EDITOR_TYPES.TEXT),
+  );
   return newElement;
 }

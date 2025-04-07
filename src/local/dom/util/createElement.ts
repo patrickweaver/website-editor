@@ -125,7 +125,7 @@ export function createElement<T extends keyof ElementTagToType>({
   let styleKey: StyleProperty;
   for (styleKey in style) {
     const property = style[styleKey];
-    if (property) element.setAttribute("style", property);
+    if (property) element.style[styleKey] = property;
   }
   const elementProperties: { [K in ElementProperty]?: string | number | null } =
     {

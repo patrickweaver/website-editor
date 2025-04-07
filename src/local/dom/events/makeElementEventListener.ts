@@ -45,8 +45,7 @@ export function makeElementEventListener(editorType: string) {
       showAlert("Invalid element");
       return;
     }
-    const originalDisplay = element.style.display;
-    element.style.display = "none";
+
     // TODO
     let tagName: _ElementTag = element.tagName.toLowerCase() as _ElementTag;
     let originalContent: string = "";
@@ -107,9 +106,9 @@ export function makeElementEventListener(editorType: string) {
       editorElement,
       tagNameSelect,
       alignSelectElement,
-      altTextEditor,
+      altTextEditor: _altTextEditor,
       originalElement,
-      editorId,
+      editorId: _editorId,
     }: {
       editorElement?: HTMLInputElement | HTMLTextAreaElement;
       tagNameSelect?: HTMLSelectElement;
@@ -136,11 +135,11 @@ export function makeElementEventListener(editorType: string) {
 
     const updateImageCallback: EditorButtonUpdateCallback = async ({
       editorElement: imagePicker,
-      tagNameSelect,
+      tagNameSelect: _tagNameSelect,
       alignSelectElement,
       altTextEditor,
       originalElement,
-      editorId,
+      editorId: _editorId,
     }: {
       editorElement?: HTMLInputElement | HTMLTextAreaElement;
       tagNameSelect?: HTMLSelectElement;
@@ -316,6 +315,9 @@ export function makeElementEventListener(editorType: string) {
       insertElementWithinElement(editorContainerElement, elementCloneLabel);
       insertElementWithinElement(editorContainerElement, elementCloneContainer);
     }
+
+    const originalDisplay = element.style.display;
+    element.style.display = "none";
 
     type.controls.forEach((i) => {
       let buttonElement = createElement({

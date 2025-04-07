@@ -26,7 +26,6 @@ export function slugify(text: string) {
 }
 
 export function trimHTML(text: string) {
-  console.log({ string: text.split(/(\s)+/) });
   return text
     .split(/(\s)+/)
     .filter((i) => ![" ", "", "\t"].some((j) => j === i))

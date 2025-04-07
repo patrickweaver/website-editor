@@ -3,7 +3,6 @@ import {
   addNewHeadingEditor,
   addNewParagraphEditor,
   addNewImageEditor,
-  insertAdj,
   insertFavicon,
   getCurrentStyle,
 } from "..";

@@ -1,5 +1,5 @@
 import { GLOBALS } from "../globals";
-import { createElement, insertAdj } from "./dom";
+import { createElement } from "./dom";
 import { getLocalControls } from "./dom/editors/controls";
 import { addListenerById } from "./dom/events/listeners";
 import { onClickNewContentButton } from "./dom/events/handlers";
