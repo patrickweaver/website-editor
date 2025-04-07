@@ -298,11 +298,6 @@ export function makeElementEventListener(editorType: string) {
         id: "clone-container",
         giveUniqueId: true,
         classList: [CLONE_CONTAINER_CLASS],
-        style: {
-          textAlign: document.body.style.textAlign,
-          display: document.body.style.display,
-          flexDirection: document.body.style.flexDirection,
-        },
       });
 
       insertElementWithinElement(elementCloneContainer, elementClone);

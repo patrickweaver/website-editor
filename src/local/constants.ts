@@ -127,6 +127,7 @@ export const STRINGS = {
     LEFT: "Left",
     CENTER: "Center",
     RIGHT: "Right",
+    DEFAULT: "Default",
   },
   BUTTON_CANCEL: "Cancel",
   BUTTON_DELETE: "Delete",

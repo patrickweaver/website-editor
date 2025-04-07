@@ -70,30 +70,34 @@ export function createImageEditor({
     AlignOptions.DEFAULT,
   ];
   let foundCurrent = false;
-  alignOptions.forEach((labelText) => {
+  alignOptions.forEach((value) => {
     const container = createElement();
-    const value = labelText.toLowerCase();
+    const valueLower = value.toLowerCase();
     const input = createElement({
       tag: _ElementTag.INPUT,
-      value,
-      id: `${editAlignElement.id}-option-${value}`,
+      value: valueLower,
+      id: `${editAlignElement.id}-option-${valueLower}`,
       type: INPUT_TYPES.RADIO,
       name: editAlignElement.id,
     });
     const { alignSelf } = style;
     if (
       (alignSelf === FlexAlignCssValues.LEFT &&
-        value === TextAlignCssValues.LEFT) ||
+        valueLower === TextAlignCssValues.LEFT) ||
       (alignSelf === FlexAlignCssValues.RIGHT &&
-        value === TextAlignCssValues.RIGHT) ||
+        valueLower === TextAlignCssValues.RIGHT) ||
       (alignSelf === FlexAlignCssValues.CENTER &&
-        value === TextAlignCssValues.CENTER)
+        valueLower === TextAlignCssValues.CENTER)
     ) {
       input.checked = true;
       foundCurrent = true;
     }
 
-    const label = createEditorLabel(input.id, EditorTypes.ALIGN, labelText);
+    const label = createEditorLabel(
+      input.id,
+      EditorTypes.OPTION,
+      STRINGS.ALIGNMENT_LABELS[value],
+    );
     insertElementWithinElement(container, label, InsertPosition.AFTER_BEGIN);
     insertElementWithinElement(container, input, InsertPosition.AFTER_BEGIN);
     insertElementWithinElement(

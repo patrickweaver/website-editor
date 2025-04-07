@@ -79,21 +79,25 @@ export function createTextEditor({
     AlignOptions.DEFAULT,
   ];
   let foundCurrent = false;
-  alignOptions.forEach((labelText) => {
+  alignOptions.forEach((value) => {
     const container = createElement({ id: "cont", giveUniqueId: true });
-    const value = labelText.toLowerCase();
+    const valueLower = value.toLowerCase();
     const input = createElement({
       tag: _ElementTag.INPUT,
-      id: `${editAlignElement.id}-option-${value}`,
+      id: `${editAlignElement.id}-option-${valueLower}`,
       type: INPUT_TYPES.RADIO,
       name: editAlignElement.id,
-      value,
+      value: valueLower,
     });
-    if (!foundCurrent && style.textAlign === value) {
+    if (!foundCurrent && style.textAlign === valueLower) {
       input.checked = true;
       foundCurrent = true;
     }
-    const label = createEditorLabel(input.id, EditorTypes.TEXT, labelText);
+    const label = createEditorLabel(
+      input.id,
+      EditorTypes.OPTION,
+      STRINGS.ALIGNMENT_LABELS[value],
+    );
     insertElementWithinElement(container, label, InsertPosition.AFTER_BEGIN);
     insertElementWithinElement(container, input, InsertPosition.AFTER_BEGIN);
     insertElementWithinElement(

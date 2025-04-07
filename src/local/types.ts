@@ -16,13 +16,14 @@ export enum IMAGE_PREVIEW {
 }
 
 export enum EditorTypes {
-  TEXT = "text",
+  ALIGN = "align",
   HEADING = "heading",
   HEADING_LEVEL = "heading-level",
-  ALIGN = "align",
-  PARAGRAPH = "paragraph",
   IMAGE = "image",
   IMAGE_ALT_TEXT = "image-alt",
+  OPTION = "option",
+  PARAGRAPH = "paragraph",
+  TEXT = "text",
 }
 
 export enum EventType {
