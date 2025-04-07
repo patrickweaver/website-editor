@@ -5,5 +5,9 @@ export function insertElementToDOM(
   element: HTMLElement,
   position: InsertPosition = InsertPosition.AFTER_BEGIN,
 ) {
-  document.getElementById(neighborId)?.insertAdjacentElement(position, element);
+  const neighbor = document.getElementById(neighborId);
+  if (!neighbor) {
+    alert("Error: Invalid insertion point");
+  }
+  neighbor?.insertAdjacentElement(position, element);
 }
