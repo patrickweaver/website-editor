@@ -1,4 +1,4 @@
-import { getAlignValueFromFieldset } from "../../../local2/dom/align";
+import { getAlignValueFromFieldset } from "./getAlignValueFromFieldset";
 import { EventType, InsertPosition } from "../../types";
 import { _ElementTag, createElement, HeaderTag } from "./createElement";
 import { insertElementToDOM } from "./insertElementToDOM";

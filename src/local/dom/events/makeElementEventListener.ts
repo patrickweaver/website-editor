@@ -1,5 +1,5 @@
 import { GLOBALS } from "../../../globals";
-import { addLinkAroundSelection } from "../../../local2/dom";
+import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import {
   CLONE_CLASS,
   CLONE_CONTAINER_CLASS,
@@ -94,6 +94,7 @@ export function makeElementEventListener(editorType: string) {
         if (!editorId) return undefined;
         const selectableInput = document.getElementById(editorId);
         if (!(selectableInput instanceof HTMLTextAreaElement)) return;
+        console.log({ selectableInput, type: typeof selectableInput });
         selectableInput.value = addLinkAroundSelection(selectableInput);
       },
     };

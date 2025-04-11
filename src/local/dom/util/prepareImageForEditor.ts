@@ -1,4 +1,4 @@
-import { getAlignValueFromFieldset } from "../../../local2/dom/align";
+import { getAlignValueFromFieldset } from "./getAlignValueFromFieldset";
 import { EDITOR_TYPES, STRINGS } from "../../constants";
 import { AlignOptions, EventType, InsertPosition } from "../../types";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
