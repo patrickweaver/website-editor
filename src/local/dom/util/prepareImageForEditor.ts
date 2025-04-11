@@ -23,6 +23,7 @@ export async function prepareImageForEditor({
   // TODO is this function misnamed?
   const value = getAlignValueFromFieldset(alignSelectElement);
   if (
+    value !== AlignOptions.DEFAULT &&
     value !== AlignOptions.LEFT &&
     value !== AlignOptions.CENTER &&
     value !== AlignOptions.RIGHT
