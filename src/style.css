@@ -1,8 +1,8 @@
 :root {
-  --button-del-bg: #ffbfbf;
-  --button-del-border: #ff0000;
-  --button-del-hover-bg: #ffafaf;
-  --button-del-hover-border: #ff2f2f;
+  --warning-bg-a: #ffbfbf;
+  --warning-highlight-a: #ff0000;
+  --warning-bg-b: #ffafaf;
+  --warning-highlight-b: #ff2f2f;
   --lc-bg: #dfdfe8;
   --lc-bg-2: #f8f8ff;
   --lc-bg-3: #f4f4f4;
@@ -22,6 +22,7 @@
 body {
   font-family: "Arial", sans-serif;
   margin: 2rem;
+  line-height: 1.4;
 }
 
 input,
@@ -148,6 +149,25 @@ fieldset.edit {
   outline: 1px dashed var(--lc-border-3);
 }
 
+.local-controls-alert {
+  border: 2px solid var(--warning-highlight-a);
+  background-color: var(--warning-bg-a);
+  padding: 0rem 1rem;
+  margin: 1rem 0;
+  position: relative;
+  transform: scaleY(1);
+}
+
+.local-controls-alert button {
+  position: absolute;
+  top: 6px;
+  right: 2px;
+}
+
+.local-controls-alert.alert-removed{
+  display: none;
+}
+
 #local-controls fieldset label,
 #local-controls fieldset input {
   display: inline-block;
@@ -214,13 +234,13 @@ fieldset.edit {
 }
 
 .edit-buttons button.delete-button {
-  border: 2px outset var(--button-del-border);
-  background-color: var(--button-del-bg);
+  border: 2px outset var(--warning-highlight-a);
+  background-color: var(--warning-bg-a);
 }
 
 .edit-buttons button.delete-button:hover {
-  border: 2px outset var(--button-del-hover-border);
-  background-color: var(--button-del-hover-bg);
+  border: 2px outset var(--warning-highlight-b);
+  background-color: var(--warning-bg-b);
 }
 
 .controls-section label {

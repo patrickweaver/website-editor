@@ -1,19 +1,22 @@
 {
   "name": "website-editor",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "An in-browser website editor for creating HTML files",
   "engines": {
-    "node": ">=18.3.0"
+    "node": ">=22.14.0"
   },
   "scripts": {
-    "dev": "vite --config ./src/vite.config.js",
-    "build": "vite build --config ./src/vite.config.js && rm -rf dist/assets",
-    "preview": "vite preview --config ./src/vite.config.js"
+    "dev": "vite --config ./src/vite.config.ts",
+    "build": "vite build --config ./src/vite.config.ts && rm -rf dist/assets",
+    "preview": "vite preview --config ./src/vite.config.ts"
   },
   "type": "module",
   "devDependencies": {
-    "vite": "^2.9.9",
-    "vite-plugin-singlefile": "^0.9.0"
+    "@types/node": "^20.17.28",
+    "prettier": "^3.5.3",
+    "typescript": "^5.3.3",
+    "vite": "^6.2.3",
+    "vite-plugin-singlefile": "^2.2.0"
   },
   "repository": {
     "type": "git",
@@ -24,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/patrickweaver/website-editor/issues"
   },
-  "homepage": "https://github.com/patrickweaver/website-editor#readme"
+  "homepage": "https://github.com/patrickweaver/website-editor#readme",
+  "dependencies": {
+    "@types/wicg-file-system-access": "^2023.10.5"
+  }
 }
