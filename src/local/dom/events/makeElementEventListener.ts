@@ -93,7 +93,7 @@ export function makeElementEventListener(editorType: string) {
         // TODO unnecessary check
         if (!editorId) return undefined;
         const selectableInput = document.getElementById(editorId);
-        if (!(selectableInput instanceof HTMLInputElement)) return;
+        if (!(selectableInput instanceof HTMLTextAreaElement)) return;
         selectableInput.value = addLinkAroundSelection(selectableInput);
       },
     };
