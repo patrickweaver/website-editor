@@ -27,10 +27,10 @@ export async function prepareImageForEditor({
     value !== AlignOptions.CENTER &&
     value !== AlignOptions.RIGHT
   )
-    return;
+    return null;
   const style = handleUpdateImageAlign(value);
   const filePicker = document?.getElementById(filePickerId);
-  if (!(filePicker instanceof HTMLInputElement)) return;
+  if (!(filePicker instanceof HTMLInputElement)) return null;
   const file = filePicker?.files?.[0];
   if (file && !isImageFile(file)) {
     // This won't happen because button is disabled

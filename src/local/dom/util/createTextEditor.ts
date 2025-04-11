@@ -1,9 +1,4 @@
-import {
-  EDIT_CLASS,
-  EDITOR_TYPES,
-  INPUT_TYPES,
-  STRINGS,
-} from "../../constants";
+import { EDIT_CLASS, INPUT_TYPES, STRINGS } from "../../constants";
 import {
   AlignOptions,
   Editor,
@@ -65,7 +60,7 @@ export function createTextEditor({
   editAlignElement.addEventListener(EventType.CHANGE, editorChangeListener);
   const alignLegend = createElement({
     tag: _ElementTag.LEGEND,
-    innerHTML: STRINGS.EDITOR_LABELS[EDITOR_TYPES.ALIGN],
+    innerHTML: STRINGS.EDITOR_LABELS[EditorTypes.ALIGN],
   });
   insertElementWithinElement(
     editAlignElement,

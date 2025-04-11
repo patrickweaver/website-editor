@@ -1,4 +1,5 @@
 import { HeaderTag } from "./dom/util/createElement";
+import { EditorTypes } from "./types";
 
 export const HTML_ELEMENT_ID = "html-element";
 export const PAGE_TITLE_INPUT_ID = "edit-page-title";
@@ -143,12 +144,12 @@ export const STRINGS = {
   ERROR_NO_IMAGE: "Error: No image found",
   ERROR_NO_SELECTION: "Error: Nothing selected",
   EDITOR_LABELS: {
-    [EDITOR_TYPES.PARAGRAPH]: "Edit paragraph text",
-    [EDITOR_TYPES.HEADING]: "Edit heading text",
-    [EDITOR_TYPES.HEADING_LEVEL]: "Edit heading level",
-    [EDITOR_TYPES.IMAGE]: "Select an image",
-    [EDITOR_TYPES.IMAGE_ALT_TEXT]: "Image alt text",
-    [EDITOR_TYPES.ALIGN]: "Edit alignment",
+    [EditorTypes.PARAGRAPH]: "Edit paragraph text",
+    [EditorTypes.HEADING]: "Edit heading text",
+    [EditorTypes.HEADING_LEVEL]: "Edit heading level",
+    [EditorTypes.IMAGE]: "Select an image",
+    [EditorTypes.IMAGE_ALT_TEXT]: "Image alt text",
+    [EditorTypes.ALIGN]: "Edit alignment",
   },
   FAVICON_PREVIEW_CAPTION: "New favicon preview:",
   IMAGE_PREVIEW_CAPTION: "Image preview:",

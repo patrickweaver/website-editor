@@ -75,7 +75,7 @@ export function createImageEditor({
     const valueLower = value.toLowerCase();
     const input = createElement({
       tag: _ElementTag.INPUT,
-      value: valueLower,
+      value,
       id: `${editAlignElement.id}-option-${valueLower}`,
       type: INPUT_TYPES.RADIO,
       name: editAlignElement.id,
