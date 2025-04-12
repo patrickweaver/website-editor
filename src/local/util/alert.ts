@@ -4,11 +4,8 @@ import {
   ALERT_REMOVED,
   ALERT_ANIMATION_DELAY,
 } from "../constants.ts";
-import {
-  _ElementTag,
-  createElement,
-  HeaderTag,
-} from "../dom/util/createElement.ts";
+import { ElementTag } from "../types.ts";
+import { createElement } from "../dom/util/createElement.ts";
 import { insertElementToDOM } from "../dom/util/insertElementToDOM.ts";
 import { insertElementWithinElement } from "../dom/util/insertElementWithinElement.ts";
 import { InsertPosition } from "../types.ts";
@@ -17,21 +14,21 @@ export function showAlert(message: string) {
   // This timeout is needed to make sure that the local controls element exists when the alert is created
   setTimeout(() => {
     const alert = createElement({
-      tag: _ElementTag.DIV,
+      tag: ElementTag.DIV,
       id: "alert",
       giveUniqueId: true,
     });
     const now = new Date();
     const alertHeader = createElement({
-      tag: HeaderTag.H3,
+      tag: ElementTag.H3,
       innerHTML: `Alert (${now.toLocaleTimeString()} - id: ${alert.id.split("-").reverse()[0]})`,
     });
     const alertMessage = createElement({
-      tag: _ElementTag.P,
+      tag: ElementTag.P,
       innerHTML: `Error -- ${message}`,
     });
     const alertCloseButton = createElement({
-      tag: _ElementTag.BUTTON,
+      tag: ElementTag.BUTTON,
       innerHTML: "Close",
     });
     insertElementWithinElement(alert, alertHeader, InsertPosition.AFTER_BEGIN);

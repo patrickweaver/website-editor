@@ -5,7 +5,7 @@ import {
   STRINGS,
 } from "../../constants";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
-import { _ElementTag } from "../util/createElement";
+import { ElementTag } from "../../types";
 import { getButtonId, trimHTML } from "../../util/strings";
 
 export function getEditorChangeListener(
@@ -23,8 +23,8 @@ export function getEditorChangeListener(
     const { type } = target;
     const tagName = target.tagName.toLowerCase();
     const isParagraphEditor =
-      tagName === _ElementTag.TEXTAREA && target instanceof HTMLTextAreaElement;
-    const isImageChangeEvent = tagName === _ElementTag.INPUT && type === "file";
+      tagName === ElementTag.TEXTAREA && target instanceof HTMLTextAreaElement;
+    const isImageChangeEvent = tagName === ElementTag.INPUT && type === "file";
     if (isParagraphEditor) {
       updateButton.disabled = !trimHTML(target.value);
     } else if (isImageChangeEvent) {

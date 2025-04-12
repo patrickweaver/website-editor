@@ -39,7 +39,6 @@ import { handleUpdateFullWidth } from "./dom/events/handleUpdateFullWidth";
 import { handleUpdateSocialImage } from "./dom/events/handleUpdateSocialImage";
 import { handleUpdateWidth } from "./dom/events/handleUpdateWidth";
 import { makeElementEventListener } from "./dom/events/makeElementEventListener";
-import { _ElementTag } from "./dom/util/createElement";
 import {
   CSSProperties,
   EventType,

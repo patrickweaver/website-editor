@@ -1,6 +1,7 @@
 import { EDIT_CLASS, STRINGS } from "../../constants";
 import { EditorTypes } from "../../types";
-import { _ElementTag, createElement } from "./createElement";
+import { createElement } from "./createElement";
+import { ElementTag } from "../../types";
 
 export function createEditorLabel(
   editorId: string,
@@ -8,7 +9,7 @@ export function createEditorLabel(
   text: string = "",
 ) {
   return createElement({
-    tag: _ElementTag.LABEL,
+    tag: ElementTag.LABEL,
     innerHTML: STRINGS.EDITOR_LABELS?.[type] ?? text,
     htmlFor: editorId,
     classList: [EDIT_CLASS],

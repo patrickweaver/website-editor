@@ -10,8 +10,13 @@ import {
   NEW_CONTENT_MODAL_WRAPPER_ID,
   STRINGS,
 } from "../../constants";
-import { EditorTypes, EventType, InsertPosition } from "../../types";
-import { _ElementTag, createElement, HeaderTag } from "../util/createElement";
+import {
+  EditorTypes,
+  EventType,
+  InsertPosition,
+  ElementTag,
+} from "../../types";
+import { createElement } from "../util/createElement";
 import { insertElementToDOM } from "../util/insertElementToDOM";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { scrollToElement } from "../util/scrollToElement";
@@ -61,23 +66,23 @@ function getNewContentModal() {
   const wrapper = createElement({ id: NEW_CONTENT_MODAL_WRAPPER_ID });
   const modal = createElement({ id: NEW_CONTENT_MODAL_ID });
   const heading = createElement({
-    tag: HeaderTag.H2,
+    tag: ElementTag.H2,
     innerHTML: STRINGS.NEW_CONTENT_HEADER,
   });
-  const list = createElement({ tag: _ElementTag.UL });
+  const list = createElement({ tag: ElementTag.UL });
   const buttons = [
     { id: ADD_ITEM_HEADING_ID, innerHTML: STRINGS.BUTTON_ADD_HEADING },
     { id: ADD_ITEM_PARAGRAPH_ID, innerHTML: STRINGS.BUTTON_ADD_PARAGRAPH },
     { id: ADD_ITEM_IMAGE_ID, innerHTML: STRINGS.BUTTON_ADD_IMAGE },
   ];
   buttons.forEach((buttonOptions) => {
-    const listItem = createElement({ tag: _ElementTag.LI });
-    const button = createElement({ tag: _ElementTag.BUTTON, ...buttonOptions });
+    const listItem = createElement({ tag: ElementTag.LI });
+    const button = createElement({ tag: ElementTag.BUTTON, ...buttonOptions });
     insertElementWithinElement(listItem, button);
     insertElementWithinElement(list, listItem);
   });
   const cancelButton = createElement({
-    tag: _ElementTag.BUTTON,
+    tag: ElementTag.BUTTON,
     id: ADD_ITEM_CANCEL_BUTTON_ID,
     innerHTML: STRINGS.BUTTON_CANCEL,
   });
@@ -89,14 +94,14 @@ function getNewContentModal() {
 }
 
 function addNewTextElementEditor(type: EditorTypes = EditorTypes.PARAGRAPH) {
-  const tag = type === EditorTypes.HEADING ? HeaderTag.H2 : _ElementTag.P;
+  const tag = type === EditorTypes.HEADING ? ElementTag.H2 : ElementTag.P;
   const innerHTML = STRINGS.PLACEHOLDER_TEXT;
   const newElement = createElement({ tag, innerHTML });
   addNewEditorCleanup(newElement, makeElementEventListener(EDITOR_TYPES.TEXT));
 }
 
 function addNewImageEditor() {
-  const tag = _ElementTag.IMG;
+  const tag = ElementTag.IMG;
   const newElement = createElement({ tag });
   addNewEditorCleanup(newElement, makeElementEventListener(EDITOR_TYPES.IMAGE));
 }

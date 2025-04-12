@@ -3,14 +3,15 @@ import {
   CURRENT_FAVICON_PREVIEW_ID,
   FAVICON_QUERY_SELECTOR,
 } from "../constants";
+import { ElementTag } from "../types";
 import { getDataURLFromFile } from "../util/files";
-import { _ElementTag, createElement } from "./util/createElement";
+import { createElement } from "./util/createElement";
 
 export async function insertFavicon(file: File) {
   const oldElement = document.querySelector(FAVICON_QUERY_SELECTOR);
   if (!oldElement) return;
   oldElement.remove();
-  const newElement = createElement({ tag: _ElementTag.LINK });
+  const newElement = createElement({ tag: ElementTag.LINK });
   const dataUrl = await getDataURLFromFile(file);
   newElement.rel = "icon";
   newElement.href = dataUrl;

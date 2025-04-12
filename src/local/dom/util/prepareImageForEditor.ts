@@ -1,9 +1,14 @@
 import { getAlignValueFromFieldset } from "./getAlignValueFromFieldset";
 import { EDITOR_TYPES, STRINGS } from "../../constants";
-import { AlignOptions, EventType, InsertPosition } from "../../types";
+import {
+  AlignOptions,
+  EventType,
+  InsertPosition,
+  ElementTag,
+} from "../../types";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { handleUpdateImageAlign } from "../events/handleUpdateImageAlign";
-import { _ElementTag, createElement } from "./createElement";
+import { createElement } from "./createElement";
 import { insertElementToDOM } from "./insertElementToDOM";
 import { scrollToElement } from "./scrollToElement";
 import { getEditorContainerId } from "../../util/strings";
@@ -39,7 +44,7 @@ export async function prepareImageForEditor({
     alert(STRINGS.ERROR_IMAGE_ONLY);
     return null;
   }
-  const newElement = createElement({ tag: _ElementTag.IMG, style, altText });
+  const newElement = createElement({ tag: ElementTag.IMG, style, altText });
   const containerId = getEditorContainerId(filePickerId);
   insertElementToDOM(containerId, newElement, InsertPosition.AFTER_END);
   scrollToElement(newElement.id);

@@ -10,9 +10,10 @@ import {
 } from "../../types";
 import { getEditorChangeListener } from "../events/getEditorChangeListener";
 import { createEditorLabel } from "./createEditorLabel";
-import { _ElementTag, createElement } from "./createElement";
+import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 import { makeImagePreview } from "./makeImagePreview";
+import { ElementTag } from "../../types";
 
 export function createImageEditor({
   id,
@@ -27,7 +28,7 @@ export function createImageEditor({
 }): Editor | null {
   const editorChangeListener = getEditorChangeListener(id, confirmButtonLabel);
   const imagePicker = createElement({
-    tag: _ElementTag.INPUT,
+    tag: ElementTag.INPUT,
     type: INPUT_TYPES.FILE,
     id,
     classList: [EDIT_CLASS],
@@ -37,7 +38,7 @@ export function createImageEditor({
 
   const imagePreviewFigure = makeImagePreview(id);
   const altEditor = createElement({
-    tag: _ElementTag.INPUT,
+    tag: ElementTag.INPUT,
     type: INPUT_TYPES.TEXT,
     id: `alt-text-${id}`,
     classList: [EDIT_CLASS],
@@ -50,13 +51,13 @@ export function createImageEditor({
   );
 
   const editAlignElement = createElement({
-    tag: _ElementTag.FIELDSET,
+    tag: ElementTag.FIELDSET,
     id: `align-${id}`,
     classList: [EDIT_CLASS],
   });
   editAlignElement.addEventListener(EventType.CHANGE, editorChangeListener);
   const alignLegend = createElement({
-    tag: _ElementTag.LEGEND,
+    tag: ElementTag.LEGEND,
     innerHTML: STRINGS.EDITOR_LABELS[EditorTypes.ALIGN],
   });
   editAlignElement.insertAdjacentElement(
@@ -74,7 +75,7 @@ export function createImageEditor({
     const container = createElement();
     const valueLower = value.toLowerCase();
     const input = createElement({
-      tag: _ElementTag.INPUT,
+      tag: ElementTag.INPUT,
       value,
       id: `${editAlignElement.id}-option-${valueLower}`,
       type: INPUT_TYPES.RADIO,

@@ -5,8 +5,8 @@ import {
   IMAGE_PREVIEW_ID_PREFIX,
   STRINGS,
 } from "../../constants";
-import { IMAGE_PREVIEW } from "../../types";
-import { _ElementTag, createElement } from "./createElement";
+import { IMAGE_PREVIEW, ElementTag } from "../../types";
+import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 
 const captions = {
@@ -19,17 +19,17 @@ export function makeImagePreview(
   type: IMAGE_PREVIEW = IMAGE_PREVIEW.IMAGE,
 ) {
   const imagePreviewImg = createElement({
-    tag: _ElementTag.IMG,
+    tag: ElementTag.IMG,
     id: `${IMAGE_PREVIEW_ID_PREFIX}${id}`,
     classList: [IMAGE_PREVIEW_CLASS],
   });
   const captionText = captions[type];
   const imagePreviewCaption = createElement({
-    tag: _ElementTag.FIGCAPTION,
+    tag: ElementTag.FIGCAPTION,
     innerHTML: captionText,
   });
   const imagePreviewFigure = createElement({
-    tag: _ElementTag.FIGURE,
+    tag: ElementTag.FIGURE,
     id: `${IMAGE_PREVIEW_FIGURE_ID_PREFIX}${id}`,
     classList: [HIDDEN_CLASS],
   });

@@ -1,5 +1,6 @@
-import { _ElementTag, createElement } from "./createElement";
+import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
+import { ElementTag } from "../../types";
 
 export function getFigureWithCaption(
   figureId: string,
@@ -8,13 +9,13 @@ export function getFigureWithCaption(
   imageSrc: string,
   imageAlt: string,
 ) {
-  const figure = createElement({ tag: _ElementTag.FIGURE, id: figureId });
+  const figure = createElement({ tag: ElementTag.FIGURE, id: figureId });
   const caption = createElement({
-    tag: _ElementTag.FIGCAPTION,
+    tag: ElementTag.FIGCAPTION,
     innerHTML: captionText,
   });
   const image = createElement({
-    tag: _ElementTag.IMG,
+    tag: ElementTag.IMG,
     id: imageId,
     imageSrc,
     altText: imageAlt,

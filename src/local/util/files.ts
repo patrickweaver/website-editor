@@ -17,7 +17,6 @@ export function isImageFile(file: File) {
 // Chromium only
 // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/write
 export async function saveFile(data: string) {
-  console.log("**", typeof data);
   // create a new handle
   const newHandle = await window.showSaveFilePicker({
     startIn: "desktop",
