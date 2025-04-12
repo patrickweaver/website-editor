@@ -1,7 +1,7 @@
 import {
   ALERT_CLASS,
   ALERT_LIST,
-  ALERT_REMOVED,
+  ALERT_REMOVED_CLASS,
   ALERT_ANIMATION_DELAY,
 } from "../constants.ts";
 import { ElementTag } from "../types.ts";
@@ -41,7 +41,9 @@ export function showAlert(message: string) {
 }
 
 function closeAlertListener(event: MouseEvent) {
-  (event.target as HTMLElement)?.parentElement?.classList.add(ALERT_REMOVED);
+  (event.target as HTMLElement)?.parentElement?.classList.add(
+    ALERT_REMOVED_CLASS,
+  );
   setTimeout(() => {
     // This makes sense once we animate it out
     (event.target as HTMLElement)?.parentElement?.remove();
