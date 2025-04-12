@@ -1,5 +1,3 @@
-import { ElementTag } from "./types";
-
 export const HTML_ELEMENT_ID = "html-element";
 export const PAGE_TITLE_INPUT_ID = "edit-page-title";
 export const PAGE_TITLE_ID = "page-title";
@@ -68,31 +66,6 @@ export const LOCAL_CONTROLS_ID = "local-controls";
 export const NEW_CONTENT_MODAL_ID = "new-content-modal";
 export const NEW_CONTENT_MODAL_WRAPPER_ID = "new-content-modal-wrapper";
 export const NOTE_CLASS = "note";
-export const BUTTON_ELEMENT = "button";
-export const DATALIST_ELEMENT = "datalist";
-export const HEADING_ELEMENTS: Array<ElementTag> = [
-  ElementTag.H1,
-  ElementTag.H1,
-  ElementTag.H2,
-  ElementTag.H3,
-  ElementTag.H4,
-  ElementTag.H5,
-  ElementTag.H6,
-];
-export const FIELDSET_ELEMENT = "fieldset";
-export const FIGCAPTION_ELEMENT = "figcaption";
-export const FIGURE_ELEMENT = "figure";
-export const INPUT_ELEMENT = "input";
-export const LABEL_ELEMENT = "label";
-export const LEGEND_ELEMENT = "legend";
-export const OPTION_ELEMENT = "option";
-export const PARAGRAPH_ELEMENT = "p";
-export const IMG_ELEMENT = "img";
-export const LIST_ELEMENTS = { UNORDERED: "ul", ORDERED: "ol" };
-export const LIST_ITEM_ELEMENT = "li";
-export const HOZ_RULE_ELEMENT = "hr";
-export const SPAN_ELEMENT = "span";
-export const TEXTAREA_ELEMENT = "textarea";
 
 export const EDITOR_TYPES = {
   TEXT: "text",

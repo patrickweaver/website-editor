@@ -1,9 +1,7 @@
 import {
   EDITOR_TYPES,
   FULL_WIDTH_CHECKBOX_ID,
-  HEADING_ELEMENTS,
   HTML_ELEMENT_ID,
-  IMG_ELEMENT,
   PAGE_DESC_ID,
   PAGE_DESC_INPUT_ID,
   PAGE_LANG_INPUT_ID,
@@ -13,7 +11,6 @@ import {
   PAGE_TITLE_INPUT_ID,
   PAGE_TWITTER_DESC_ID,
   PAGE_TWITTER_TITLE_ID,
-  PARAGRAPH_ELEMENT,
   SAVE_CHANGES_ID,
   UPDATE_BACKGROUND_COLOR_ID,
   UPDATE_BODY_ALIGN_ID,
@@ -41,6 +38,7 @@ import { handleUpdateWidth } from "./dom/events/handleUpdateWidth";
 import { makeElementEventListener } from "./dom/events/makeElementEventListener";
 import {
   CSSProperties,
+  ElementTag,
   EventType,
   HtmlProperty,
   MetaProperty,
@@ -50,7 +48,15 @@ import {
 /* JavaScript enabling editing only runs locally */
 export function localEditingMode() {
   console.log("Local editing mode enabled");
-  const textElements = [...HEADING_ELEMENTS, PARAGRAPH_ELEMENT];
+  const textElements = [
+    ElementTag.H1,
+    ElementTag.H2,
+    ElementTag.H3,
+    ElementTag.H4,
+    ElementTag.H5,
+    ElementTag.H6,
+    ElementTag.P,
+  ];
   document
     .querySelectorAll(textElements.join(", "))
     .forEach((element) =>
@@ -61,7 +67,7 @@ export function localEditingMode() {
     );
 
   document
-    .querySelectorAll(IMG_ELEMENT)
+    .querySelectorAll(ElementTag.IMG)
     .forEach((element) =>
       element.addEventListener(
         EventType.CLICK,
