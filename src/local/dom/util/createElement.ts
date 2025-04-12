@@ -1,40 +1,6 @@
 import { INPUT_TYPES } from "../../constants";
 import { getUniqueId } from "../../util/random";
-
-export enum HeaderTag {
-  H1 = "h1",
-  H2 = "h2",
-  H3 = "h3",
-  H4 = "h4",
-  H5 = "h5",
-  H6 = "h6",
-}
-
-export enum _ElementTag {
-  A = "a",
-  BUTTON = "button",
-  DATALIST = "datalist",
-  DIV = "div",
-  FIELDSET = "fieldset",
-  FIGCAPTION = "figcaption",
-  FIGURE = "figure",
-  HR = "hr",
-  IMG = "img",
-  INPUT = "input",
-  LABEL = "label",
-  LEGEND = "legend",
-  LI = "li",
-  LINK = "link",
-  OPTION = "option",
-  P = "p",
-  OL = "ol",
-  SELECT = "select",
-  SPAN = "span",
-  TEXTAREA = "textarea",
-  UL = "ul",
-}
-
-export type ElementTag = HeaderTag | _ElementTag;
+import { ElementTag, ElementTagToType } from "../../types";
 
 export enum StyleProperty {
   ALIGN_ITEMS = "alignItems",
@@ -57,36 +23,6 @@ export enum ElementProperty {
   ALT = "alt",
 }
 
-type ElementTagToType = {
-  [_ElementTag.A]: HTMLAnchorElement;
-  [_ElementTag.BUTTON]: HTMLButtonElement;
-  [_ElementTag.DATALIST]: HTMLDataListElement;
-  [_ElementTag.DIV]: HTMLDivElement;
-  [_ElementTag.FIELDSET]: HTMLFieldSetElement;
-  [_ElementTag.FIGCAPTION]: HTMLElement;
-  [_ElementTag.FIGURE]: HTMLElement;
-  [HeaderTag.H1]: HTMLHeadingElement;
-  [HeaderTag.H2]: HTMLHeadingElement;
-  [HeaderTag.H3]: HTMLHeadingElement;
-  [HeaderTag.H4]: HTMLHeadingElement;
-  [HeaderTag.H5]: HTMLHeadingElement;
-  [HeaderTag.H6]: HTMLHeadingElement;
-  [_ElementTag.HR]: HTMLElement;
-  [_ElementTag.IMG]: HTMLImageElement;
-  [_ElementTag.INPUT]: HTMLInputElement;
-  [_ElementTag.LABEL]: HTMLLabelElement;
-  [_ElementTag.LEGEND]: HTMLLegendElement;
-  [_ElementTag.LI]: HTMLLIElement;
-  [_ElementTag.LINK]: HTMLLinkElement;
-  [_ElementTag.OL]: HTMLOListElement;
-  [_ElementTag.OPTION]: HTMLOptionElement;
-  [_ElementTag.P]: HTMLParagraphElement;
-  [_ElementTag.SELECT]: HTMLSelectElement;
-  [_ElementTag.SPAN]: HTMLSpanElement;
-  [_ElementTag.TEXTAREA]: HTMLTextAreaElement;
-  [_ElementTag.UL]: HTMLUListElement;
-};
-
 export type CreateElementParams<T extends keyof ElementTagToType> = {
   tag?: T;
   id?: string | null;
@@ -103,7 +39,7 @@ export type CreateElementParams<T extends keyof ElementTagToType> = {
 };
 
 export function createElement<T extends keyof ElementTagToType>({
-  tag = _ElementTag.DIV as T,
+  tag = ElementTag.DIV as T,
   id = null,
   giveUniqueId = false,
   classList = [],

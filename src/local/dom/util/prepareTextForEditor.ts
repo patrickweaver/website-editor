@@ -1,6 +1,6 @@
 import { getAlignValueFromFieldset } from "./getAlignValueFromFieldset";
-import { EventType, InsertPosition } from "../../types";
-import { _ElementTag, createElement, HeaderTag } from "./createElement";
+import { EventType, InsertPosition, ElementTag } from "../../types";
+import { createElement } from "./createElement";
 import { insertElementToDOM } from "./insertElementToDOM";
 import { scrollToElement } from "./scrollToElement";
 import { getEditorContainerId } from "../../util/strings";
@@ -14,7 +14,7 @@ export function prepareTextForEditor({
   text,
 }: {
   editorId: string;
-  tagName: _ElementTag | HeaderTag;
+  tagName: ElementTag;
   alignSelectElement: HTMLFieldSetElement;
   text: string;
 }) {

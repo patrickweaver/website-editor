@@ -1,5 +1,4 @@
-import { HeaderTag } from "./dom/util/createElement";
-import { EditorTypes } from "./types";
+import { ElementTag } from "./types";
 
 export const HTML_ELEMENT_ID = "html-element";
 export const PAGE_TITLE_INPUT_ID = "edit-page-title";
@@ -71,14 +70,14 @@ export const NEW_CONTENT_MODAL_WRAPPER_ID = "new-content-modal-wrapper";
 export const NOTE_CLASS = "note";
 export const BUTTON_ELEMENT = "button";
 export const DATALIST_ELEMENT = "datalist";
-export const HEADING_ELEMENTS: Array<HeaderTag> = [
-  HeaderTag.H1,
-  HeaderTag.H1,
-  HeaderTag.H2,
-  HeaderTag.H3,
-  HeaderTag.H4,
-  HeaderTag.H5,
-  HeaderTag.H6,
+export const HEADING_ELEMENTS: Array<ElementTag> = [
+  ElementTag.H1,
+  ElementTag.H1,
+  ElementTag.H2,
+  ElementTag.H3,
+  ElementTag.H4,
+  ElementTag.H5,
+  ElementTag.H6,
 ];
 export const FIELDSET_ELEMENT = "fieldset";
 export const FIGCAPTION_ELEMENT = "figcaption";
@@ -145,12 +144,14 @@ export const STRINGS = {
   ERROR_NO_SELECTION: "Error: Nothing selected",
   ERROR_NO_URL: "Error: Invalid URL",
   EDITOR_LABELS: {
-    [EditorTypes.PARAGRAPH]: "Edit paragraph text",
-    [EditorTypes.HEADING]: "Edit heading text",
-    [EditorTypes.HEADING_LEVEL]: "Edit heading level",
-    [EditorTypes.IMAGE]: "Select an image",
-    [EditorTypes.IMAGE_ALT_TEXT]: "Image alt text",
-    [EditorTypes.ALIGN]: "Edit alignment",
+    align: "Edit alignment",
+    heading: "Edit heading text",
+    "heading-level": "Edit heading level",
+    image: "Select an image",
+    "image-alt": "Image alt text",
+    paragraph: "Edit paragraph text",
+    text: "Edit text",
+    option: null,
   },
   FAVICON_PREVIEW_CAPTION: "New favicon preview:",
   IMAGE_PREVIEW_CAPTION: "Image preview:",

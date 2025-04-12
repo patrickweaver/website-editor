@@ -17,10 +17,11 @@ import {
   ImgElementProperty,
   InsertPosition,
   TextElementProperty,
+  ElementTag,
 } from "../../types";
 import { showAlert } from "../../util/alert";
 import { getUniqueId } from "../../util/random";
-import { _ElementTag, createElement } from "../util/createElement";
+import { createElement } from "../util/createElement";
 import { createImageEditor } from "../util/createImageEditor";
 import { createTextEditor } from "../util/createTextEditor";
 import { prepareImageForEditor } from "../util/prepareImageForEditor";
@@ -47,7 +48,7 @@ export function makeElementEventListener(editorType: string) {
     }
 
     // TODO
-    let tagName: _ElementTag = element.tagName.toLowerCase() as _ElementTag;
+    let tagName: ElementTag = element.tagName.toLowerCase() as ElementTag;
     let originalContent: string = "";
     let altTextContent: string = "";
     const isParagraph = element instanceof HTMLParagraphElement;
@@ -94,7 +95,6 @@ export function makeElementEventListener(editorType: string) {
         if (!editorId) return undefined;
         const selectableInput = document.getElementById(editorId);
         if (!(selectableInput instanceof HTMLTextAreaElement)) return;
-        console.log({ selectableInput, type: typeof selectableInput });
         selectableInput.value = addLinkAroundSelection(selectableInput);
       },
     };
@@ -120,10 +120,10 @@ export function makeElementEventListener(editorType: string) {
     }) => {
       if (!editorElement || !alignSelectElement || !originalElement)
         return undefined;
-      const tagName = tagNameSelect?.value ?? _ElementTag.P;
+      const tagName = tagNameSelect?.value ?? ElementTag.P;
       const updatedTextElement = prepareTextForEditor({
         editorId: editorElement.id,
-        tagName: tagName as _ElementTag,
+        tagName: tagName as ElementTag,
         alignSelectElement,
         text: renderWhitespaceForHTML(editorElement.value),
       });
@@ -304,7 +304,7 @@ export function makeElementEventListener(editorType: string) {
       insertElementWithinElement(elementCloneContainer, elementClone);
 
       const elementCloneLabel = createElement({
-        tag: _ElementTag.LABEL,
+        tag: ElementTag.LABEL,
         innerHTML: STRINGS.CLONE_LABEL,
       });
 
@@ -317,7 +317,7 @@ export function makeElementEventListener(editorType: string) {
 
     type.controls.forEach((i) => {
       let buttonElement = createElement({
-        tag: _ElementTag.BUTTON,
+        tag: ElementTag.BUTTON,
         classList: [`${slugify(i.label)}-button`],
       });
       buttonElement.id = getButtonId(i.label, editorId);

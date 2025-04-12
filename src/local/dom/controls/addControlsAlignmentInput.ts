@@ -1,5 +1,6 @@
 import { INPUT_TYPES } from "../../constants";
-import { _ElementTag, createElement } from "../util/createElement";
+import { ElementTag } from "../../types";
+import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { addControlsInput } from "./addControlsInput";
 
@@ -14,9 +15,9 @@ export function addControlsAlignmentInput(
     labelText: string;
   }[],
 ): [HTMLFieldSetElement] {
-  const fieldset = createElement({ tag: _ElementTag.FIELDSET, id: fieldsetId });
+  const fieldset = createElement({ tag: ElementTag.FIELDSET, id: fieldsetId });
   const legend = createElement({
-    tag: _ElementTag.LEGEND,
+    tag: ElementTag.LEGEND,
     innerHTML: legendText,
   });
   const optionElements = options.map((option) => {
@@ -29,7 +30,9 @@ export function addControlsAlignmentInput(
       value,
     );
     input.name = name;
-    input.checked = checked;
+    if (input instanceof HTMLInputElement) {
+      input.checked = checked;
+    }
     insertElementWithinElement(container, input);
     insertElementWithinElement(container, label);
     return container;

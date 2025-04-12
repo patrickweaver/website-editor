@@ -5,20 +5,21 @@ import {
   EditorTypes,
   EventType,
   InsertPosition,
+  ElementTag,
 } from "../../types";
 import { getEditorChangeListener } from "../events/getEditorChangeListener";
 import { createEditorLabel } from "./createEditorLabel";
-import { _ElementTag, createElement, HeaderTag } from "./createElement";
+import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 import { countLinebreaks, renderWhitespaceForEditor } from "../../util/strings";
 
 const headingElements = [
-  HeaderTag.H1,
-  HeaderTag.H2,
-  HeaderTag.H3,
-  HeaderTag.H4,
-  HeaderTag.H5,
-  HeaderTag.H6,
+  ElementTag.H1,
+  ElementTag.H2,
+  ElementTag.H3,
+  ElementTag.H4,
+  ElementTag.H5,
+  ElementTag.H6,
 ];
 
 export function createTextEditor({
@@ -31,7 +32,7 @@ export function createTextEditor({
   id: string;
   confirmButtonLabel: string;
   content: string;
-  tagName: _ElementTag | HeaderTag;
+  tagName: ElementTag | ElementTag;
   style: { [key: string]: string };
 }): Editor | null {
   let editLevelElement: HTMLSelectElement;
@@ -42,7 +43,7 @@ export function createTextEditor({
   const contentWithWhitespace = renderWhitespaceForEditor(content);
 
   let editElement = createElement({
-    tag: _ElementTag.TEXTAREA,
+    tag: ElementTag.TEXTAREA,
     id,
     classList: [EDIT_CLASS],
     innerHTML: contentWithWhitespace,
@@ -53,13 +54,13 @@ export function createTextEditor({
   editElement.addEventListener(EventType.INPUT, editorChangeListener);
 
   const editAlignElement = createElement({
-    tag: _ElementTag.FIELDSET,
+    tag: ElementTag.FIELDSET,
     id: `align-${id}`,
     classList: [EDIT_CLASS],
   });
   editAlignElement.addEventListener(EventType.CHANGE, editorChangeListener);
   const alignLegend = createElement({
-    tag: _ElementTag.LEGEND,
+    tag: ElementTag.LEGEND,
     innerHTML: STRINGS.EDITOR_LABELS[EditorTypes.ALIGN],
   });
   insertElementWithinElement(
@@ -78,7 +79,7 @@ export function createTextEditor({
     const container = createElement({ id: "cont", giveUniqueId: true });
     const valueLower = value.toLowerCase();
     const input = createElement({
-      tag: _ElementTag.INPUT,
+      tag: ElementTag.INPUT,
       id: `${editAlignElement.id}-option-${valueLower}`,
       type: INPUT_TYPES.RADIO,
       name: editAlignElement.id,
@@ -126,13 +127,13 @@ export function createTextEditor({
 
   if (isHeading) {
     editLevelElement = createElement({
-      tag: _ElementTag.SELECT,
+      tag: ElementTag.SELECT,
       id: `level-${id}`,
       classList: [EDIT_CLASS],
     });
     headingElements.forEach((level) => {
       let headingLevelElement = createElement({
-        tag: _ElementTag.OPTION,
+        tag: ElementTag.OPTION,
         innerHTML: level,
         value: level,
       });

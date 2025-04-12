@@ -1,11 +1,12 @@
 import { CONTROLS_SECTION_CLASS } from "../../constants";
-import { createElement, HeaderTag } from "../util/createElement";
+import { ElementTag, HeaderTag } from "../../types";
+import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 
 export function addControlsSection(
   headerText: string,
   children: HTMLElement[],
-  headerTag: HeaderTag = HeaderTag.H3,
+  headerTag: HeaderTag = ElementTag.H3,
   id: string | null = null,
 ) {
   const section = createElement({
