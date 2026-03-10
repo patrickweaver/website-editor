@@ -2,11 +2,11 @@ import {
   HIDDEN_CLASS,
   IMAGE_PREVIEW_FIGURE_ID_PREFIX,
   IMAGE_PREVIEW_ID_PREFIX,
-  STRINGS,
 } from "../../constants";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { ElementTag } from "../../types";
-import { getButtonId, trimHTML } from "../../util/strings";
+import { getButtonId, trimHTML } from "../../util/stringUtils";
+import { ERROR_IMAGE_ONLY } from "../../util/strings";
 
 export function getEditorChangeListener(
   id: string,
@@ -44,7 +44,7 @@ export function getEditorChangeListener(
           target.value = "";
           imagePreviewImg.src = "";
           imagePreviewFigure.classList.add(HIDDEN_CLASS);
-          alert(STRINGS.ERROR_IMAGE_ONLY);
+          alert(ERROR_IMAGE_ONLY);
           return;
         }
         const url = await getDataURLFromFile(files[0]);

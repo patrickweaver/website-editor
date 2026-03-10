@@ -1,33 +1,75 @@
-const htmlLinebreakRegex = /<\s?br\s?\/?>/g;
-const textLinebreakRegex = /\n/g;
-
-export function countLinebreaks(text: string) {
-  return text.split(textLinebreakRegex).length;
-}
-
-export function getButtonId(label: string, editorId: string) {
-  return `${slugify(label)}-${editorId}`;
-}
-
-export function getEditorContainerId(editorId: string) {
-  return `container-${editorId}`;
-}
-
-export function renderWhitespaceForHTML(text: string) {
-  return text.replaceAll(/\n/g, "<br />");
-}
-
-export function renderWhitespaceForEditor(text: string) {
-  return text.replaceAll(htmlLinebreakRegex, "\n");
-}
-
-export function slugify(text: string) {
-  return text.split(" ").join("-").toLowerCase();
-}
-
-export function trimHTML(text: string) {
-  return text
-    .split(/(\s)+/)
-    .filter((i) => ![" ", "", "\t"].some((j) => j === i))
-    .join(" ");
-}
+export const ALIGNMENT_LABELS = {
+  LEFT: "Left",
+  CENTER: "Center",
+  RIGHT: "Right",
+  DEFAULT: "Default",
+};
+export const BUTTON_CANCEL = "Cancel";
+export const BUTTON_DELETE = "Delete";
+export const BUTTON_LINK = "Make Link From Selection";
+export const BUTTON_ADD_HEADING = "Heading";
+export const BUTTON_ADD_PARAGRAPH = "Paragraph";
+export const BUTTON_ADD_IMAGE = "Image";
+export const BUTTON_SAVE = "Save";
+export const BUTTON_UPDATE = "Update";
+export const CLONE_LABEL = "Original Element";
+export const CONFIRM_DELETE = "Are you sure you want to delete this element?";
+export const ERROR_IMAGE_ONLY = "Error: Please choose an image file";
+export const ERROR_NO_IMAGE = "Error: No image found";
+export const ERROR_NO_SELECTION = "Error: Nothing selected";
+export const ERROR_NO_URL = "Error: Invalid URL";
+export const EDITOR_LABELS = {
+  align: "Edit alignment",
+  heading: "Edit heading text",
+  "heading-level": "Edit heading level",
+  image: "Select an image",
+  "image-alt": "Image alt text",
+  paragraph: "Edit paragraph text",
+  text: "Edit text",
+  option: null,
+};
+export const FAVICON_PREVIEW_CAPTION = "New favicon preview:";
+export const IMAGE_PREVIEW_CAPTION = "Image preview:";
+export const LC_BG_COLOR_SUBHEADER = "Background Color";
+export const LC_TEXT_COLOR_SUBHEADER = "Text Color";
+export const LC_COLOR_LABEL = "Select a color";
+export const LC_BODY_ALIGNMENT_LEGEND =
+  "Select an option for aligning the body of the page on the window";
+export const LC_BODY_ALIGNMENT_RIGHT_MESSAGE =
+  "Right aligned body is not supported.";
+export const LC_BODY_ALIGNMENT_SUBHEADER = "Body Alignment";
+export const LC_BODY_WIDTH_SUBHEADER = "Body Width";
+export const LC_BODY_WIDTH_FIXED_LABEL = "Fixed Body Width: ";
+export const LC_BODY_WIDTH_FULL_LABEL = "Use Full Window Width";
+export const LC_CONTENT_SUBHEADER = "Add Content";
+export const LC_CONTENT_BUTTON = "Add Item";
+export const LC_CURRENT_FAVICON_CAPTION = "Current Favicon:";
+export const LC_CURRENT_FAVICON_ALT_TEXT = "The current favicon";
+export const LC_FAVICON_SUBHEADER = "Favicon";
+export const LC_GENERAL_PAGE_DESC_LABEL = "Page Description";
+export const LC_GENERAL_PAGE_LANG_LABEL = "Page Language";
+export const LC_GENERAL_PAGE_LANG_BELOW_LABEL = `See list of valid language tags <a href="https://en.wikipedia.org/wiki/IETF_language_tag#List_of_subtags" target="_blank">here</a>.`;
+export const LC_GENERAL_PAGE_TITLE_LABEL = "Page Title";
+export const LC_GENERAL_SUBHEADER = "General";
+export const LC_HEADER = "Local Controls";
+export const LC_INSTRUCTIONS =
+  "This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on a computer.";
+export const LC_METADATA_SUBHEADER = "Metadata";
+export const LC_SAVE_CHANGES_BUTTON_LABEL = "Save All Changes to Local File";
+export const LC_SAVE_CHANGES_SUBHEADER = "Save Changes";
+export const LC_SOCIAL_IMAGE_INPUT_BELOW_LABEL =
+  "Social Image must be a full URL including the domain name and cannot be included inline as a data URL like other images. You will likely need to upload the image to your web host, then update your page again with the hosted image URL. The social image is configured for a square image at least 144px x 144px large.";
+export const LC_SOCIAL_IMAGE_INPUT_LABEL = "Update Social Image";
+export const LC_SOCIAL_IMAGE_LABEL = "Current Social Image:";
+export const LC_SOCIAL_IMAGE_SUBHEADER = "Social Image";
+export const LC_STYLES_SUBHEADER = "Styles";
+export const LC_TEXT_ALIGNMENT_LEGEND =
+  "Select an option for aligning the text within the body";
+export const LC_TEXT_ALIGNMENT_SUBHEADER = "Text Alignment";
+export const LC_TEXT_SIZE_LABEL = "Font Size (%)";
+export const LC_TEXT_STYLE_SUBHEADER = "Text Style";
+export const LC_UPDATE_FAVICON_LABEL = "Update Favicon";
+export const PLACEHOLDER_TEXT = "Your text here";
+export const PROMPT_LINK_URL = "URL:";
+export const MISSING_SOCIAL_IMAGE_ALT = "Social Image is not set.";
+export const NEW_CONTENT_HEADER = "Add New Content";

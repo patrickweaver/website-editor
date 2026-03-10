@@ -1,5 +1,5 @@
 import { getAlignValueFromFieldset } from "./getAlignValueFromFieldset";
-import { EDITOR_TYPES, STRINGS } from "../../constants";
+import { EDITOR_TYPES } from "../../constants";
 import {
   AlignOptions,
   EventType,
@@ -11,8 +11,9 @@ import { handleUpdateImageAlign } from "../events/handleUpdateImageAlign";
 import { createElement } from "./createElement";
 import { insertElementToDOM } from "./insertElementToDOM";
 import { scrollToElement } from "./scrollToElement";
-import { getEditorContainerId } from "../../util/strings";
+import { getEditorContainerId } from "../../util/stringUtils";
 import { makeElementEventListener } from "../events/makeElementEventListener";
+import { ERROR_IMAGE_ONLY, ERROR_NO_IMAGE } from "../../util/strings";
 
 export async function prepareImageForEditor({
   filePickerId,
@@ -41,7 +42,7 @@ export async function prepareImageForEditor({
   if (file && !isImageFile(file)) {
     // This won't happen because button is disabled
     // unless file is an image
-    alert(STRINGS.ERROR_IMAGE_ONLY);
+    alert(ERROR_IMAGE_ONLY);
     return null;
   }
   const newElement = createElement({ tag: ElementTag.IMG, style, altText });
@@ -54,7 +55,7 @@ export async function prepareImageForEditor({
   } else if (originalElement.src) {
     newElement.src = originalElement.src;
   } else {
-    alert(STRINGS.ERROR_NO_IMAGE);
+    alert(ERROR_NO_IMAGE);
     return null;
   }
 

@@ -8,7 +8,6 @@ import {
   LOCAL_CONTROLS_ID,
   NEW_CONTENT_MODAL_ID,
   NEW_CONTENT_MODAL_WRAPPER_ID,
-  STRINGS,
 } from "../../constants";
 import {
   EditorTypes,
@@ -16,6 +15,14 @@ import {
   InsertPosition,
   ElementTag,
 } from "../../types";
+import {
+  BUTTON_ADD_HEADING,
+  BUTTON_ADD_IMAGE,
+  BUTTON_ADD_PARAGRAPH,
+  BUTTON_CANCEL,
+  NEW_CONTENT_HEADER,
+  PLACEHOLDER_TEXT,
+} from "../../util/strings";
 import { createElement } from "../util/createElement";
 import { insertElementToDOM } from "../util/insertElementToDOM";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
@@ -67,13 +74,13 @@ function getNewContentModal() {
   const modal = createElement({ id: NEW_CONTENT_MODAL_ID });
   const heading = createElement({
     tag: ElementTag.H2,
-    innerHTML: STRINGS.NEW_CONTENT_HEADER,
+    innerHTML: NEW_CONTENT_HEADER,
   });
   const list = createElement({ tag: ElementTag.UL });
   const buttons = [
-    { id: ADD_ITEM_HEADING_ID, innerHTML: STRINGS.BUTTON_ADD_HEADING },
-    { id: ADD_ITEM_PARAGRAPH_ID, innerHTML: STRINGS.BUTTON_ADD_PARAGRAPH },
-    { id: ADD_ITEM_IMAGE_ID, innerHTML: STRINGS.BUTTON_ADD_IMAGE },
+    { id: ADD_ITEM_HEADING_ID, innerHTML: BUTTON_ADD_HEADING },
+    { id: ADD_ITEM_PARAGRAPH_ID, innerHTML: BUTTON_ADD_PARAGRAPH },
+    { id: ADD_ITEM_IMAGE_ID, innerHTML: BUTTON_ADD_IMAGE },
   ];
   buttons.forEach((buttonOptions) => {
     const listItem = createElement({ tag: ElementTag.LI });
@@ -84,7 +91,7 @@ function getNewContentModal() {
   const cancelButton = createElement({
     tag: ElementTag.BUTTON,
     id: ADD_ITEM_CANCEL_BUTTON_ID,
-    innerHTML: STRINGS.BUTTON_CANCEL,
+    innerHTML: BUTTON_CANCEL,
   });
   insertElementWithinElement(modal, heading);
   insertElementWithinElement(modal, list);
@@ -95,7 +102,7 @@ function getNewContentModal() {
 
 function addNewTextElementEditor(type: EditorTypes = EditorTypes.PARAGRAPH) {
   const tag = type === EditorTypes.HEADING ? ElementTag.H2 : ElementTag.P;
-  const innerHTML = STRINGS.PLACEHOLDER_TEXT;
+  const innerHTML = PLACEHOLDER_TEXT;
   const newElement = createElement({ tag, innerHTML });
   addNewEditorCleanup(newElement, makeElementEventListener(EDITOR_TYPES.TEXT));
 }

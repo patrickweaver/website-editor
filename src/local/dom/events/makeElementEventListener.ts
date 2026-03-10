@@ -7,7 +7,6 @@ import {
   EDIT_CONTAINER_CLASS,
   EDITOR_TYPES,
   IMAGE_PICKER_ID_READABLE_STRING,
-  STRINGS,
   TEXT_EDITOR_ID_READABLE_STRING,
 } from "../../constants";
 import {
@@ -32,8 +31,17 @@ import {
   renderWhitespaceForHTML,
   slugify,
   trimHTML,
-} from "../../util/strings";
+} from "../../util/stringUtils";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
+import {
+  BUTTON_CANCEL,
+  BUTTON_DELETE,
+  BUTTON_LINK,
+  BUTTON_SAVE,
+  BUTTON_UPDATE,
+  CLONE_LABEL,
+  CONFIRM_DELETE,
+} from "../../util/strings";
 
 export function makeElementEventListener(editorType: string) {
   return function (event: Event, isExistingElement: boolean = true) {
@@ -61,7 +69,7 @@ export function makeElementEventListener(editorType: string) {
     }
 
     const deleteButton: EditorButton = {
-      label: STRINGS.BUTTON_DELETE,
+      label: BUTTON_DELETE,
       initiallyDisabled: false,
       updateElement: async ({
         editorElement,
@@ -73,7 +81,7 @@ export function makeElementEventListener(editorType: string) {
           | HTMLParagraphElement
           | HTMLHeadingElement;
       }) => {
-        const result = window.confirm(STRINGS.CONFIRM_DELETE);
+        const result = window.confirm(CONFIRM_DELETE);
         if (!result) return;
         editorElement?.remove();
         originalElement?.remove();
@@ -82,13 +90,13 @@ export function makeElementEventListener(editorType: string) {
     };
 
     const cancelButton: EditorButton = {
-      label: STRINGS.BUTTON_CANCEL,
+      label: BUTTON_CANCEL,
       initiallyDisabled: false,
       updateElement: async ({}) => true,
     };
 
     const linkButton: EditorButton = {
-      label: STRINGS.BUTTON_LINK,
+      label: BUTTON_LINK,
       initiallyDisabled: false,
       updateElement: async ({ editorId }: { editorId?: string }) => {
         // TODO unnecessary check
@@ -99,9 +107,7 @@ export function makeElementEventListener(editorType: string) {
       },
     };
 
-    const updateButtonLabel = isExistingElement
-      ? STRINGS.BUTTON_UPDATE
-      : STRINGS.BUTTON_SAVE;
+    const updateButtonLabel = isExistingElement ? BUTTON_UPDATE : BUTTON_SAVE;
 
     const updateTextCallback: EditorButtonUpdateCallback = async ({
       editorElement,
@@ -305,7 +311,7 @@ export function makeElementEventListener(editorType: string) {
 
       const elementCloneLabel = createElement({
         tag: ElementTag.LABEL,
-        innerHTML: STRINGS.CLONE_LABEL,
+        innerHTML: CLONE_LABEL,
       });
 
       insertElementWithinElement(editorContainerElement, elementCloneLabel);

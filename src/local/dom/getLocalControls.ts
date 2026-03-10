@@ -20,7 +20,6 @@ import {
   SAVE_CHANGES_ID,
   SETTINGS,
   SOCIAL_IMAGE_FIGURE_ID,
-  STRINGS,
   UPDATE_BACKGROUND_COLOR_ID,
   UPDATE_BODY_ALIGN_CONTAINER_ID,
   UPDATE_BODY_ALIGN_ID,
@@ -45,8 +44,7 @@ import { makeImagePreview } from "./util/makeImagePreview";
 import { getFigureWithCaption } from "./util/getFigureWithCaption";
 import { getCurrentFaviconURL } from "./util/getCurrentFaviconUrl";
 import { getCurrentSocialImage } from "./util/getCurrentSocialImage";
-
-const {
+import {
   BUTTON_CANCEL,
   BUTTON_UPDATE,
   LC_BG_COLOR_SUBHEADER,
@@ -83,7 +81,8 @@ const {
   LC_STYLES_SUBHEADER,
   LC_UPDATE_FAVICON_LABEL,
   MISSING_SOCIAL_IMAGE_ALT,
-} = STRINGS;
+  LC_TEXT_SIZE_LABEL,
+} from "../util/strings";
 
 export function getLocalControls(): HTMLElement {
   const addContent = addControlsSection(LC_CONTENT_SUBHEADER, [
@@ -219,7 +218,7 @@ export function getLocalControls(): HTMLElement {
   const textSizeControls = addControlsInput(
     UPDATE_TEXT_SIZE_ID,
     INPUT_TYPES.NUMBER,
-    STRINGS.LC_TEXT_SIZE_LABEL,
+    LC_TEXT_SIZE_LABEL,
     String(100),
   );
   if (textSizeControls[1] instanceof HTMLInputElement) {

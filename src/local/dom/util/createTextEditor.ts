@@ -1,4 +1,4 @@
-import { EDIT_CLASS, INPUT_TYPES, STRINGS } from "../../constants";
+import { EDIT_CLASS, INPUT_TYPES } from "../../constants";
 import {
   AlignOptions,
   Editor,
@@ -11,7 +11,11 @@ import { getEditorChangeListener } from "../events/getEditorChangeListener";
 import { createEditorLabel } from "./createEditorLabel";
 import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
-import { countLinebreaks, renderWhitespaceForEditor } from "../../util/strings";
+import {
+  countLinebreaks,
+  renderWhitespaceForEditor,
+} from "../../util/stringUtils";
+import { ALIGNMENT_LABELS, EDITOR_LABELS } from "../../util/strings";
 
 const headingElements = [
   ElementTag.H1,
@@ -61,7 +65,7 @@ export function createTextEditor({
   editAlignElement.addEventListener(EventType.CHANGE, editorChangeListener);
   const alignLegend = createElement({
     tag: ElementTag.LEGEND,
-    innerHTML: STRINGS.EDITOR_LABELS[EditorTypes.ALIGN],
+    innerHTML: EDITOR_LABELS[EditorTypes.ALIGN],
   });
   insertElementWithinElement(
     editAlignElement,
@@ -92,7 +96,7 @@ export function createTextEditor({
     const label = createEditorLabel(
       input.id,
       EditorTypes.OPTION,
-      STRINGS.ALIGNMENT_LABELS[value],
+      ALIGNMENT_LABELS[value],
     );
     insertElementWithinElement(container, label, InsertPosition.AFTER_BEGIN);
     insertElementWithinElement(container, input, InsertPosition.AFTER_BEGIN);

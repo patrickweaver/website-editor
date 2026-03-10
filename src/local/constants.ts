@@ -1,3 +1,5 @@
+import { ALIGNMENT_LABELS } from "./util/strings";
+
 export const HTML_ELEMENT_ID = "html-element";
 export const PAGE_TITLE_INPUT_ID = "edit-page-title";
 export const PAGE_TITLE_ID = "page-title";
@@ -95,83 +97,6 @@ export const SETTINGS = {
   ),
 };
 
-export const STRINGS = {
-  ALIGNMENT_LABELS: {
-    LEFT: "Left",
-    CENTER: "Center",
-    RIGHT: "Right",
-    DEFAULT: "Default",
-  },
-  BUTTON_CANCEL: "Cancel",
-  BUTTON_DELETE: "Delete",
-  BUTTON_LINK: "Make Link From Selection",
-  BUTTON_ADD_HEADING: "Heading",
-  BUTTON_ADD_PARAGRAPH: "Paragraph",
-  BUTTON_ADD_IMAGE: "Image",
-  BUTTON_SAVE: "Save",
-  BUTTON_UPDATE: "Update",
-  CLONE_LABEL: "Original Element",
-  CONFIRM_DELETE: "Are you sure you want to delete this element?",
-  ERROR_IMAGE_ONLY: "Error: Please choose an image file",
-  ERROR_NO_IMAGE: "Error: No image found",
-  ERROR_NO_SELECTION: "Error: Nothing selected",
-  ERROR_NO_URL: "Error: Invalid URL",
-  EDITOR_LABELS: {
-    align: "Edit alignment",
-    heading: "Edit heading text",
-    "heading-level": "Edit heading level",
-    image: "Select an image",
-    "image-alt": "Image alt text",
-    paragraph: "Edit paragraph text",
-    text: "Edit text",
-    option: null,
-  },
-  FAVICON_PREVIEW_CAPTION: "New favicon preview:",
-  IMAGE_PREVIEW_CAPTION: "Image preview:",
-  LC_BG_COLOR_SUBHEADER: "Background Color",
-  LC_TEXT_COLOR_SUBHEADER: "Text Color",
-  LC_COLOR_LABEL: "Select a color",
-  LC_BODY_ALIGNMENT_LEGEND:
-    "Select an option for aligning the body of the page on the window",
-  LC_BODY_ALIGNMENT_RIGHT_MESSAGE: "Right aligned body is not supported.",
-  LC_BODY_ALIGNMENT_SUBHEADER: "Body Alignment",
-  LC_BODY_WIDTH_SUBHEADER: "Body Width",
-  LC_BODY_WIDTH_FIXED_LABEL: "Fixed Body Width: ",
-  LC_BODY_WIDTH_FULL_LABEL: "Use Full Window Width",
-  LC_CONTENT_SUBHEADER: "Add Content",
-  LC_CONTENT_BUTTON: "Add Item",
-  LC_CURRENT_FAVICON_CAPTION: "Current Favicon:",
-  LC_CURRENT_FAVICON_ALT_TEXT: "The current favicon",
-  LC_FAVICON_SUBHEADER: "Favicon",
-  LC_GENERAL_PAGE_DESC_LABEL: "Page Description",
-  LC_GENERAL_PAGE_LANG_LABEL: "Page Language",
-  LC_GENERAL_PAGE_LANG_BELOW_LABEL: `See list of valid language tags <a href="https://en.wikipedia.org/wiki/IETF_language_tag#List_of_subtags" target="_blank">here</a>.`,
-  LC_GENERAL_PAGE_TITLE_LABEL: "Page Title",
-  LC_GENERAL_SUBHEADER: "General",
-  LC_HEADER: "Local Controls",
-  LC_INSTRUCTIONS:
-    "This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on a computer.",
-  LC_METADATA_SUBHEADER: "Metadata",
-  LC_SAVE_CHANGES_BUTTON_LABEL: "Save All Changes to Local File",
-  LC_SAVE_CHANGES_SUBHEADER: "Save Changes",
-  LC_SOCIAL_IMAGE_INPUT_BELOW_LABEL:
-    "Social Image must be a full URL including the domain name and cannot be included inline as a data URL like other images. You will likely need to upload the image to your web host, then update your page again with the hosted image URL. The social image is configured for a square image at least 144px x 144px large.",
-  LC_SOCIAL_IMAGE_INPUT_LABEL: "Update Social Image",
-  LC_SOCIAL_IMAGE_LABEL: "Current Social Image:",
-  LC_SOCIAL_IMAGE_SUBHEADER: "Social Image",
-  LC_STYLES_SUBHEADER: "Styles",
-  LC_TEXT_ALIGNMENT_LEGEND:
-    "Select an option for aligning the text within the body",
-  LC_TEXT_ALIGNMENT_SUBHEADER: "Text Alignment",
-  LC_TEXT_SIZE_LABEL: "Font Size (%)",
-  LC_TEXT_STYLE_SUBHEADER: "Text Style",
-  LC_UPDATE_FAVICON_LABEL: "Update Favicon",
-  PLACEHOLDER_TEXT: "Your text here",
-  PROMPT_LINK_URL: "URL:",
-  MISSING_SOCIAL_IMAGE_ALT: "Social Image is not set.",
-  NEW_CONTENT_HEADER: "Add New Content",
-};
-
 export const OPTIONS = {
   LC_BODY_ALIGNMENT_OPTIONS: [
     {
@@ -179,7 +104,7 @@ export const OPTIONS = {
       name: UPDATE_BODY_ALIGN_OPTION_NAME,
       value: "left",
       checked: true,
-      labelText: STRINGS.ALIGNMENT_LABELS.LEFT,
+      labelText: ALIGNMENT_LABELS.LEFT,
       style: {
         margin: "2rem",
       },
@@ -189,7 +114,7 @@ export const OPTIONS = {
       name: UPDATE_BODY_ALIGN_OPTION_NAME,
       value: "center",
       checked: false,
-      labelText: STRINGS.ALIGNMENT_LABELS.CENTER,
+      labelText: ALIGNMENT_LABELS.CENTER,
       style: {
         margin: "2rem auto",
       },
@@ -201,21 +126,21 @@ export const OPTIONS = {
       name: UPDATE_TEXT_ALIGN_OPTION_NAME,
       value: "LEFT",
       checked: true,
-      labelText: STRINGS.ALIGNMENT_LABELS.LEFT,
+      labelText: ALIGNMENT_LABELS.LEFT,
     },
     {
       id: "text-center",
       name: UPDATE_TEXT_ALIGN_OPTION_NAME,
       value: "CENTER",
       checked: false,
-      labelText: STRINGS.ALIGNMENT_LABELS.CENTER,
+      labelText: ALIGNMENT_LABELS.CENTER,
     },
     {
       id: "text-right",
       name: UPDATE_TEXT_ALIGN_OPTION_NAME,
       value: "RIGHT",
       checked: false,
-      labelText: STRINGS.ALIGNMENT_LABELS.RIGHT,
+      labelText: ALIGNMENT_LABELS.RIGHT,
     },
   ],
 };

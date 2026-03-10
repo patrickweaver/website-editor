@@ -4,12 +4,12 @@ import {
   HIDDEN_CLASS,
   IMAGE_PREVIEW_FIGURE_ID_PREFIX,
   IMAGE_PREVIEW_ID_PREFIX,
-  STRINGS,
   UPDATE_FAVICON_ID,
 } from "../../constants";
 import { UpdateMethod } from "../../types";
 import { showAlert } from "../../util/alert";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
+import { ERROR_IMAGE_ONLY, ERROR_NO_IMAGE } from "../../util/strings";
 import { insertFavicon } from "../insertFavicon";
 
 export function handleUpdateFavicon(event: Event) {
@@ -17,12 +17,12 @@ export function handleUpdateFavicon(event: Event) {
   if (!(target instanceof HTMLInputElement)) return;
   const file = target?.files?.[0];
   if (!file) {
-    showAlert(STRINGS.ERROR_NO_IMAGE);
+    showAlert(ERROR_NO_IMAGE);
     return;
   }
   const validFile = isImageFile(file);
   if (!validFile) {
-    showAlert(STRINGS.ERROR_IMAGE_ONLY);
+    showAlert(ERROR_IMAGE_ONLY);
     return;
   }
 

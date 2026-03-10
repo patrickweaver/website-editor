@@ -3,15 +3,18 @@ import {
   IMAGE_PREVIEW_CLASS,
   IMAGE_PREVIEW_FIGURE_ID_PREFIX,
   IMAGE_PREVIEW_ID_PREFIX,
-  STRINGS,
 } from "../../constants";
 import { IMAGE_PREVIEW, ElementTag } from "../../types";
+import {
+  FAVICON_PREVIEW_CAPTION,
+  IMAGE_PREVIEW_CAPTION,
+} from "../../util/strings";
 import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 
 const captions = {
-  [IMAGE_PREVIEW.IMAGE]: STRINGS.IMAGE_PREVIEW_CAPTION,
-  [IMAGE_PREVIEW.FAVICON]: STRINGS.FAVICON_PREVIEW_CAPTION,
+  [IMAGE_PREVIEW.IMAGE]: IMAGE_PREVIEW_CAPTION,
+  [IMAGE_PREVIEW.FAVICON]: FAVICON_PREVIEW_CAPTION,
 };
 
 export function makeImagePreview(

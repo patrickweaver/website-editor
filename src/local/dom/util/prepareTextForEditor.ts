@@ -3,7 +3,7 @@ import { EventType, InsertPosition, ElementTag } from "../../types";
 import { createElement } from "./createElement";
 import { insertElementToDOM } from "./insertElementToDOM";
 import { scrollToElement } from "./scrollToElement";
-import { getEditorContainerId } from "../../util/strings";
+import { getEditorContainerId } from "../../util/stringUtils";
 import { makeElementEventListener } from "../events/makeElementEventListener";
 import { EDITOR_TYPES } from "../../constants";
 

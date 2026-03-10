@@ -1,4 +1,4 @@
-import { EDIT_CLASS, INPUT_TYPES, STRINGS } from "../../constants";
+import { EDIT_CLASS, INPUT_TYPES } from "../../constants";
 import {
   AlignOptions,
   Editor,
@@ -14,6 +14,7 @@ import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 import { makeImagePreview } from "./makeImagePreview";
 import { ElementTag } from "../../types";
+import { ALIGNMENT_LABELS, EDITOR_LABELS } from "../../util/strings";
 
 export function createImageEditor({
   id,
@@ -58,7 +59,7 @@ export function createImageEditor({
   editAlignElement.addEventListener(EventType.CHANGE, editorChangeListener);
   const alignLegend = createElement({
     tag: ElementTag.LEGEND,
-    innerHTML: STRINGS.EDITOR_LABELS[EditorTypes.ALIGN],
+    innerHTML: EDITOR_LABELS[EditorTypes.ALIGN],
   });
   editAlignElement.insertAdjacentElement(
     InsertPosition.BEFORE_END,
@@ -97,7 +98,7 @@ export function createImageEditor({
     const label = createEditorLabel(
       input.id,
       EditorTypes.OPTION,
-      STRINGS.ALIGNMENT_LABELS[value],
+      ALIGNMENT_LABELS[value],
     );
     insertElementWithinElement(container, label, InsertPosition.AFTER_BEGIN);
     insertElementWithinElement(container, input, InsertPosition.AFTER_BEGIN);

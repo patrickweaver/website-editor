@@ -1,15 +1,19 @@
-import { STRINGS } from "../../constants";
+import {
+  ERROR_NO_SELECTION,
+  ERROR_NO_URL,
+  PROMPT_LINK_URL,
+} from "../../util/strings";
 
 export function addLinkAroundSelection(selectableInput: HTMLTextAreaElement) {
   const { selectionStart: start, selectionEnd: end, value } = selectableInput;
   if (start === end) {
-    alert(STRINGS.ERROR_NO_SELECTION);
+    alert(ERROR_NO_SELECTION);
     return value;
   }
   const selection = value.substring(start, end);
-  const url = window.prompt(STRINGS.PROMPT_LINK_URL);
+  const url = window.prompt(PROMPT_LINK_URL);
   if (!url) {
-    alert(STRINGS.ERROR_NO_URL);
+    alert(ERROR_NO_URL);
     return value;
   }
   const before = value.slice(0, start);
