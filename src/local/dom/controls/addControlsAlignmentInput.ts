@@ -1,4 +1,4 @@
-import { INPUT_TYPES } from "../../constants";
+import { INPUT_TYPES } from "../../util/constants";
 import { ElementTag } from "../../types";
 import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";

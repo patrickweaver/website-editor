@@ -3,7 +3,7 @@ import {
   IMAGE_PREVIEW_CLASS,
   IMAGE_PREVIEW_FIGURE_ID_PREFIX,
   IMAGE_PREVIEW_ID_PREFIX,
-} from "../../constants";
+} from "../../util/constants";
 import { IMAGE_PREVIEW, ElementTag } from "../../types";
 import {
   FAVICON_PREVIEW_CAPTION,

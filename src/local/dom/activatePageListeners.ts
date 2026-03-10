@@ -19,7 +19,7 @@ import {
   UPDATE_TEXT_COLOR_ID,
   UPDATE_TEXT_SIZE_ID,
   WIDTH_SLIDER_ID,
-} from "../constants";
+} from "../util/constants";
 import {
   CSSProperties,
   EventType,

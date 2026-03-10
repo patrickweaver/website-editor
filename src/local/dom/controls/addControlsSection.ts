@@ -1,4 +1,4 @@
-import { CONTROLS_SECTION_CLASS } from "../../constants";
+import { CONTROLS_SECTION_CLASS } from "../../util/constants";
 import { ElementTag, HeaderTag } from "../../types";
 import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";

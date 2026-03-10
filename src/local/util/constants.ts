@@ -1,4 +1,4 @@
-import { ALIGNMENT_LABELS } from "./util/strings";
+import { ALIGNMENT_LABELS } from "./strings";
 
 export const HTML_ELEMENT_ID = "html-element";
 export const PAGE_TITLE_INPUT_ID = "edit-page-title";

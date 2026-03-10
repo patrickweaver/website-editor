@@ -1,4 +1,4 @@
-import { OPTIONS } from "../../constants";
+import { OPTIONS } from "../../util/constants";
 
 export function handleUpdateBodyAlignment(_event: Event) {
   const selectedAlignmentElement = document.querySelector(

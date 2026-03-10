@@ -2,7 +2,7 @@ import {
   ADD_ITEM_ID,
   END_OF_DOC_ID,
   LOCAL_CONTROLS_CONTAINER_ID,
-} from "../constants";
+} from "../util/constants";
 import { EventType, InsertPosition } from "../types";
 import { showAlert } from "../util/alert";
 import { addListenerById } from "./events/addListenerById";

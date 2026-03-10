@@ -2,7 +2,7 @@ import {
   HIDDEN_CLASS,
   IMAGE_PREVIEW_FIGURE_ID_PREFIX,
   IMAGE_PREVIEW_ID_PREFIX,
-} from "../../constants";
+} from "../../util/constants";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { ElementTag } from "../../types";
 import { getButtonId, trimHTML } from "../../util/stringUtils";

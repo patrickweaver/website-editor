@@ -1,4 +1,4 @@
-import { WIDTH_SLIDER_VALUE_ID } from "../../constants";
+import { WIDTH_SLIDER_VALUE_ID } from "../../util/constants";
 
 export function handleUpdateWidth(event: Event) {
   const target = event.target;

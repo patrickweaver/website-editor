@@ -32,7 +32,7 @@ import {
   WIDTH_SLIDER_DATALIST_ID,
   WIDTH_SLIDER_ID,
   WIDTH_SLIDER_VALUE_ID,
-} from "../constants";
+} from "../util/constants";
 import { CSSProperties, IMAGE_PREVIEW, ElementTag } from "../types";
 import { addControlsInput } from "./controls/addControlsInput";
 import { addControlsSection } from "./controls/addControlsSection";

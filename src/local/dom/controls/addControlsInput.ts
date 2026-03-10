@@ -1,4 +1,4 @@
-import { INPUT_TYPE_TEXT_CLASS, INPUT_TYPES } from "../../constants";
+import { INPUT_TYPE_TEXT_CLASS, INPUT_TYPES } from "../../util/constants";
 import { ElementTag } from "../../types";
 import { createElement } from "../util/createElement";
 

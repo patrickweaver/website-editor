@@ -1,4 +1,4 @@
-import { EDIT_CLASS, INPUT_TYPES } from "../../constants";
+import { EDIT_CLASS, INPUT_TYPES } from "../../util/constants";
 import {
   AlignOptions,
   Editor,

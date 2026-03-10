@@ -1,5 +1,5 @@
 import { getAlignValueFromFieldset } from "./getAlignValueFromFieldset";
-import { EDITOR_TYPES } from "../../constants";
+import { EDITOR_TYPES } from "../../util/constants";
 import {
   AlignOptions,
   EventType,

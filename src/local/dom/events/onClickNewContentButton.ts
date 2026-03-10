@@ -8,7 +8,7 @@ import {
   LOCAL_CONTROLS_ID,
   NEW_CONTENT_MODAL_ID,
   NEW_CONTENT_MODAL_WRAPPER_ID,
-} from "../../constants";
+} from "../../util/constants";
 import {
   EditorTypes,
   EventType,

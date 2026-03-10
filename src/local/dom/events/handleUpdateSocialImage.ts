@@ -2,7 +2,7 @@ import {
   CURRENT_SOCIAL_IMAGE_ID,
   CURRENT_SOCIAL_IMAGE_PREVIEW_ID,
   CURRENT_TWITTER_IMAGE_ID,
-} from "../../constants";
+} from "../../util/constants";
 import { ImgElementProperty, MetaProperty } from "../../types";
 
 export function handleUpdateSocialImage(event: Event) {

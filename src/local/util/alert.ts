@@ -3,7 +3,7 @@ import {
   ALERT_LIST,
   ALERT_REMOVED_CLASS,
   ALERT_ANIMATION_DELAY,
-} from "../constants.ts";
+} from "./constants.ts";
 import { ElementTag } from "../types.ts";
 import { createElement } from "../dom/util/createElement.ts";
 import { insertElementToDOM } from "../dom/util/insertElementToDOM.ts";

@@ -8,7 +8,7 @@ import {
   EDITOR_TYPES,
   IMAGE_PICKER_ID_READABLE_STRING,
   TEXT_EDITOR_ID_READABLE_STRING,
-} from "../../constants";
+} from "../../util/constants";
 import {
   EditorButton,
   EditorButtonUpdateCallback,

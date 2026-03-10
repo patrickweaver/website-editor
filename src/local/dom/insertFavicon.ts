@@ -2,7 +2,7 @@ import { GLOBALS } from "../../globals";
 import {
   CURRENT_FAVICON_PREVIEW_ID,
   FAVICON_QUERY_SELECTOR,
-} from "../constants";
+} from "../util/constants";
 import { ElementTag } from "../types";
 import { getDataURLFromFile } from "../util/files";
 import { createElement } from "./util/createElement";

@@ -5,7 +5,7 @@ import {
   IMAGE_PREVIEW_FIGURE_ID_PREFIX,
   IMAGE_PREVIEW_ID_PREFIX,
   UPDATE_FAVICON_ID,
-} from "../../constants";
+} from "../../util/constants";
 import { UpdateMethod } from "../../types";
 import { showAlert } from "../../util/alert";
 import { getDataURLFromFile, isImageFile } from "../../util/files";

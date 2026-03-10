@@ -1,4 +1,4 @@
-import { EDITOR_TYPES } from "../constants";
+import { EDITOR_TYPES } from "../util/constants";
 import { ElementTag, EventType } from "../types";
 import { makeElementEventListener } from "./events/makeElementEventListener";
 

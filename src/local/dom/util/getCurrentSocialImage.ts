@@ -1,7 +1,7 @@
 import {
   CURRENT_SOCIAL_IMAGE_ALT_ID,
   CURRENT_SOCIAL_IMAGE_ID,
-} from "../../constants";
+} from "../../util/constants";
 
 export function getCurrentSocialImage() {
   const metaImageElement = document.getElementById(CURRENT_SOCIAL_IMAGE_ID);

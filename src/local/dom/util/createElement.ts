@@ -1,4 +1,4 @@
-import { INPUT_TYPES } from "../../constants";
+import { INPUT_TYPES } from "../../util/constants";
 import { getUniqueId } from "../../util/random";
 import { ElementTag, ElementTagToType } from "../../types";
 

@@ -3,7 +3,7 @@ import {
   WIDTH_SLIDER_CONTAINER_ID,
   WIDTH_SLIDER_ID,
   WIDTH_SLIDER_VALUE_ID,
-} from "../../constants";
+} from "../../util/constants";
 import { handleUpdateBodyAlignment } from "./handleUpdateBodyAlignment";
 
 export function handleUpdateFullWidth(event: Event) {

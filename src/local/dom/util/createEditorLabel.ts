@@ -1,4 +1,4 @@
-import { EDIT_CLASS } from "../../constants";
+import { EDIT_CLASS } from "../../util/constants";
 import { EditorTypes } from "../../types";
 import { createElement } from "./createElement";
 import { ElementTag } from "../../types";
