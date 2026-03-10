@@ -1,3 +1,4 @@
+import { GLOBALS } from "../../../globals";
 import { EventType, TitleProperty } from "../../types";
 
 export function addListenerToTitleEditor(
@@ -20,6 +21,7 @@ export function addListenerToTitleEditor(
 
   editor.value = element[property];
 
+  // TODO could this be abstracted?
   const onUpdateTitleProperty = (_event: Event) => {
     const newValue = editor.value;
     element[property] = newValue;
@@ -28,6 +30,7 @@ export function addListenerToTitleEditor(
       if (!(element instanceof HTMLTitleElement)) return;
       element[property] = newValue;
     });
+    GLOBALS.EDITING_STATE_DIRTY = true;
   };
 
   editor.addEventListener(EventType.INPUT, onUpdateTitleProperty);

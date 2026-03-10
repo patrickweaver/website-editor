@@ -1,3 +1,4 @@
+import { GLOBALS } from "../../../globals";
 import {
   UPDATE_BODY_ALIGN_ID,
   WIDTH_SLIDER_CONTAINER_ID,
@@ -42,4 +43,5 @@ export function handleUpdateFullWidth(event: Event) {
 
   document.body.style.setProperty("width", bodyWidth);
   document.body.style.setProperty("margin", bodyMargin);
+  GLOBALS.EDITING_STATE_DIRTY = true;
 }

@@ -10,6 +10,9 @@ export function getCurrentSocialImage() {
     !(metaImageElement instanceof HTMLMetaElement) ||
     !(metaAltElement instanceof HTMLMetaElement)
   )
-    return { url: "", alt: "" };
+    return {
+      url: "",
+      alt: "",
+    };
   return { url: metaImageElement.content, alt: metaAltElement.content };
 }

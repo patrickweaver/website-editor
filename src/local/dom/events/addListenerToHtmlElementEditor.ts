@@ -1,3 +1,4 @@
+import { GLOBALS } from "../../../globals";
 import { EventType, HtmlProperty } from "../../types";
 
 export function addListenerToHtmlElementEditor(
@@ -22,6 +23,7 @@ export function addListenerToHtmlElementEditor(
   const onUpdateHtmlProperty = (_event: Event) => {
     const newValue = editor.value;
     element[property] = newValue;
+    GLOBALS.EDITING_STATE_DIRTY = true;
   };
 
   editor.addEventListener(EventType.INPUT, onUpdateHtmlProperty);

@@ -1,3 +1,4 @@
+import { GLOBALS } from "../../../globals";
 import { WIDTH_SLIDER_VALUE_ID } from "../../util/constants";
 
 export function handleUpdateWidth(event: Event) {
@@ -10,4 +11,5 @@ export function handleUpdateWidth(event: Event) {
   );
   if (!widthSliderValueDisplay) return;
   widthSliderValueDisplay.innerHTML = value;
+  GLOBALS.EDITING_STATE_DIRTY = true;
 }

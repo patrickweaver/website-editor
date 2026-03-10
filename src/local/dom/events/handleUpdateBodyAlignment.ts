@@ -1,3 +1,4 @@
+import { GLOBALS } from "../../../globals";
 import { OPTIONS } from "../../util/constants";
 
 export function handleUpdateBodyAlignment(_event: Event) {
@@ -14,9 +15,12 @@ export function handleUpdateBodyAlignment(_event: Event) {
       });
     }
   });
+  // TODO change margin on alignment change
   // if (value === OPTIONS.LC_BODY_ALIGNMENT_OPTIONS[0].value) {
   //   document.body.style.margin = "2rem";
   // } else if (value === OPTIONS.LC_BODY_ALIGNMENT_OPTIONS[1].value) {
   //   document.body.style.margin = "2rem auto";
   // }
+
+  GLOBALS.EDITING_STATE_DIRTY = true;
 }

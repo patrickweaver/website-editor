@@ -188,10 +188,21 @@ fieldset.edit {
   margin: 0;
 }
 
-#local-controls figure img {
+#local-controls figure img#current-favicon-preview {
   width: 16px;
   position: relative;
   top: 3px;
+}
+
+#local-controls figure#social-image-preview {
+  width: 100%;
+}
+
+#local-controls figure img#current-social-image-preview {
+  object-fit: contain;
+  display: block;
+  width: 100%;
+  max-width: 300px;
 }
 
 #local-controls button,

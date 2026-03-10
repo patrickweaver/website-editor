@@ -4,6 +4,7 @@ import {
   CURRENT_TWITTER_IMAGE_ID,
 } from "../../util/constants";
 import { ImgElementProperty, MetaProperty } from "../../types";
+import { GLOBALS } from "../../../globals";
 
 export function handleUpdateSocialImage(event: Event) {
   const items = [
@@ -29,4 +30,5 @@ export function handleUpdateSocialImage(event: Event) {
       }
     }
   });
+  GLOBALS.EDITING_STATE_DIRTY = true;
 }

@@ -1,3 +1,4 @@
+import { GLOBALS } from "../../../globals";
 import { EventType, MetaProperty } from "../../types";
 
 export function addListenerToMetaEditor(
@@ -28,6 +29,7 @@ export function addListenerToMetaEditor(
       if (!(element instanceof HTMLMetaElement)) return;
       element[property] = newValue;
     });
+    GLOBALS.EDITING_STATE_DIRTY = true;
   };
 
   editor.addEventListener(EventType.INPUT, onUpdateMetaProperty);
