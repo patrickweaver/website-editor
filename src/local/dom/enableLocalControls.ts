@@ -4,7 +4,7 @@ import {
   LOCAL_CONTROLS_CONTAINER_ID,
 } from "../util/constants";
 import { EventType, InsertPosition } from "../types";
-import { showAlert } from "../util/alert";
+import { showAlert } from "./util/alert";
 import { addListenerById } from "./events/addListenerById";
 import { onClickNewContentButton } from "./events/onClickNewContentButton";
 import { getLocalControls } from "./getLocalControls";

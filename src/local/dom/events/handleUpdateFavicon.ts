@@ -7,7 +7,7 @@ import {
   UPDATE_FAVICON_ID,
 } from "../../util/constants";
 import { UpdateMethod } from "../../types";
-import { showAlert } from "../../util/alert";
+import { showAlert } from "../util/alert";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { ERROR_IMAGE_ONLY, ERROR_NO_IMAGE } from "../../util/strings";
 import { insertFavicon } from "../insertFavicon";

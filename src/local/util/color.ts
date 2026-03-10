@@ -1,6 +1,6 @@
 // https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
 
-import { showAlert } from "./alert";
+import { showAlert } from "../dom/util/alert";
 
 // Hex is needed for <input type="color" />
 export function rgb2hex(rgb: string) {

@@ -18,7 +18,7 @@ import {
   TextElementProperty,
   ElementTag,
 } from "../../types";
-import { showAlert } from "../../util/alert";
+import { showAlert } from "../util/alert";
 import { getUniqueId } from "../../util/random";
 import { createElement } from "../util/createElement";
 import { createImageEditor } from "../util/createImageEditor";

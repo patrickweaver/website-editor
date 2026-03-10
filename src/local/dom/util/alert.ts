@@ -3,12 +3,12 @@ import {
   ALERT_LIST,
   ALERT_REMOVED_CLASS,
   ALERT_ANIMATION_DELAY,
-} from "./constants.ts";
-import { ElementTag } from "../types.ts";
-import { createElement } from "../dom/util/createElement.ts";
-import { insertElementToDOM } from "../dom/util/insertElementToDOM.ts";
-import { insertElementWithinElement } from "../dom/util/insertElementWithinElement.ts";
-import { InsertPosition } from "../types.ts";
+} from "../../util/constants.ts";
+import { ElementTag } from "../../types.ts";
+import { createElement } from "./createElement.ts";
+import { insertElementToDOM } from "./insertElementToDOM.ts";
+import { insertElementWithinElement } from "./insertElementWithinElement.ts";
+import { InsertPosition } from "../../types.ts";
 
 export function showAlert(message: string) {
   // This timeout is needed to make sure that the local controls element exists when the alert is created
