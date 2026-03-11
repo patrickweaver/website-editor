@@ -18,7 +18,8 @@ import {
   UPDATE_TEXT_ALIGN_ID,
   UPDATE_TEXT_COLOR_ID,
   UPDATE_TEXT_SIZE_ID,
-  WIDTH_SLIDER_ID,
+  BODY_WIDTH_RANGE_INPUT_ID,
+  BODY_WIDTH_NUMBER_INPUT_ID,
 } from "../util/constants";
 import {
   CSSProperties,
@@ -56,7 +57,12 @@ export function activatePageListeners() {
       eventHandler: handleUpdateFullWidth,
     },
     {
-      id: WIDTH_SLIDER_ID,
+      id: BODY_WIDTH_NUMBER_INPUT_ID,
+      eventHandler: handleUpdateWidth,
+      type: EventType.INPUT,
+    },
+    {
+      id: BODY_WIDTH_RANGE_INPUT_ID,
       eventHandler: handleUpdateWidth,
       type: EventType.INPUT,
     },

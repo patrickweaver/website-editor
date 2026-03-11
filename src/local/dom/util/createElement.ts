@@ -21,6 +21,8 @@ export enum ElementProperty {
   HTML_FOR = "htmlFor",
   SRC = "src",
   ALT = "alt",
+  MIN = "min",
+  MAX = "max",
 }
 
 export type CreateElementParams<T extends keyof ElementTagToType> = {
@@ -36,6 +38,8 @@ export type CreateElementParams<T extends keyof ElementTagToType> = {
   htmlFor?: string;
   imageSrc?: string;
   altText?: string;
+  min?: string | number;
+  max?: string | number;
 };
 
 export function createElement<T extends keyof ElementTagToType>({
@@ -51,6 +55,8 @@ export function createElement<T extends keyof ElementTagToType>({
   htmlFor,
   imageSrc,
   altText,
+  min,
+  max,
 }: CreateElementParams<T> = {}): ElementTagToType[T] {
   const element = document.createElement(tag);
   const uniqueId = giveUniqueId ? `-${getUniqueId()}` : "";
@@ -72,6 +78,8 @@ export function createElement<T extends keyof ElementTagToType>({
       htmlFor,
       src: imageSrc,
       alt: altText,
+      min,
+      max,
     };
   let elementKey: ElementProperty;
   for (elementKey in elementProperties) {
@@ -111,6 +119,13 @@ export function createElement<T extends keyof ElementTagToType>({
           element instanceof HTMLElement
         )
           element[elementKey] = String(value);
+      } else if (
+        elementKey === ElementProperty.MIN ||
+        elementKey === ElementProperty.MAX
+      ) {
+        if (element instanceof HTMLInputElement) {
+          element[elementKey] = String(value);
+        }
       }
     }
   }

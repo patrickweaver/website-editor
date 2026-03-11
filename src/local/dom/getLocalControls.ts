@@ -30,8 +30,8 @@ import {
   UPDATE_TEXT_SIZE_ID,
   WIDTH_SLIDER_CONTAINER_ID,
   WIDTH_SLIDER_DATALIST_ID,
-  WIDTH_SLIDER_ID,
-  WIDTH_SLIDER_VALUE_ID,
+  BODY_WIDTH_RANGE_INPUT_ID,
+  BODY_WIDTH_NUMBER_INPUT_ID,
 } from "../util/constants";
 import { CSSProperties, IMAGE_PREVIEW, ElementTag } from "../types";
 import { addControlsInput } from "./controls/addControlsInput";
@@ -140,20 +140,25 @@ export function getLocalControls(): HTMLElement {
 
   const bodyWidthFixedEditor = createElement({ id: WIDTH_SLIDER_CONTAINER_ID });
   const bodyWidthFixedCurrentValue = createElement({
-    id: WIDTH_SLIDER_VALUE_ID,
-    tag: ElementTag.SPAN,
-    innerHTML: `${SETTINGS.BODY_WIDTH}px`,
+    id: BODY_WIDTH_NUMBER_INPUT_ID,
+    tag: ElementTag.INPUT,
+    type: INPUT_TYPES.NUMBER,
+    value: `${SETTINGS.BODY_WIDTH}`,
+    min: SETTINGS.BODY_WIDTHS[0],
+    max: SETTINGS.BODY_WIDTHS[SETTINGS.BODY_WIDTHS.length - 1],
   });
   const bodyWidthFixedLabel = createElement({
     tag: ElementTag.LABEL,
-    htmlFor: WIDTH_SLIDER_ID,
+    htmlFor: BODY_WIDTH_RANGE_INPUT_ID,
     innerHTML: LC_BODY_WIDTH_FIXED_LABEL,
   });
   insertElementWithinElement(bodyWidthFixedLabel, bodyWidthFixedCurrentValue);
   const bodyWidthFixedInput = createElement({
-    id: WIDTH_SLIDER_ID,
+    id: BODY_WIDTH_RANGE_INPUT_ID,
     tag: ElementTag.INPUT,
     type: INPUT_TYPES.RANGE,
+    min: SETTINGS.BODY_WIDTHS[0],
+    max: SETTINGS.BODY_WIDTHS[SETTINGS.BODY_WIDTHS.length - 1],
   });
   bodyWidthFixedInput.min = SETTINGS.BODY_WIDTHS[0];
   bodyWidthFixedInput.max =

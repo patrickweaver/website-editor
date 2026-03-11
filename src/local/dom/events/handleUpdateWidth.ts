@@ -1,15 +1,31 @@
 import { GLOBALS } from "../../../globals";
-import { WIDTH_SLIDER_VALUE_ID } from "../../util/constants";
+import {
+  BODY_WIDTH_NUMBER_INPUT_ID,
+  BODY_WIDTH_RANGE_INPUT_ID,
+  SETTINGS,
+} from "../../util/constants";
 
 export function handleUpdateWidth(event: Event) {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return;
-  const value = `${target.value}px`;
-  document.body.style.setProperty("width", value);
-  const widthSliderValueDisplay = document.getElementById(
-    WIDTH_SLIDER_VALUE_ID,
-  );
-  if (!widthSliderValueDisplay) return;
-  widthSliderValueDisplay.innerHTML = value;
+  let value = parseInt(target.value);
+
+  const numberInput = document.getElementById(BODY_WIDTH_NUMBER_INPUT_ID);
+  const rangeInput = document.getElementById(BODY_WIDTH_RANGE_INPUT_ID);
+  if (!numberInput || !rangeInput) return;
+  if (!(numberInput instanceof HTMLInputElement)) return;
+  if (!(rangeInput instanceof HTMLInputElement)) return;
+
+  if (value < parseInt(SETTINGS.BODY_WIDTHS[0])) {
+    value = parseInt(SETTINGS.BODY_WIDTHS[0]);
+  } else if (
+    value > parseInt(SETTINGS.BODY_WIDTHS[SETTINGS.BODY_WIDTHS.length - 1])
+  ) {
+    value = parseInt(SETTINGS.BODY_WIDTHS[SETTINGS.BODY_WIDTHS.length - 1]);
+  }
+  const valueString = `${value}px`;
+  document.body.style.setProperty("width", valueString);
+  numberInput.value = String(value);
+  rangeInput.value = String(value);
   GLOBALS.EDITING_STATE_DIRTY = true;
 }

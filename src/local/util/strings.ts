@@ -39,7 +39,7 @@ export const LC_BODY_ALIGNMENT_RIGHT_MESSAGE =
   "Right aligned body is not supported.";
 export const LC_BODY_ALIGNMENT_SUBHEADER = "Body Alignment";
 export const LC_BODY_WIDTH_SUBHEADER = "Body Width";
-export const LC_BODY_WIDTH_FIXED_LABEL = "Fixed Body Width: ";
+export const LC_BODY_WIDTH_FIXED_LABEL = "Fixed Body Width (px): ";
 export const LC_BODY_WIDTH_FULL_LABEL = "Use Full Window Width";
 export const LC_CONTENT_SUBHEADER = "Add Content";
 export const LC_CONTENT_BUTTON = "Add Item";
