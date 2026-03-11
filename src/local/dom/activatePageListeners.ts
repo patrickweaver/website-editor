@@ -20,6 +20,7 @@ import {
   UPDATE_TEXT_SIZE_ID,
   BODY_WIDTH_RANGE_INPUT_ID,
   BODY_WIDTH_NUMBER_INPUT_ID,
+  UPDATE_SOCIAL_IMAGE_ALT_ID,
 } from "../util/constants";
 import {
   CSSProperties,
@@ -39,7 +40,10 @@ import { handleUpdateBodyTextAlign } from "./events/handleUpdateBodyTextAlign";
 import { handleUpdateBodyTextSize } from "./events/handleUpdateBodyTextSize";
 import { handleUpdateFavicon } from "./events/handleUpdateFavicon";
 import { handleUpdateFullWidth } from "./events/handleUpdateFullWidth";
-import { handleUpdateSocialImage } from "./events/handleUpdateSocialImage";
+import {
+  handleUpdateSocialImageAlt,
+  handleUpdateSocialImageSrc,
+} from "./events/handleUpdateSocialImage";
 import { handleUpdateWidth } from "./events/handleUpdateWidth";
 
 export function activatePageListeners() {
@@ -84,7 +88,12 @@ export function activatePageListeners() {
     },
     {
       id: UPDATE_SOCIAL_IMAGE_ID,
-      eventHandler: handleUpdateSocialImage,
+      eventHandler: handleUpdateSocialImageSrc,
+      type: EventType.INPUT,
+    },
+    {
+      id: UPDATE_SOCIAL_IMAGE_ALT_ID,
+      eventHandler: handleUpdateSocialImageAlt,
       type: EventType.INPUT,
     },
     {

@@ -158,10 +158,11 @@ fieldset.edit {
   margin-bottom: 0.5rem;
 }
 
-.note {
+.controls-section label.note {
   border: 1px solid var(--note-border);
   background-color: var(--note-bg);
   padding: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 #local-controls-container {
@@ -344,6 +345,17 @@ fieldset.edit {
   border: 1px dashed var(--lc-border-3);
   background-color: white;
   max-width: 150px;
+}
+
+.placeholder {
+  border: 1px dashed var(--lc-border-3);
+  background-color: var(--lc-bg-3);
+  color: var(--lc-border-3);
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+  height: 5rem;
 }
 
 .hidden {

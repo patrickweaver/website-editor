@@ -1,6 +1,7 @@
 import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 import { ElementTag } from "../../types";
+import { PLACEHOLDER_CLASS } from "../../util/constants";
 
 export function getFigureWithCaption(
   figureId: string,
@@ -16,19 +17,31 @@ export function getFigureWithCaption(
     tag: ElementTag.FIGCAPTION,
     innerHTML: captionText,
   });
-  const image = createElement({
-    tag: ElementTag.IMG,
-    id: imageId,
-    imageSrc,
-    altText: imageAlt,
-  });
+  let imageOrPlaceholder: HTMLElement;
+  if (imageSrc) {
+    imageOrPlaceholder = createElement({
+      tag: ElementTag.IMG,
+      id: imageId,
+      imageSrc,
+      altText: imageAlt,
+    });
+  } else {
+    imageOrPlaceholder = createElement({
+      tag: ElementTag.DIV,
+      classList: [PLACEHOLDER_CLASS],
+      id: imageId,
+      innerHTML: "No image",
+    });
+  }
   insertElementWithinElement(figure, caption);
-  insertElementWithinElement(figure, image);
+  insertElementWithinElement(figure, imageOrPlaceholder);
   Object.entries(figureStyle).forEach(([key, value]) => {
     figure.style.setProperty(key, String(value ?? ""));
   });
-  Object.entries(imageStyle).forEach(([key, value]) => {
-    image.style.setProperty(key, String(value ?? ""));
-  });
+  if (imageOrPlaceholder instanceof HTMLImageElement) {
+    Object.entries(imageStyle).forEach(([key, value]) => {
+      imageOrPlaceholder.style.setProperty(key, String(value ?? ""));
+    });
+  }
   return figure;
 }

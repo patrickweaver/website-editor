@@ -59,7 +59,8 @@ export const LC_SAVE_CHANGES_BUTTON_LABEL = "Save All Changes to Local File";
 export const LC_SAVE_CHANGES_SUBHEADER = "Save Changes";
 export const LC_SOCIAL_IMAGE_INPUT_BELOW_LABEL =
   "Social Image must be a full URL including the domain name and cannot be included inline as a data URL like other images. You will likely need to upload the image to your web host, then update your page again with the hosted image URL. The social image is configured for a square image at least 144px x 144px large.";
-export const LC_SOCIAL_IMAGE_INPUT_LABEL = "Update Social Image";
+export const LC_SOCIAL_IMAGE_INPUT_LABEL = "Update Social Image URL";
+export const LC_SOCIAL_IMAGE_ALT_INPUT_LABEL = "Update Social Image Alt Text";
 export const LC_SOCIAL_IMAGE_LABEL = "Current Social Image:";
 export const LC_SOCIAL_IMAGE_SUBHEADER = "Social Image";
 export const LC_STYLES_SUBHEADER = "Styles";

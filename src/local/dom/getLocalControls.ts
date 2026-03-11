@@ -33,6 +33,7 @@ import {
   BODY_WIDTH_RANGE_INPUT_ID,
   BODY_WIDTH_NUMBER_INPUT_ID,
   STATE_ELEMENT_ID,
+  UPDATE_SOCIAL_IMAGE_ALT_ID,
 } from "../util/constants";
 import { CSSProperties, IMAGE_PREVIEW, ElementTag } from "../types";
 import { addControlsInput } from "./controls/addControlsInput";
@@ -83,6 +84,7 @@ import {
   LC_UPDATE_FAVICON_LABEL,
   MISSING_SOCIAL_IMAGE_ALT,
   LC_TEXT_SIZE_LABEL,
+  LC_SOCIAL_IMAGE_ALT_INPUT_LABEL,
 } from "../util/strings";
 import { GLOBALS } from "../../globals";
 
@@ -302,6 +304,12 @@ export function getLocalControls(): HTMLElement {
         classList: [NOTE_CLASS],
         innerHTML: LC_SOCIAL_IMAGE_INPUT_BELOW_LABEL,
       }),
+      // TODO this is not activated
+      ...addControlsInput(
+        UPDATE_SOCIAL_IMAGE_ALT_ID,
+        INPUT_TYPES.TEXT,
+        LC_SOCIAL_IMAGE_ALT_INPUT_LABEL,
+      ),
     ],
     ElementTag.H4,
   );
