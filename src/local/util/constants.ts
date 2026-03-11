@@ -12,6 +12,7 @@ export const PAGE_OG_DESC_ID = "og-description";
 export const PAGE_OG_IMAGE_ID = "og-image";
 export const PAGE_OG_IMAGE_ALT_ID = "og-image-alt";
 export const PAGE_LANG_INPUT_ID = "edit-page-language";
+export const STATE_ELEMENT_ID = "editor-state";
 export const ADD_ITEM_ID = "add-item";
 export const ADD_ITEM_HEADING_ID = "add-item-heading";
 export const ADD_ITEM_IMAGE_ID = "add-item-image";

@@ -32,6 +32,7 @@ import {
   WIDTH_SLIDER_DATALIST_ID,
   BODY_WIDTH_RANGE_INPUT_ID,
   BODY_WIDTH_NUMBER_INPUT_ID,
+  STATE_ELEMENT_ID,
 } from "../util/constants";
 import { CSSProperties, IMAGE_PREVIEW, ElementTag } from "../types";
 import { addControlsInput } from "./controls/addControlsInput";
@@ -83,6 +84,7 @@ import {
   MISSING_SOCIAL_IMAGE_ALT,
   LC_TEXT_SIZE_LABEL,
 } from "../util/strings";
+import { GLOBALS } from "../../globals";
 
 export function getLocalControls(): HTMLElement {
   const addContent = addControlsSection(LC_CONTENT_SUBHEADER, [
@@ -314,6 +316,7 @@ export function getLocalControls(): HTMLElement {
 
   const wrapper = createElement({ id: LOCAL_CONTROLS_ID });
   const children = [
+    createElement({ id: STATE_ELEMENT_ID, tag: ElementTag.H3 }),
     createElement({ id: ALERT_LIST }),
     createElement({ tag: ElementTag.H2, innerHTML: LC_HEADER }),
     createElement({ tag: ElementTag.P, innerHTML: LC_INSTRUCTIONS }),
@@ -336,6 +339,15 @@ export function getLocalControls(): HTMLElement {
   children.forEach((element) => {
     insertElementWithinElement(wrapper, element);
   });
+
+  const stateTimer = setInterval(() => {
+    if (GLOBALS.EDITING_STATE_DIRTY) {
+      const stateElement = document.getElementById(STATE_ELEMENT_ID);
+      if (!stateElement) return;
+      stateElement.innerHTML = "Unsaved changes";
+      clearInterval(stateTimer);
+    }
+  }, 1000);
 
   return wrapper;
 }

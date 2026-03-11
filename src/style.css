@@ -13,6 +13,9 @@
   --edit-element-highlight: #ffff00;
   --note-border: #ffe8b8;
   --note-bg: #fffce8;
+  --scroll-bar: #9f9f9f;
+  --scroll-bar-hover: #6f6f6f;
+  --scroll-bar-bg: #e1e1e1;
 }
 
 * {
@@ -23,6 +26,36 @@ body {
   font-family: "Arial", sans-serif;
   margin: 2rem;
   line-height: 1.4;
+  z-index: 5;
+}
+
+body.local-controls-enabled::-webkit-scrollbar {
+  display: block;
+  width: 10px;
+  z-index: 5;
+}
+
+body.local-controls-enabled::-webkit-scrollbar-track {
+  background: var(--scroll-bar-bg);
+}
+
+body.local-controls-enabled::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-bar);
+  border-right: none;
+  border-left: none;
+}
+
+body.local-controls-enabled::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scroll-bar-hover);
+}
+
+body.local-controls-enabled::-webkit-scrollbar-track-piece:end {
+  background: transparent;
+  margin-bottom: 25rem;
+}
+
+body.local-controls-enabled::-webkit-scrollbar-track-piece:start {
+  background: transparent;
 }
 
 input,
@@ -133,20 +166,48 @@ fieldset.edit {
 
 #local-controls-container {
   width: 100%;
-  text-align: left;
-  margin-top: 3rem;
-  font-size: 16px;
-  line-height: 18.5px;
+  margin-top: 25rem;
 }
 
 #local-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 25rem;
   background-color: var(--lc-bg);
   color: var(--lc-color);
   text-align: left;
-  margin: 1rem;
+  margin: 1rem 0 0 0;
   padding: 0.5rem 1rem;
-  max-width: 600px;
   outline: 1px dashed var(--lc-border-3);
+  overflow-y: scroll;
+  font-size: 16px;
+  z-index: 10;
+}
+
+#local-controls::-webkit-scrollbar {
+  width: 20px;
+}
+
+#local-controls::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-bar);
+}
+
+#local-controls::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scroll-bar-hover);
+}
+
+#local-controls::-webkit-scrollbar-track {
+  background-color: var(--scroll-bar-bg);
+}
+
+#local-controls #editor-state {
+  font-weight: bold;
+  margin: 0.125rem 0;
+  color: var(--warning-highlight-a);
+  text-align: center;
 }
 
 .local-controls-alert {
