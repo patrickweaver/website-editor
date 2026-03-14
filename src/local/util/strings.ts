@@ -24,6 +24,7 @@ export const EDITOR_LABELS = {
   "heading-level": "Edit heading level",
   image: "Select an image",
   "image-alt": "Image alt text",
+  "image-href": "Image link URL",
   paragraph: "Edit paragraph text",
   text: "Edit text",
   option: null,

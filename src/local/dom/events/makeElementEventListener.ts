@@ -145,6 +145,7 @@ export function makeElementEventListener(editorType: string) {
       tagNameSelect: _tagNameSelect,
       alignSelectElement,
       altTextEditor,
+      hrefEditor,
       originalElement,
       editorId: _editorId,
     }: {
@@ -152,6 +153,7 @@ export function makeElementEventListener(editorType: string) {
       tagNameSelect?: HTMLSelectElement;
       alignSelectElement?: HTMLFieldSetElement;
       altTextEditor?: HTMLInputElement;
+      hrefEditor?: HTMLInputElement;
       originalElement?:
         | HTMLImageElement
         | HTMLParagraphElement
@@ -161,15 +163,19 @@ export function makeElementEventListener(editorType: string) {
       if (
         !imagePicker ||
         !altTextEditor ||
+        !hrefEditor ||
         !alignSelectElement ||
         !originalElement
-      )
+      ) {
+        console.log("Missing required elements for image update");
         return undefined;
+      }
       // TODO remove check
       if (!(originalElement instanceof HTMLImageElement)) return undefined;
       const updatedImageElement = await prepareImageForEditor({
         filePickerId: imagePicker.id,
         altText: altTextEditor?.value,
+        href: hrefEditor?.value,
         alignSelectElement,
         originalElement,
       });
@@ -221,6 +227,7 @@ export function makeElementEventListener(editorType: string) {
         // https://github.com/patrickweaver/website-editor/issues/87
         return updatedValue !== originalValue;
       });
+      // TODO need to remove the original anchor tag also.
       originalElement.remove();
       GLOBALS.EDITING_STATE_DIRTY =
         GLOBALS.EDITING_STATE_DIRTY || _editingStateDirty;
@@ -268,6 +275,7 @@ export function makeElementEventListener(editorType: string) {
       content: originalContent,
       tagName,
       altTextContent,
+      hrefContent: "",
       // TODO
       style: element.style as unknown as { [key: string]: string },
     });
@@ -283,6 +291,8 @@ export function makeElementEventListener(editorType: string) {
       altEditorLabel,
       alignSelect,
       imagePreview,
+      hrefEditor,
+      hrefEditorLabel,
     } = editElements;
 
     let buttonsContainerElement = createElement({
@@ -338,6 +348,7 @@ export function makeElementEventListener(editorType: string) {
             tagNameSelect: tagPicker ?? undefined,
             alignSelectElement: alignSelect,
             altTextEditor: altEditor ?? undefined,
+            hrefEditor: hrefEditor ?? undefined,
             originalElement: element,
             editorId,
           });
@@ -364,6 +375,8 @@ export function makeElementEventListener(editorType: string) {
       imagePreview,
       altEditorLabel,
       altEditor,
+      hrefEditorLabel,
+      hrefEditor,
       buttonsContainerElement,
     ];
     // TODO any

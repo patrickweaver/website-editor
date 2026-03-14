@@ -89,6 +89,7 @@ export enum EditorTypes {
   HEADING_LEVEL = "heading-level",
   IMAGE = "image",
   IMAGE_ALT_TEXT = "image-alt",
+  IMAGE_HREF = "image-href",
   OPTION = "option",
   PARAGRAPH = "paragraph",
   TEXT = "text",
@@ -156,6 +157,8 @@ export type Editor = {
   tagPickerLabel: HTMLLabelElement | null;
   altEditor: HTMLInputElement | null;
   altEditorLabel: HTMLLabelElement | null;
+  hrefEditor: HTMLInputElement | null;
+  hrefEditorLabel: HTMLLabelElement | null;
   alignSelect: HTMLFieldSetElement;
   imagePreview: HTMLElement | null;
 };
@@ -172,6 +175,7 @@ export type EditorButtonUpdateCallback = ({
   tagNameSelect?: HTMLSelectElement;
   alignSelectElement: HTMLFieldSetElement;
   altTextEditor?: HTMLInputElement;
+  hrefEditor?: HTMLInputElement;
   originalElement?:
     | HTMLImageElement
     | HTMLParagraphElement

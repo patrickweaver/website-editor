@@ -20,11 +20,13 @@ export function createImageEditor({
   id,
   confirmButtonLabel,
   altTextContent,
+  hrefContent,
   style,
 }: {
   id: string;
   confirmButtonLabel: string;
   altTextContent: string;
+  hrefContent: string;
   style: { [key: string]: string };
 }): Editor | null {
   const editorChangeListener = getEditorChangeListener(id, confirmButtonLabel);
@@ -49,6 +51,19 @@ export function createImageEditor({
   const altEditorLabel = createEditorLabel(
     altEditor.id,
     EditorTypes.IMAGE_ALT_TEXT,
+  );
+
+  const hrefEditor = createElement({
+    tag: ElementTag.INPUT,
+    type: INPUT_TYPES.TEXT,
+    id: `href-${id}`,
+    classList: [EDIT_CLASS],
+    value: hrefContent ?? "",
+  });
+  hrefEditor.addEventListener(EventType.INPUT, editorChangeListener);
+  const hrefEditorLabel = createEditorLabel(
+    hrefEditor.id,
+    EditorTypes.IMAGE_HREF,
   );
 
   const editAlignElement = createElement({
@@ -122,6 +137,8 @@ export function createImageEditor({
     altEditorLabel,
     alignSelect: editAlignElement,
     imagePreview: imagePreviewFigure,
+    hrefEditor,
+    hrefEditorLabel,
   };
 
   return {
