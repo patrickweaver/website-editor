@@ -53,6 +53,7 @@ export const COLOR_PICKER_CLASS = "color-picker";
 export const SAVE_CHANGES_ID = "save-changes";
 export const EDIT_CLASS = "edit";
 export const EDIT_CONTAINER_CLASS = "edit-container";
+export const EDITOR_SUB_CONTAINER_CLASS = "editor-sub-container";
 export const EDIT_BUTTONS_CLASS = "edit-buttons";
 export const INPUT_TYPE_TEXT_CLASS = "text-input";
 export const INPUT_TYPE_TEXTAREA_CLASS = "text-textarea";

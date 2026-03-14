@@ -103,32 +103,17 @@ img {
 }
 
 .edit-container {
-  border-radius: 3px;
-  text-align: left;
-  width: 100%;
+  border: 1px dashed pink;
+  margin: 1rem;
 }
 
-.edit-container {
-  border: 2px solid var(--edit-element-highlight);
-  margin: 1rem 0;
-  padding: 0.5rem;
-  background-color: var(--lc-bg);
+.editor-sub-container {
+  border: 1px dashed cyan;
+  margin: 1rem;
 }
 
 .edit-container select {
   display: block;
-}
-
-.clone-container {
-  border: 1px solid var(--lc-border-3);
-  background-color: var(--lc-bg-3);
-  padding: 1rem;
-  margin: 0.5rem 0 1rem;
-}
-
-.clone {
-  opacity: 50%;
-  margin: 0;
 }
 
 label.edit,
@@ -139,7 +124,9 @@ textarea.edit {
 }
 
 fieldset.edit > div {
-  line-height: 2rem;
+  line-height: 1.5rem;
+  display: inline-block;
+  margin-right: 1rem;
 }
 
 fieldset.edit > div > label {

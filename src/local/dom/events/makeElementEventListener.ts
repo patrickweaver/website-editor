@@ -3,6 +3,7 @@ import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import {
   EDIT_BUTTONS_CLASS,
   EDIT_CONTAINER_CLASS,
+  EDITOR_SUB_CONTAINER_CLASS,
   EDITOR_TYPES,
   IMAGE_PICKER_ID_READABLE_STRING,
   TEXT_EDITOR_ID_READABLE_STRING,
@@ -340,22 +341,30 @@ export function makeElementEventListener(editorType: string) {
     );
     // Reverse so labels are placed above inputs
     const editElementsArray = [
-      tagPickerLabel,
-      tagPicker,
-      alignSelect,
-      editorLabel,
-      editor,
-      imagePreview,
-      altEditorLabel,
-      altEditor,
-      hrefEditorLabel,
-      hrefEditor,
-      buttonsContainerElement,
+      [tagPickerLabel, tagPicker],
+      [alignSelect],
+      [editorLabel, editor],
+      [imagePreview],
+      [altEditorLabel, altEditor],
+      [hrefEditorLabel, hrefEditor],
+      [buttonsContainerElement],
     ];
+
     // TODO any
-    editElementsArray.forEach((editorElement: any) => {
-      if (!editorElement) return;
-      insertElementWithinElement(editorContainerElement, editorElement);
+    editElementsArray.forEach((editorGroup: any) => {
+      if (!editorGroup) return;
+      const editorSubContainer = createElement({
+        classList: [EDITOR_SUB_CONTAINER_CLASS],
+      });
+      let count = 0;
+      editorGroup.forEach((editorElement: HTMLElement | undefined) => {
+        if (!editorElement) return;
+        insertElementWithinElement(editorSubContainer, editorElement);
+        count += 1;
+      });
+      if (count > 0) {
+        insertElementWithinElement(editorContainerElement, editorSubContainer);
+      }
     });
 
     editor.focus();
