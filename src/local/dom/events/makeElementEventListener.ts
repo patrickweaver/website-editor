@@ -1,8 +1,6 @@
 import { GLOBALS } from "../../../globals";
 import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import {
-  CLONE_CLASS,
-  CLONE_CONTAINER_CLASS,
   EDIT_BUTTONS_CLASS,
   EDIT_CONTAINER_CLASS,
   EDITOR_TYPES,
@@ -39,7 +37,6 @@ import {
   BUTTON_LINK,
   BUTTON_SAVE,
   BUTTON_UPDATE,
-  CLONE_LABEL,
   CONFIRM_DELETE,
 } from "../../util/strings";
 
@@ -303,30 +300,6 @@ export function makeElementEventListener(editorType: string) {
       classList: [EDIT_CONTAINER_CLASS],
       id: getEditorContainerId(editorId),
     });
-
-    if (isExistingElement) {
-      const elementClone = element.cloneNode(true);
-      if (!(elementClone instanceof HTMLElement)) {
-        showAlert("Invalid cloned element");
-        return;
-      }
-      elementClone.classList.add(CLONE_CLASS);
-      const elementCloneContainer = createElement({
-        id: "clone-container",
-        giveUniqueId: true,
-        classList: [CLONE_CONTAINER_CLASS],
-      });
-
-      insertElementWithinElement(elementCloneContainer, elementClone);
-
-      const elementCloneLabel = createElement({
-        tag: ElementTag.H3,
-        innerHTML: CLONE_LABEL,
-      });
-
-      insertElementWithinElement(editorContainerElement, elementCloneLabel);
-      insertElementWithinElement(editorContainerElement, elementCloneContainer);
-    }
 
     const originalDisplay = element.style.display;
     element.style.display = "none";
