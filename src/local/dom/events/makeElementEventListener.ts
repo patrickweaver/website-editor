@@ -320,7 +320,7 @@ export function makeElementEventListener(editorType: string) {
       insertElementWithinElement(elementCloneContainer, elementClone);
 
       const elementCloneLabel = createElement({
-        tag: ElementTag.LABEL,
+        tag: ElementTag.H3,
         innerHTML: CLONE_LABEL,
       });
 
