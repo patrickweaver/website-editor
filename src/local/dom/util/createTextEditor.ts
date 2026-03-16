@@ -115,7 +115,7 @@ export function createTextEditor({
 
   const editElementLabel = createEditorLabel(
     id,
-    isHeading ? EditorTypes.PARAGRAPH : EditorTypes.HEADING,
+    isHeading ? EditorTypes.HEADING : EditorTypes.PARAGRAPH,
   );
   const editorObject: {
     editor: HTMLTextAreaElement;
@@ -162,6 +162,8 @@ export function createTextEditor({
     ...editorObject,
     altEditor: null,
     altEditorLabel: null,
+    hrefEditor: null,
+    hrefEditorLabel: null,
     imagePreview: null,
   };
 }
