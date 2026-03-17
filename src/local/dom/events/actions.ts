@@ -1,16 +1,9 @@
-import {
-  CURRENTLY_EDITING_ID,
-  CURRENTLY_EDITING_TOOLBAR_ID,
-} from "../../util/constants";
+
+import { EditableType } from "../../util/constants";
 import { CONFIRM_DELETE } from "../../util/strings";
-
-function getCurrentlyEditingElement() {
-  return document.getElementById(CURRENTLY_EDITING_ID);
-}
-
-function getCurrentlyEditingToolbar() {
-  return document.getElementById(CURRENTLY_EDITING_TOOLBAR_ID);
-}
+import { getCurrentlyEditingElement, getCurrentlyEditingToolbar, openFormattingPanel } from "../ui/toolbar";
+import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
+import { showAlert } from "../util/alert";
 
 export async function actionDeleteElement(_event: Event) {
   const result = window.confirm(CONFIRM_DELETE);
@@ -55,4 +48,28 @@ export async function actionSaveChanges(_event: Event) {
   const element = getCurrentlyEditingElement();
   if (!element) return;
   exitEditMode(element);
+}
+
+export async function actionCreateLink(_event: Event) {
+  const element = getCurrentlyEditingElement();
+  const isParagraph = element instanceof HTMLParagraphElement;
+  if (!isParagraph) return;
+  element.innerHTML = addLinkAroundSelection(element);
+}
+
+export async function actionOpenFormatPanel(_event: Event) {
+  let editableType: EditableType | null = null;
+  const element = getCurrentlyEditingElement();
+  if (!element) {
+    showAlert("Error: Invalid element")
+  }
+  if (element instanceof HTMLParagraphElement || element instanceof HTMLHeadingElement) {
+    editableType = EditableType.TEXT
+  } else if (element instanceof HTMLImageElement) {
+    editableType = EditableType.IMAGE
+  }
+  if (!editableType) {
+    showAlert("Error: Invalid element")
+  }
+  openFormattingPanel(editableType)
 }

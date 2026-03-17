@@ -110,19 +110,23 @@ img {
   border: 2px solid aqua;
 }
 
+#currently-editing-formatting {
+  border: 2px solid lawngreen;
+}
+
 label.edit,
 input.edit,
 fieldset.edit {
   width: Calc(100% - 1rem);
 }
 
-fieldset.edit > div {
+fieldset.edit>div {
   line-height: 1.5rem;
   display: inline-block;
   margin-right: 1rem;
 }
 
-fieldset.edit > div > label {
+fieldset.edit>div>label {
   margin: 0 5px;
 }
 
@@ -206,7 +210,7 @@ fieldset.edit {
   right: 2px;
 }
 
-.local-controls-alert.alert-removed{
+.local-controls-alert.alert-removed {
   display: none;
 }
 

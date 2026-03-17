@@ -1,3 +1,5 @@
+import { EditableType } from "./util/constants";
+
 export enum ElementTag {
   A = "a",
   BUTTON = "button",
@@ -170,9 +172,9 @@ export type EditorButtonUpdateArgs = {
   altTextEditor?: HTMLInputElement;
   hrefEditor?: HTMLInputElement;
   originalElement?:
-    | HTMLParagraphElement
-    | HTMLHeadingElement
-    | HTMLImageElement;
+  | HTMLParagraphElement
+  | HTMLHeadingElement
+  | HTMLImageElement;
   editorId?: string;
 };
 
@@ -189,7 +191,8 @@ export type EditorButtonConfig = {
   initiallyDisabled: boolean;
   // TODO remove this
   updateElement?:
-    | TextEditorButtonUpdateCallback
-    | ImageEditorButtonUpdateCallback;
+  | TextEditorButtonUpdateCallback
+  | ImageEditorButtonUpdateCallback;
   eventListener?: (event: Event) => void;
+  editableTypes?: EditableType[],
 };

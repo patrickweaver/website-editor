@@ -1,4 +1,4 @@
-import { EDITOR_TYPES } from "../util/constants";
+import { EditableType } from "../util/constants";
 import { ElementTag, EventType } from "../types";
 import { makeElementEventListener } from "./events/makeElementEventListener";
 
@@ -20,7 +20,7 @@ export function activateElementListeners() {
     .forEach((element) =>
       element.addEventListener(
         EventType.CLICK,
-        makeElementEventListener(EDITOR_TYPES.TEXT),
+        makeElementEventListener(EditableType.TEXT),
       ),
     );
 
@@ -29,7 +29,7 @@ export function activateElementListeners() {
     .forEach((element) =>
       element.addEventListener(
         EventType.CLICK,
-        makeElementEventListener(EDITOR_TYPES.IMAGE),
+        makeElementEventListener(EditableType.IMAGE),
       ),
     );
 }

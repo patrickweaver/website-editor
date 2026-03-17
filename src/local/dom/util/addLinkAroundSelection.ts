@@ -4,7 +4,6 @@ import {
   ERROR_NO_URL,
   PROMPT_LINK_URL,
 } from "../../util/strings";
-import { getUniqueId } from "../../util/random";
 import { ElementTag } from "../../types";
 
 export function addLinkAroundSelection(selectableInput: HTMLParagraphElement) {
@@ -50,8 +49,6 @@ export function addLinkAroundSelection(selectableInput: HTMLParagraphElement) {
   }
 
   const anchor = document.createElement(ElementTag.A);
-  const anchorId = getUniqueId();
-  anchor.id = anchorId;
   anchor.href = href;
   anchor.target = "_blank";
   anchor.appendChild(fragment);
@@ -84,15 +81,11 @@ function isPartiallyOverlappingAnchor(
   const anchors = container.querySelectorAll(ElementTag.A);
 
   for (const anchor of anchors) {
-    // Skip anchors the range doesn't touch at all
     if (!range.intersectsNode(anchor)) continue;
 
-    // Build a range that spans the anchor's full contents
     const anchorRange = document.createRange();
     anchorRange.selectNodeContents(anchor);
 
-    // The range fully contains the anchor if it starts at/before the anchor's
-    // start AND ends at/after the anchor's end. Anything else is partial.
     const startsAtOrBefore =
       range.compareBoundaryPoints(Range.START_TO_START, anchorRange) <= 0;
     const endsAtOrAfter =

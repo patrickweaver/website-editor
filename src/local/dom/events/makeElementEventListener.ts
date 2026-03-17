@@ -5,6 +5,7 @@ import {
   EDIT_BUTTONS_CLASS,
   EDIT_CONTAINER_CLASS,
   EDIT_UI_CONTAINER_CLASS,
+  EditableType,
   EDITOR_SUB_CONTAINER_CLASS,
   EDITOR_TYPES,
   IMAGE_PICKER_ID_READABLE_STRING,
@@ -35,7 +36,7 @@ import { updateImageCallback } from "./updateImageCallback";
 import { cancelEditAction } from "./actions";
 import { getButtons } from "../ui/buttons";
 
-export function makeElementEventListener(editorType: string) {
+export function makeElementEventListener(editableType: EditableType) {
   return function (event: Event) {
     const element = event.currentTarget;
     if (
@@ -72,19 +73,6 @@ export function makeElementEventListener(editorType: string) {
         altTextContent = element.alt;
       }
 
-      const linkButton: EditorButtonConfig = {
-        label: BUTTON_LINK,
-        initiallyDisabled: false,
-        updateElement: async ({ editorId }: { editorId?: string }) => {
-          // TODO unnecessary check
-          if (!editorId) return undefined;
-          const elementWithSelection = document.getElementById(editorId);
-          if (!(elementWithSelection instanceof HTMLParagraphElement)) return;
-          elementWithSelection.innerHTML =
-            addLinkAroundSelection(elementWithSelection);
-        },
-      };
-
       const updateButtonLabel = BUTTON_SAVE;
 
       const updateTextButton: EditorButtonConfig = {
@@ -99,23 +87,21 @@ export function makeElementEventListener(editorType: string) {
         updateElement: updateImageCallback,
       };
 
-      const defaultButtons: Array<EditorButtonConfig> = [];
-
       let types = {
         [EDITOR_TYPES.TEXT]: {
           idReadableString: TEXT_EDITOR_ID_READABLE_STRING,
-          controls: [...defaultButtons, linkButton, updateTextButton],
+          controls: [],
           createEditor: createTextEditor,
         },
         [EDITOR_TYPES.IMAGE]: {
           idReadableString: IMAGE_PICKER_ID_READABLE_STRING,
-          controls: [...defaultButtons, updateImageButton],
+          controls: [updateImageButton],
           createEditor: createImageEditor,
         },
       };
       types[EDITOR_TYPES.HEADING] = types.text;
       types[EDITOR_TYPES.PARAGRAPH] = types.text;
-      const type = types[editorType];
+      const type = types[editableType];
 
       const editorId = getUniqueId(type.idReadableString);
 
@@ -256,37 +242,28 @@ export function makeElementEventListener(editorType: string) {
       },
     };
 
-    const _updateTextButton: EditorButtonConfig = {
-      label: updateButtonLabel,
-      initiallyDisabled: false,
-      updateElement: updateTextCallback,
-    };
-
     const _updateImageButton: EditorButtonConfig = {
       label: updateButtonLabel,
       initiallyDisabled: true,
       updateElement: updateImageCallback,
     };
 
-    const defaultButtons: Array<EditorButtonConfig> = [];
-
     let types = {
       [EDITOR_TYPES.TEXT]: {
         idReadableString: TEXT_EDITOR_ID_READABLE_STRING,
-        controls: [...defaultButtons, linkButton, _updateTextButton],
+        controls: [],
         createEditor: createTextEditor,
       },
       [EDITOR_TYPES.IMAGE]: {
         idReadableString: IMAGE_PICKER_ID_READABLE_STRING,
-        controls: [...defaultButtons, _updateImageButton],
+        controls: [_updateImageButton],
         createEditor: createImageEditor,
       },
     };
     types[EDITOR_TYPES.HEADING] = types.text;
     types[EDITOR_TYPES.PARAGRAPH] = types.text;
-    const type = types[editorType];
 
-    const buttonsContainerElement = getButtons();
+    const buttonsContainerElement = getButtons(editableType);
 
     // TODO Not for new elements
     insertElementWithinElement(toolbar, buttonsContainerElement);
