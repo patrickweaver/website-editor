@@ -184,10 +184,12 @@ export type ImageEditorButtonUpdateCallback = (
   args: EditorButtonUpdateArgs,
 ) => Promise<boolean | undefined>;
 
-export type EditorButton = {
+export type EditorButtonConfig = {
   label: string;
   initiallyDisabled: boolean;
-  updateElement:
+  // TODO remove this
+  updateElement?:
     | TextEditorButtonUpdateCallback
     | ImageEditorButtonUpdateCallback;
+  eventListener?: (event: Event) => void;
 };
