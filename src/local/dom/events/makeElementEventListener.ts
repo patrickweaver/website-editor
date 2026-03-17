@@ -10,7 +10,8 @@ import {
 } from "../../util/constants";
 import {
   EditorButton,
-  EditorButtonUpdateCallback,
+  ImageEditorButtonUpdateCallback,
+  TextEditorButtonUpdateCallback,
   EventType,
   ImgElementProperty,
   InsertPosition,
@@ -27,7 +28,6 @@ import { prepareTextForEditor } from "../util/prepareTextForEditor";
 import {
   getButtonId,
   getEditorContainerId,
-  renderWhitespaceForHTML,
   slugify,
   trimHTML,
 } from "../../util/stringUtils";
@@ -45,11 +45,13 @@ export function makeElementEventListener(editorType: string) {
   return function (event: Event, isExistingElement: boolean = true) {
     const element = event.currentTarget;
     if (
-      !(element instanceof HTMLHeadingElement) &&
-      !(element instanceof HTMLParagraphElement) &&
-      !(element instanceof HTMLImageElement)
+      !(
+        element instanceof HTMLHeadingElement ||
+        element instanceof HTMLParagraphElement ||
+        element instanceof HTMLImageElement
+      )
     ) {
-      showAlert("Invalid element");
+      showAlert("Invalid element for editor");
       return;
     }
 
@@ -108,21 +110,15 @@ export function makeElementEventListener(editorType: string) {
 
     const updateButtonLabel = isExistingElement ? BUTTON_UPDATE : BUTTON_SAVE;
 
-    const updateTextCallback: EditorButtonUpdateCallback = async ({
-      editorElement,
-      tagNameSelect,
-      alignSelectElement,
-      altTextEditor: _altTextEditor,
-      originalElement,
-      editorId: _editorId,
-    }: {
-      editorElement?: HTMLInputElement | HTMLTextAreaElement;
-      tagNameSelect?: HTMLSelectElement;
-      alignSelectElement?: HTMLFieldSetElement;
-      altTextEditor?: HTMLInputElement;
-      originalElement?: HTMLHeadingElement | HTMLParagraphElement;
-      editorId?: string;
-    }) => {
+    const updateTextCallback: TextEditorButtonUpdateCallback = async (args) => {
+      const {
+        editorElement,
+        tagNameSelect,
+        alignSelectElement,
+        altTextEditor: _altTextEditor,
+        originalElement,
+        editorId: _editorId,
+      } = args;
       if (!editorElement || !alignSelectElement || !originalElement)
         return undefined;
       const tagName = tagNameSelect?.value ?? ElementTag.P;
@@ -130,9 +126,7 @@ export function makeElementEventListener(editorType: string) {
         editorId: editorElement.id,
         tagName: tagName as ElementTag,
         alignSelectElement,
-        text: renderWhitespaceForHTML(
-          editorElement?.value ?? editorElement?.innerHTML ?? "",
-        ),
+        text: editorElement?.innerHTML ?? "",
       });
       return elementUpdateCleanup(updatedTextElement, originalElement, [
         TextElementProperty.INNER_HTML,
@@ -141,26 +135,18 @@ export function makeElementEventListener(editorType: string) {
       ]);
     };
 
-    const updateImageCallback: EditorButtonUpdateCallback = async ({
-      editorElement: imagePicker,
-      tagNameSelect: _tagNameSelect,
-      alignSelectElement,
-      altTextEditor,
-      hrefEditor,
-      originalElement,
-      editorId: _editorId,
-    }: {
-      editorElement?: HTMLInputElement | HTMLTextAreaElement;
-      tagNameSelect?: HTMLSelectElement;
-      alignSelectElement?: HTMLFieldSetElement;
-      altTextEditor?: HTMLInputElement;
-      hrefEditor?: HTMLInputElement;
-      originalElement?:
-        | HTMLImageElement
-        | HTMLParagraphElement
-        | HTMLHeadingElement;
-      editorId?: string;
-    }) => {
+    const updateImageCallback: ImageEditorButtonUpdateCallback = async (
+      args,
+    ) => {
+      const {
+        editorElement: imagePicker,
+        tagNameSelect: _tagNameSelect,
+        alignSelectElement,
+        altTextEditor,
+        hrefEditor,
+        originalElement,
+        editorId: _editorId,
+      } = args;
       if (
         !imagePicker ||
         !altTextEditor ||
@@ -168,7 +154,11 @@ export function makeElementEventListener(editorType: string) {
         !alignSelectElement ||
         !originalElement
       ) {
-        console.log("Missing required elements for image update");
+        showAlert("Missing required elements for image update");
+        return undefined;
+      }
+      if (!(imagePicker instanceof HTMLInputElement)) {
+        showAlert("Image editor element is not an input element");
         return undefined;
       }
       // TODO remove check

@@ -6,12 +6,6 @@ export function getEditorContainerId(editorId: string) {
   return `container-${editorId}`;
 }
 
-export function renderWhitespaceForHTML(text: string) {
-  console.log({ text });
-  // return text.replaceAll(/\n/g, "<br />");
-  return text;
-}
-
 export function slugify(text: string) {
   return text.split(" ").join("-").toLowerCase();
 }

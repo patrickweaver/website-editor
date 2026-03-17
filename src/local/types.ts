@@ -151,7 +151,7 @@ export enum ImgElementProperty {
 }
 
 export type Editor = {
-  editor: HTMLInputElement | HTMLParagraphElement;
+  editor: HTMLHeadingElement | HTMLParagraphElement | HTMLInputElement;
   editorLabel: HTMLLabelElement;
   tagPicker: HTMLSelectElement | null;
   tagPickerLabel: HTMLLabelElement | null;
@@ -163,28 +163,31 @@ export type Editor = {
   imagePreview: HTMLElement | null;
 };
 
-export type EditorButtonUpdateCallback = ({
-  editorElement,
-  tagNameSelect,
-  alignSelectElement,
-  altTextEditor,
-  originalElement,
-  editorId,
-}: {
-  editorElement?: HTMLParagraphElement | HTMLInputElement;
+export type EditorButtonUpdateArgs = {
+  editorElement?: HTMLHeadingElement | HTMLParagraphElement | HTMLInputElement;
   tagNameSelect?: HTMLSelectElement;
   alignSelectElement: HTMLFieldSetElement;
   altTextEditor?: HTMLInputElement;
   hrefEditor?: HTMLInputElement;
   originalElement?:
-    | HTMLImageElement
     | HTMLParagraphElement
-    | HTMLHeadingElement;
+    | HTMLHeadingElement
+    | HTMLImageElement;
   editorId?: string;
-}) => Promise<boolean | undefined>;
+};
+
+export type TextEditorButtonUpdateCallback = (
+  args: EditorButtonUpdateArgs,
+) => Promise<boolean | undefined>;
+
+export type ImageEditorButtonUpdateCallback = (
+  args: EditorButtonUpdateArgs,
+) => Promise<boolean | undefined>;
 
 export type EditorButton = {
   label: string;
   initiallyDisabled: boolean;
-  updateElement: EditorButtonUpdateCallback;
+  updateElement:
+    | TextEditorButtonUpdateCallback
+    | ImageEditorButtonUpdateCallback;
 };
