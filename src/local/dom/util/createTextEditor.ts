@@ -1,4 +1,4 @@
-import { EDIT_CLASS, INPUT_TYPES } from "../../util/constants";
+import { EDIT_CLASS, EDIT_UI_CONTAINER_CLASS } from "../../util/constants";
 import {
   AlignOptions,
   Editor,
@@ -11,11 +11,8 @@ import { getEditorChangeListener } from "../events/getEditorChangeListener";
 import { createEditorLabel } from "./createEditorLabel";
 import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
-import {
-  countLinebreaks,
-  renderWhitespaceForEditor,
-} from "../../util/stringUtils";
-import { ALIGNMENT_LABELS, EDITOR_LABELS } from "../../util/strings";
+import { showAlert } from "./alert";
+import { createAlignmentWidget } from "./createAlignmentWidget";
 
 const headingElements = [
   ElementTag.H1,
@@ -36,7 +33,7 @@ export function createTextEditor({
   id: string;
   confirmButtonLabel: string;
   content: string;
-  tagName: ElementTag | ElementTag;
+  tagName: ElementTag;
   style: { [key: string]: string };
 }): Editor | null {
   let editLevelElement: HTMLSelectElement;
@@ -44,81 +41,47 @@ export function createTextEditor({
   const isHeading = headingElements.some((i) => i === tagName.toLowerCase());
 
   const editorChangeListener = getEditorChangeListener(id, confirmButtonLabel);
-  const contentWithWhitespace = renderWhitespaceForEditor(content);
-
   let editElement = createElement({
-    tag: ElementTag.TEXTAREA,
+    tag: tagName,
     id,
     classList: [EDIT_CLASS],
-    innerHTML: contentWithWhitespace,
-    style: {
-      minHeight: `${content.length / 65 + countLinebreaks(contentWithWhitespace) + 3}rem`,
-    },
+    innerHTML: content,
   });
+  const isParagraphEditor = editElement instanceof HTMLParagraphElement;
+  const isHeadingEditor = editElement instanceof HTMLHeadingElement;
+  if (!(isParagraphEditor || isHeadingEditor)) {
+    showAlert("Invalid tag for text editor");
+    return null;
+  }
+
+  editElement.contentEditable = "true";
   editElement.addEventListener(EventType.INPUT, editorChangeListener);
 
-  const editAlignElement = createElement({
-    tag: ElementTag.FIELDSET,
-    id: `align-${id}`,
-    classList: [EDIT_CLASS],
-  });
-  editAlignElement.addEventListener(EventType.CHANGE, editorChangeListener);
-  const alignLegend = createElement({
-    tag: ElementTag.LEGEND,
-    innerHTML: EDITOR_LABELS[EditorTypes.ALIGN],
-  });
-  insertElementWithinElement(
-    editAlignElement,
-    alignLegend,
-    InsertPosition.BEFORE_END,
-  );
-  const alignOptions = [
-    AlignOptions.RIGHT,
-    AlignOptions.CENTER,
-    AlignOptions.LEFT,
-    AlignOptions.DEFAULT,
-  ];
-  let foundCurrent = false;
-  alignOptions.forEach((value) => {
-    const container = createElement({ id: "cont", giveUniqueId: true });
-    const valueLower = value.toLowerCase();
-    const input = createElement({
-      tag: ElementTag.INPUT,
-      id: `${editAlignElement.id}-option-${valueLower}`,
-      type: INPUT_TYPES.RADIO,
-      name: editAlignElement.id,
-      value: valueLower,
-    });
-    if (!foundCurrent && style.textAlign === valueLower) {
-      input.checked = true;
-      foundCurrent = true;
-    }
-    const label = createEditorLabel(
-      input.id,
-      EditorTypes.OPTION,
-      ALIGNMENT_LABELS[value],
-    );
-    insertElementWithinElement(container, label, InsertPosition.AFTER_BEGIN);
-    insertElementWithinElement(container, input, InsertPosition.AFTER_BEGIN);
-    insertElementWithinElement(
-      editAlignElement,
-      container,
-      InsertPosition.AFTER_BEGIN,
-    );
+  // TODO move UI to container
+  const _uiContainer = createElement({
+    tag: ElementTag.DIV,
+    id: `${id}-ui-container`,
+    classList: [EDIT_CLASS, EDIT_UI_CONTAINER_CLASS],
   });
 
-  if (!foundCurrent) {
-    const input = editAlignElement.children[0].children[0];
-    if (!(input instanceof HTMLInputElement)) return null;
-    input.checked = true;
+  const currentTextAlign = style.textAlign || AlignOptions.DEFAULT;
+  const editAlignElement = createAlignmentWidget(
+    id,
+    editorChangeListener,
+    currentTextAlign,
+  );
+  if (!editAlignElement) {
+    showAlert("Failed to create alignment widget");
+    return null;
   }
+  // insertElementWithinElement(uiContainer, editAlignElement);
 
   const editElementLabel = createEditorLabel(
     id,
     isHeading ? EditorTypes.HEADING : EditorTypes.PARAGRAPH,
   );
   const editorObject: {
-    editor: HTMLTextAreaElement;
+    editor: HTMLParagraphElement | HTMLHeadingElement;
     editorLabel: HTMLLabelElement;
     alignSelect: HTMLFieldSetElement;
     tagPicker?: HTMLSelectElement;

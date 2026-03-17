@@ -83,13 +83,8 @@ input.text-input {
 
 textarea {
   width: Calc(100% - 1rem - 2px);
-  /* padding 0.5rem, border 1px */
   min-height: 6rem;
   font-family: "Arial", sans-serif;
-}
-
-textarea.text-textarea {
-  min-height: 2rem;
 }
 
 img {
@@ -103,23 +98,21 @@ img {
 }
 
 .edit-container {
-  border: 1px dashed pink;
-  margin: 1rem;
-}
-
-.editor-sub-container {
-  border: 1px dashed cyan;
-  margin: 1rem;
+  display: block;
+  width: 100%;
 }
 
 .edit-container select {
   display: block;
 }
 
+.edit-ui-container {
+  border: 2px solid aqua;
+}
+
 label.edit,
 input.edit,
-fieldset.edit,
-textarea.edit {
+fieldset.edit {
   width: Calc(100% - 1rem);
 }
 

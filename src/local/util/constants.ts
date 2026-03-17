@@ -53,10 +53,10 @@ export const COLOR_PICKER_CLASS = "color-picker";
 export const SAVE_CHANGES_ID = "save-changes";
 export const EDIT_CLASS = "edit";
 export const EDIT_CONTAINER_CLASS = "edit-container";
+export const EDIT_UI_CONTAINER_CLASS = "edit-ui-container";
 export const EDITOR_SUB_CONTAINER_CLASS = "editor-sub-container";
 export const EDIT_BUTTONS_CLASS = "edit-buttons";
 export const INPUT_TYPE_TEXT_CLASS = "text-input";
-export const INPUT_TYPE_TEXTAREA_CLASS = "text-textarea";
 export const INPUT_BELOW_LABEL_CLASS = "below-label";
 export const PLACEHOLDER_CLASS = "placeholder";
 export const TEXT_EDITOR_ID_READABLE_STRING = "text-editor";
@@ -94,7 +94,9 @@ export enum INPUT_TYPES {
 }
 
 export const SETTINGS = {
-  BODY_WIDTH: String(800),
+  BODY_WIDTH: String(500),
+  // TODO restore to 800
+  // BODY_WIDTH: String(800),
   BODY_WIDTHS: [200, 300, 400, 500, 640, 800, 1000, 1200, 1500, 1920].map((i) =>
     String(i),
   ),

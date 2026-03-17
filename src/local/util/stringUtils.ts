@@ -1,10 +1,3 @@
-const htmlLinebreakRegex = /<\s?br\s?\/?>/g;
-const textLinebreakRegex = /\n/g;
-
-export function countLinebreaks(text: string) {
-  return text.split(textLinebreakRegex).length;
-}
-
 export function getButtonId(label: string, editorId: string) {
   return `${slugify(label)}-${editorId}`;
 }
@@ -14,11 +7,9 @@ export function getEditorContainerId(editorId: string) {
 }
 
 export function renderWhitespaceForHTML(text: string) {
-  return text.replaceAll(/\n/g, "<br />");
-}
-
-export function renderWhitespaceForEditor(text: string) {
-  return text.replaceAll(htmlLinebreakRegex, "\n");
+  console.log({ text });
+  // return text.replaceAll(/\n/g, "<br />");
+  return text;
 }
 
 export function slugify(text: string) {

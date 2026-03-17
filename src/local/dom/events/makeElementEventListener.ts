@@ -73,7 +73,7 @@ export function makeElementEventListener(editorType: string) {
         editorElement,
         originalElement,
       }: {
-        editorElement?: HTMLTextAreaElement | HTMLInputElement;
+        editorElement?: HTMLParagraphElement | HTMLInputElement;
         originalElement?:
           | HTMLImageElement
           | HTMLParagraphElement
@@ -99,9 +99,10 @@ export function makeElementEventListener(editorType: string) {
       updateElement: async ({ editorId }: { editorId?: string }) => {
         // TODO unnecessary check
         if (!editorId) return undefined;
-        const selectableInput = document.getElementById(editorId);
-        if (!(selectableInput instanceof HTMLTextAreaElement)) return;
-        selectableInput.value = addLinkAroundSelection(selectableInput);
+        const elementWithSelection = document.getElementById(editorId);
+        if (!(elementWithSelection instanceof HTMLParagraphElement)) return;
+        elementWithSelection.innerHTML =
+          addLinkAroundSelection(elementWithSelection);
       },
     };
 
@@ -129,7 +130,9 @@ export function makeElementEventListener(editorType: string) {
         editorId: editorElement.id,
         tagName: tagName as ElementTag,
         alignSelectElement,
-        text: renderWhitespaceForHTML(editorElement.value),
+        text: renderWhitespaceForHTML(
+          editorElement?.value ?? editorElement?.innerHTML ?? "",
+        ),
       });
       return elementUpdateCleanup(updatedTextElement, originalElement, [
         TextElementProperty.INNER_HTML,
@@ -339,11 +342,11 @@ export function makeElementEventListener(editorType: string) {
       InsertPosition.BEFORE_BEGIN,
       editorContainerElement,
     );
-    // Reverse so labels are placed above inputs
+    // Reverse so labels are placed above inputs except for editor
     const editElementsArray = [
+      [editor, editorLabel],
       [tagPickerLabel, tagPicker],
       [alignSelect],
-      [editorLabel, editor],
       [imagePreview],
       [altEditorLabel, altEditor],
       [hrefEditorLabel, hrefEditor],
@@ -368,6 +371,6 @@ export function makeElementEventListener(editorType: string) {
     });
 
     editor.focus();
-    editor.select();
+    // editor.select();
   };
 }

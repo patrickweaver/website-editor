@@ -16,6 +16,7 @@ export const CONFIRM_DELETE = "Are you sure you want to delete this element?";
 export const ERROR_IMAGE_ONLY = "Error: Please choose an image file";
 export const ERROR_NO_IMAGE = "Error: No image found";
 export const ERROR_NO_SELECTION = "Error: Nothing selected";
+export const ERROR_INVALID_SELECTION = "Error: Invalid selection";
 export const ERROR_NO_URL = "Error: Invalid URL";
 export const EDITOR_LABELS = {
   align: "Edit alignment",

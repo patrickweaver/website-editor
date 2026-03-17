@@ -7,11 +7,7 @@ export function addListenerToHtmlElementEditor(
   property: HtmlProperty,
 ) {
   const editor = document.getElementById(editorId);
-  if (
-    !(editor instanceof HTMLInputElement) &&
-    !(editor instanceof HTMLTextAreaElement)
-  )
-    return;
+  if (!(editor instanceof HTMLInputElement)) return;
   const element = document.getElementById(elementId);
 
   if (!(element instanceof HTMLHtmlElement)) {

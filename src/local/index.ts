@@ -6,7 +6,32 @@ import { enableLocalControls } from "./dom/enableLocalControls";
 export function localEditingMode() {
   console.log("Local editing mode enabled");
 
+  boilerplateSetup();
   activateElementListeners();
   enableLocalControls();
   activatePageListeners();
+}
+
+function boilerplateSetup() {
+  // https://stackoverflow.com/questions/18552336/prevent-contenteditable-adding-div-on-enter-chrome
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0) return;
+
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+
+      const br = document.createElement("br");
+      range.insertNode(br);
+
+      // Move cursor after the <br>
+      range.setStartAfter(br);
+      range.setEndAfter(br);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  });
 }

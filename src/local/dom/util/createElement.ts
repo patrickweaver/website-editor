@@ -2,17 +2,6 @@ import { INPUT_TYPES } from "../../util/constants";
 import { getUniqueId } from "../../util/random";
 import { ElementTag, ElementTagToType } from "../../types";
 
-export enum StyleProperty {
-  ALIGN_ITEMS = "alignItems",
-  ALIGN_SELF = "alignSelf",
-  DISPLAY = "display",
-  MARGIN = "margin",
-  MIN_HEIGHT = "minHeight",
-  TEXT_ALIGN = "textAlign",
-  WIDTH = "width",
-  FLEX_DIRECTION = "flexDirection",
-}
-
 export enum ElementProperty {
   INNER_HTML = "innerHTML",
   VALUE = "value",
@@ -31,7 +20,6 @@ export type CreateElementParams<T extends keyof ElementTagToType> = {
   id?: string | null;
   giveUniqueId?: boolean;
   classList?: string[];
-  style?: { [K in StyleProperty]?: string };
   innerHTML?: string;
   value?: string | number;
   type?: INPUT_TYPES | null;
@@ -49,7 +37,6 @@ export function createElement<T extends keyof ElementTagToType>({
   id = null,
   giveUniqueId = false,
   classList = [],
-  style = {},
   innerHTML,
   value,
   type,
@@ -67,11 +54,6 @@ export function createElement<T extends keyof ElementTagToType>({
     element.id = `${id ?? ""}${uniqueId}`;
   }
   element.classList.add(...classList);
-  let styleKey: StyleProperty;
-  for (styleKey in style) {
-    const property = style[styleKey];
-    if (property) element.style[styleKey] = property;
-  }
   const elementProperties: { [K in ElementProperty]?: string | number | null } =
     {
       innerHTML,

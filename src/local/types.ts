@@ -151,7 +151,7 @@ export enum ImgElementProperty {
 }
 
 export type Editor = {
-  editor: HTMLTextAreaElement | HTMLInputElement;
+  editor: HTMLInputElement | HTMLParagraphElement;
   editorLabel: HTMLLabelElement;
   tagPicker: HTMLSelectElement | null;
   tagPickerLabel: HTMLLabelElement | null;
@@ -171,7 +171,7 @@ export type EditorButtonUpdateCallback = ({
   originalElement,
   editorId,
 }: {
-  editorElement?: HTMLTextAreaElement | HTMLInputElement;
+  editorElement?: HTMLParagraphElement | HTMLInputElement;
   tagNameSelect?: HTMLSelectElement;
   alignSelectElement: HTMLFieldSetElement;
   altTextEditor?: HTMLInputElement;
