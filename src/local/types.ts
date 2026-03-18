@@ -121,6 +121,7 @@ export enum TextAlignCssValues {
   LEFT = "left",
   CENTER = "center",
   RIGHT = "right",
+  DEFAULT = "auto",
 }
 
 export enum UpdateMethod {

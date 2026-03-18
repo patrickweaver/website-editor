@@ -4,6 +4,7 @@ import {
   DATA_ORIGINAL_CSS,
   DATA_ORIGINAL_HTML,
   DATA_ORIGINAL_SRC,
+  EDITABLE_STYLE_PROPERTIES,
   EditableType,
 } from "../../util/constants";
 import {
@@ -50,7 +51,12 @@ export function makeElementEventListener() {
       element.setAttribute(DATA_ORIGINAL_ALT, originalAlt);
     }
 
-    const originalCss = element.style;
+    const editableProperties = Object.values(EDITABLE_STYLE_PROPERTIES)
+    const originalCss = editableProperties.reduce<Record<string, string | undefined>>((acc, property) => {
+      const v = element.style.getPropertyValue(property);
+      acc[property] = v ?? undefined;
+      return acc;
+    }, {});
     const originalCssEscaped = encodeURIComponent(JSON.stringify(originalCss));
     element.setAttribute(DATA_ORIGINAL_CSS, originalCssEscaped)
 

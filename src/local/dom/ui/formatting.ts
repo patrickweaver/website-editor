@@ -1,5 +1,5 @@
-import { AlignOptions, EditorTypes, ElementTag, EventType, InsertPosition } from "../../types";
-import { CURRENTLY_EDITING_FORMATTING_ID, CURRENTLY_EDITING_UPLOAD_ID, CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID, EditableType, INPUT_TYPES } from "../../util/constants";
+import { AlignOptions, EditorTypes, ElementTag, EventType, InsertPosition, TextAlignCssValues } from "../../types";
+import { CURRENTLY_EDITING_FORMATTING_ID, CURRENTLY_EDITING_UPLOAD_ID, CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID, EditableType, FlexAlignCssKeys, INPUT_TYPES, TextAlignCssKeys } from "../../util/constants";
 import { getUniqueId } from "../../util/random";
 import { ALIGNMENT_LABELS, EDITOR_LABELS } from "../../util/strings";
 import { actionHandleImageUpload, actionUpdateImageAlign, actionUpdateTextAlign } from "../events/actions";
@@ -19,13 +19,25 @@ export function getFormattingPanel() {
 
 export function getAlignmentWidget(
 ) {
-
     const currentlyEditing = getCurrentlyEditingElement();
+    const isImage = currentlyEditing instanceof HTMLImageElement;
 
-    const currentTextAlign = currentlyEditing?.style.textAlign
+    let current: "LEFT" | "CENTER" | "RIGHT" | "DEFAULT" | null = null;
+    if (isImage) {
+        const alignSelf = currentlyEditing.style.alignSelf;
+        if (alignSelf === "flex-start" || alignSelf === "center" || alignSelf === "flex-end" || alignSelf === "default") {
+            current = FlexAlignCssKeys[alignSelf];
+        }
+    } else {
+        const textAlign = currentlyEditing?.style?.textAlign?.toUpperCase() ?? "";
+        if (textAlign === "LEFT" || textAlign === "CENTER" || textAlign === "RIGHT") {
+            current = TextAlignCssKeys[textAlign];
+        }
+    }
 
     const editAlignElement = createElement({
         tag: ElementTag.FIELDSET,
+        id: getUniqueId(),
     });
 
     const alignLegend = createElement({
@@ -46,15 +58,21 @@ export function getAlignmentWidget(
     let foundCurrent = false;
     alignOptions.forEach((value) => {
         const container = createElement({ id: "cont", giveUniqueId: true });
-        const valueLower = value.toLowerCase();
+        const valueUpper = value.toUpperCase();
+        if (
+            valueUpper !== AlignOptions.RIGHT
+            && valueUpper !== AlignOptions.CENTER
+            && valueUpper !== AlignOptions.LEFT
+            && valueUpper !== AlignOptions.DEFAULT
+        ) return;
         const input = createElement({
             tag: ElementTag.INPUT,
             id: getUniqueId(),
             type: INPUT_TYPES.RADIO,
             name: editAlignElement.id,
-            value: valueLower,
+            value: valueUpper,
         });
-        if (!foundCurrent && currentTextAlign === valueLower) {
+        if (!foundCurrent && current === valueUpper) {
             input.checked = true;
             foundCurrent = true;
         }

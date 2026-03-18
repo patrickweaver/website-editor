@@ -1,3 +1,4 @@
+import { AlignOptions } from "../types";
 import { ALIGNMENT_LABELS } from "./strings";
 
 export const HTML_ELEMENT_ID = "html-element";
@@ -94,6 +95,11 @@ export enum EditableType {
   IMAGE = "image",
 }
 
+export const EDITABLE_STYLE_PROPERTIES = {
+  TEXT_ALIGN: "text-align",
+  ALIGN_SELF: "align-self",
+}
+
 export enum INPUT_TYPES {
   TEXT = "text",
   TEXTAREA = "textarea",
@@ -161,5 +167,18 @@ export const OPTIONS = {
     },
   ],
 };
+
+export const FlexAlignCssKeys: { [key: string]: "LEFT" | "CENTER" | "RIGHT" | "DEFAULT" } = {
+  "flex-start": "LEFT",
+  center: "CENTER",
+  "flex-end": "RIGHT",
+  default: "DEFAULT",
+}
+
+export const TextAlignCssKeys: { [key: string]: "LEFT" | "CENTER" | "RIGHT" } = {
+  left: "LEFT",
+  center: "CENTER",
+  right: "RIGHT",
+}
 
 export const ALERT_ANIMATION_DELAY = 250;

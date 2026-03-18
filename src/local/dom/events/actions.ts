@@ -1,6 +1,6 @@
 
 import { AlignOptions, FlexAlignCssValues, TextAlignCssValues } from "../../types";
-import { CURRENTLY_EDITING_UPLOAD_ID, DATA_ORIGINAL_ALT, DATA_ORIGINAL_CSS, DATA_ORIGINAL_HTML, DATA_ORIGINAL_SRC, EditableType } from "../../util/constants";
+import { CURRENTLY_EDITING_ALT_TEXT_ID, CURRENTLY_EDITING_FORMATTING_ID, CURRENTLY_EDITING_UPLOAD_ID, DATA_ORIGINAL_ALT, DATA_ORIGINAL_CSS, DATA_ORIGINAL_HTML, DATA_ORIGINAL_SRC, EditableType } from "../../util/constants";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { CONFIRM_DELETE } from "../../util/strings";
 import { openAltTextPanel, openFormattingPanel, openUploadPanel } from "../ui/toolbar";
@@ -88,15 +88,28 @@ export async function actionCreateLink(_event: Event) {
   element.innerHTML = addLinkAroundSelection(element);
 }
 
+function closePanels(current: string) {
+  const panelIds = [CURRENTLY_EDITING_ALT_TEXT_ID, CURRENTLY_EDITING_FORMATTING_ID, CURRENTLY_EDITING_UPLOAD_ID];
+  panelIds.forEach(id => {
+    if (id !== current) {
+      const panel = document.getElementById(id);
+      panel?.remove();
+    }
+  })
+}
+
 export async function actionOpenFormatPanel(_event: Event) {
+  closePanels(CURRENTLY_EDITING_FORMATTING_ID);
   openFormattingPanel()
 }
 
 export async function actionOpenUploadPanel(_event: Event) {
+  closePanels(CURRENTLY_EDITING_UPLOAD_ID);
   openUploadPanel();
 }
 
 export async function actionOpenAltTextPanel(_evnet: Event) {
+  closePanels(CURRENTLY_EDITING_ALT_TEXT_ID);
   openAltTextPanel();
 }
 
@@ -152,6 +165,7 @@ function handleAlignUpdate(event: Event) {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return null;
   const value = target?.value?.toUpperCase();
+  console.log({ value })
   if (
     value !== AlignOptions.LEFT &&
     value !== AlignOptions.CENTER &&
@@ -173,6 +187,7 @@ export function actionUpdateTextAlign(event: Event) {
 
 export function actionUpdateImageAlign(event: Event) {
   const value = handleAlignUpdate(event);
+  console.log({ value })
   if (!value) return;
   const element = getCurrentlyEditingElement();
   if (!element) {
