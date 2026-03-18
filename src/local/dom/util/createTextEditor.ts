@@ -12,7 +12,7 @@ import { createEditorLabel } from "./createEditorLabel";
 import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 import { showAlert } from "./alert";
-import { createAlignmentWidget } from "./createAlignmentWidget";
+import { DEPRECATED_createAlignmentWidget } from "./DEPRECATED_createAlignmentWidget";
 
 const headingElements = [
   ElementTag.H1,
@@ -65,7 +65,7 @@ export function createTextEditor({
   });
 
   const currentTextAlign = style.textAlign || AlignOptions.DEFAULT;
-  const editAlignElement = createAlignmentWidget(
+  const editAlignElement = DEPRECATED_createAlignmentWidget(
     id,
     editorChangeListener,
     currentTextAlign,

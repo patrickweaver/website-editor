@@ -11,7 +11,7 @@ import { createEditorLabel } from "./createEditorLabel";
 import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 
-export function createAlignmentWidget(
+export function DEPRECATED_createAlignmentWidget(
   parentId: string,
   changeListener: (event: Event) => Promise<void>,
   currentTextAlign: string,

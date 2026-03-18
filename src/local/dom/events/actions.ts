@@ -1,4 +1,5 @@
 
+import { AlignOptions, FlexAlignCssValues, TextAlignCssValues } from "../../types";
 import { EditableType } from "../../util/constants";
 import { CONFIRM_DELETE } from "../../util/strings";
 import { getCurrentlyEditingElement, getCurrentlyEditingToolbar, openFormattingPanel } from "../ui/toolbar";
@@ -62,6 +63,7 @@ export async function actionOpenFormatPanel(_event: Event) {
   const element = getCurrentlyEditingElement();
   if (!element) {
     showAlert("Error: Invalid element")
+    return
   }
   if (element instanceof HTMLParagraphElement || element instanceof HTMLHeadingElement) {
     editableType = EditableType.TEXT
@@ -70,6 +72,25 @@ export async function actionOpenFormatPanel(_event: Event) {
   }
   if (!editableType) {
     showAlert("Error: Invalid element")
+    return
   }
   openFormattingPanel(editableType)
+}
+
+export async function actionUpdateTextAlign(event: Event) {
+  const element = getCurrentlyEditingElement();
+  if (!element) {
+    showAlert("Error: Invlaid element");
+    return
+  }
+
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement)) return;
+  const value = target?.value?.toUpperCase();
+  if (
+    value !== AlignOptions.LEFT &&
+    value !== AlignOptions.CENTER &&
+    value !== AlignOptions.RIGHT
+  ) return;
+  element.style.setProperty("text-align", TextAlignCssValues[value]);
 }

@@ -6,7 +6,7 @@ import {
 } from "../../util/constants";
 import { showAlert } from "../util/alert";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
-import { getFormattingPanel } from "./formatting";
+import { getAlignmentWidget, getFormattingPanel } from "./formatting";
 
 export function getCurrentlyEditingElement() {
     return document.getElementById(CURRENTLY_EDITING_ID);
@@ -23,5 +23,14 @@ export function openFormattingPanel(editableType: EditableType) {
         return
     }
     const formattingPanel = getFormattingPanel();
+
+    const alignmentWidget = getAlignmentWidget();
+    if (!alignmentWidget) {
+        showAlert("Error: Can't open formatting panel.");
+        return
+    }
+
+
+    insertElementWithinElement(formattingPanel, alignmentWidget, InsertPosition.AFTER_BEGIN)
     insertElementWithinElement(toolbar, formattingPanel, InsertPosition.AFTER_BEGIN)
 }
