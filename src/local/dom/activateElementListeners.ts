@@ -1,8 +1,7 @@
-import { EditableType } from "../util/constants";
 import { ElementTag, EventType } from "../types";
 import { makeElementEventListener } from "./events/makeElementEventListener";
 
-const textElements = [
+const textElementTags = [
   ElementTag.H1,
   ElementTag.H2,
   ElementTag.H3,
@@ -12,24 +11,16 @@ const textElements = [
   ElementTag.P,
 ];
 
-const textElementsSelector = textElements.join(", ");
+const textElementsSelector = textElementTags.join(", ");
 
 export function activateElementListeners() {
-  document
-    .querySelectorAll(textElementsSelector)
-    .forEach((element) =>
-      element.addEventListener(
-        EventType.CLICK,
-        makeElementEventListener(EditableType.TEXT),
-      ),
-    );
+  const textElements = document.querySelectorAll(textElementsSelector);
+  const imageElements = document.querySelectorAll(ElementTag.IMG);
 
-  document
-    .querySelectorAll(ElementTag.IMG)
-    .forEach((element) =>
-      element.addEventListener(
-        EventType.CLICK,
-        makeElementEventListener(EditableType.IMAGE),
-      ),
-    );
+  [...textElements, ...imageElements].forEach((element) => {
+    element.addEventListener(
+      EventType.CLICK,
+      makeElementEventListener(),
+    )
+  })
 }

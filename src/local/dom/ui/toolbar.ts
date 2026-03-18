@@ -8,7 +8,7 @@ import { showAlert } from "../util/alert";
 import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { getButtons } from "./buttons";
-import { getAlignmentWidget, getFormattingPanel } from "./formatting";
+import { getAlignmentWidget, getFormattingPanel, getUploadPanel, getUploadWidget } from "./formatting";
 import { getCurrentlyEditingToolbar, getEditableType } from "./util";
 
 export function getToolbar() {
@@ -18,7 +18,7 @@ export function getToolbar() {
     });
     const editableType = getEditableType();
     if (!editableType) {
-        showAlert("Error: Invalid element.");
+        showAlert("Error: Invalid element. 2");
         return;
     }
     const buttonsContainerElement = getButtons(editableType);
@@ -43,7 +43,21 @@ export function openFormattingPanel(editableType: EditableType) {
         return
     }
 
-
     insertElementWithinElement(formattingPanel, alignmentWidget, InsertPosition.AFTER_BEGIN)
     insertElementWithinElement(toolbar, formattingPanel, InsertPosition.AFTER_BEGIN)
+}
+
+export function openUploadPanel() {
+    const toolbar = getCurrentlyEditingToolbar()
+    if (!toolbar) {
+        showAlert("Error: Can't open upload panel.")
+        return
+    }
+    const uploadPanel = getUploadPanel();
+
+    const uploadWidget = getUploadWidget();
+
+    insertElementWithinElement(uploadPanel, uploadWidget, InsertPosition.AFTER_BEGIN)
+    insertElementWithinElement(toolbar, uploadPanel, InsertPosition.AFTER_BEGIN);
+
 }

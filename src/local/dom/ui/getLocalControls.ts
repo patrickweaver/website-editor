@@ -34,18 +34,18 @@ import {
   BODY_WIDTH_NUMBER_INPUT_ID,
   STATE_ELEMENT_ID,
   UPDATE_SOCIAL_IMAGE_ALT_ID,
-} from "../util/constants";
-import { CSSProperties, IMAGE_PREVIEW, ElementTag } from "../types";
-import { addControlsInput } from "./controls/addControlsInput";
-import { addControlsSection } from "./controls/addControlsSection";
-import { createElement } from "./util/createElement";
-import { getCurrentStyle } from "./util/getCurrentStyle";
-import { insertElementWithinElement } from "./util/insertElementWithinElement";
-import { addControlsAlignmentInput } from "./controls/addControlsAlignmentInput";
-import { makeImagePreview } from "./util/makeImagePreview";
-import { getFigureWithCaption } from "./util/getFigureWithCaption";
-import { getCurrentFaviconURL } from "./util/getCurrentFaviconUrl";
-import { getCurrentSocialImage } from "./util/getCurrentSocialImage";
+} from "../../util/constants";
+import { CSSProperties, IMAGE_PREVIEW, ElementTag } from "../../types";
+import { addControlsInput } from "../controls/addControlsInput";
+import { addControlsSection } from "../controls/addControlsSection";
+import { createElement } from "../util/createElement";
+import { getCurrentStyle } from "../util/getCurrentStyle";
+import { insertElementWithinElement } from "../util/insertElementWithinElement";
+import { addControlsAlignmentInput } from "../controls/addControlsAlignmentInput";
+import { makeImagePreview } from "../util/makeImagePreview";
+import { getFigureWithCaption } from "../util/getFigureWithCaption";
+import { getCurrentFaviconURL } from "../util/getCurrentFaviconUrl";
+import { getCurrentSocialImage } from "../util/getCurrentSocialImage";
 import {
   BUTTON_CANCEL,
   BUTTON_UPDATE,
@@ -85,8 +85,8 @@ import {
   MISSING_SOCIAL_IMAGE_ALT,
   LC_TEXT_SIZE_LABEL,
   LC_SOCIAL_IMAGE_ALT_INPUT_LABEL,
-} from "../util/strings";
-import { GLOBALS } from "../../globals";
+} from "../../util/strings";
+import { GLOBALS } from "../../../globals";
 
 export function getLocalControls(): HTMLElement {
   const addContent = addControlsSection(LC_CONTENT_SUBHEADER, [
@@ -291,7 +291,7 @@ export function getLocalControls(): HTMLElement {
         CURRENT_SOCIAL_IMAGE_PREVIEW_ID,
         currentSocialImageURL ?? "",
         currentSocialImageAlt ??
-          (currentSocialImageURL ? "" : MISSING_SOCIAL_IMAGE_ALT),
+        (currentSocialImageURL ? "" : MISSING_SOCIAL_IMAGE_ALT),
       ),
       ...addControlsInput(
         UPDATE_SOCIAL_IMAGE_ID,

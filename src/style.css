@@ -110,7 +110,8 @@ img {
   border: 2px solid aqua;
 }
 
-#currently-editing-formatting {
+#currently-editing-formatting,
+#currently-editing-upload {
   border: 2px solid lawngreen;
 }
 
@@ -285,7 +286,7 @@ fieldset.edit {
 }
 
 .edit-buttons {
-  background-color: var(--lc-bg);
+  background-color: none;
   margin: 0.5rem 0;
   display: inline-block;
 }

@@ -161,7 +161,6 @@ export type Editor = {
   altEditorLabel: HTMLLabelElement | null;
   hrefEditor: HTMLInputElement | null;
   hrefEditorLabel: HTMLLabelElement | null;
-  imagePreview: HTMLElement | null;
 };
 
 export type EditorButtonUpdateArgs = {

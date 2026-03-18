@@ -1,12 +1,12 @@
 import { AlignOptions, EditorTypes, ElementTag, EventType, InsertPosition } from "../../types";
-import { CURRENTLY_EDITING_FORMATTING_ID, EDIT_CLASS, INPUT_TYPES } from "../../util/constants";
+import { CURRENTLY_EDITING_FORMATTING_ID, CURRENTLY_EDITING_UPLOAD_ID, CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID, EditableType, INPUT_TYPES } from "../../util/constants";
 import { getUniqueId } from "../../util/random";
 import { ALIGNMENT_LABELS, EDITOR_LABELS } from "../../util/strings";
-import { actionUpdateTextAlign } from "../events/actions";
-import { createEditorLabel } from "../util/createEditorLabel";
+import { actionHandleImageUpload, actionUpdateImageAlign, actionUpdateTextAlign } from "../events/actions";
+import { createLabel } from "../util/createLabel";
 import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
-import { getCurrentlyEditingElement } from "./util";
+import { getCurrentlyEditingElement, getEditableType } from "./util";
 
 export function getFormattingPanel() {
     const formattingPanel = createElement({
@@ -15,6 +15,15 @@ export function getFormattingPanel() {
     })
 
     return formattingPanel
+}
+
+export function getUploadPanel() {
+    const uploadPanel = createElement({
+        tag: ElementTag.DIV,
+        id: CURRENTLY_EDITING_UPLOAD_ID
+    })
+
+    return uploadPanel
 }
 
 export function getAlignmentWidget(
@@ -26,7 +35,6 @@ export function getAlignmentWidget(
 
     const editAlignElement = createElement({
         tag: ElementTag.FIELDSET,
-        classList: [EDIT_CLASS],
     });
 
     const alignLegend = createElement({
@@ -59,7 +67,7 @@ export function getAlignmentWidget(
             input.checked = true;
             foundCurrent = true;
         }
-        const label = createEditorLabel(
+        const label = createLabel(
             input.id,
             EditorTypes.OPTION,
             ALIGNMENT_LABELS[value],
@@ -73,7 +81,17 @@ export function getAlignmentWidget(
         );
     });
 
-    editAlignElement.addEventListener(EventType.CHANGE, actionUpdateTextAlign);
+    const editableType = getEditableType();
+
+    let listener: ((event: Event) => void) | null = null;
+    if (editableType === EditableType.TEXT) {
+        listener = actionUpdateTextAlign;
+    }
+    if (editableType === EditableType.IMAGE) {
+        listener = actionUpdateImageAlign;
+    }
+    if (!listener) return;
+    editAlignElement.addEventListener(EventType.CHANGE, listener);
 
     if (!foundCurrent) {
         const input = editAlignElement.children[0].children[0];
@@ -82,4 +100,36 @@ export function getAlignmentWidget(
     }
 
     return editAlignElement;
+}
+
+export function getUploadWidget() {
+    const container = createElement({
+        tag: ElementTag.DIV
+    })
+    const id = CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID;
+    const imagePicker = createElement({
+        tag: ElementTag.INPUT,
+        id,
+        type: INPUT_TYPES.FILE,
+    });
+    imagePicker.addEventListener(EventType.CHANGE, actionHandleImageUpload);
+
+    const imagePickerLabel = createLabel(id, EditorTypes.IMAGE);
+
+    // const altEditor = createElement({
+    //     tag: ElementTag.INPUT,
+    //     type: INPUT_TYPES.TEXT,
+    //     id: `alt-text-${id}`,
+    //     value: altTextContent ?? "",
+    // });
+    // altEditor.addEventListener(EventType.INPUT, editorChangeListener);
+    // const altEditorLabel = createLabel(
+    //     altEditor.id,
+    //     EditorTypes.IMAGE_ALT_TEXT,
+    // );
+
+    insertElementWithinElement(container, imagePickerLabel, InsertPosition.BEFORE_END);
+    insertElementWithinElement(container, imagePicker, InsertPosition.BEFORE_END);
+
+    return container
 }

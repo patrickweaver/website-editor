@@ -14,8 +14,13 @@ export function getEditableType() {
     if (element instanceof HTMLParagraphElement || element instanceof HTMLHeadingElement) {
         editableType = EditableType.TEXT
     } else if (element instanceof HTMLImageElement) {
+        console.log("image");
         editableType = EditableType.IMAGE
+    } else {
+        console.log("neither")
     }
+
+    console.log(editableType)
 
     return editableType;
 }

@@ -10,7 +10,7 @@ import { UpdateMethod } from "../../types";
 import { showAlert } from "../util/alert";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { ERROR_IMAGE_ONLY, ERROR_NO_IMAGE } from "../../util/strings";
-import { insertFavicon } from "../insertFavicon";
+import { insertFavicon } from "../util/insertFavicon";
 
 export function handleUpdateFavicon(event: Event) {
   const target = event.target;

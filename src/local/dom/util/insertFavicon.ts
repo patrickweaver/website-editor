@@ -1,12 +1,12 @@
-import { GLOBALS } from "../../globals";
+import { GLOBALS } from "../../../globals";
 import {
   CURRENT_FAVICON_PREVIEW_ID,
   FAVICON_QUERY_SELECTOR,
-} from "../util/constants";
-import { ElementTag } from "../types";
-import { getDataURLFromFile } from "../util/files";
-import { createElement } from "./util/createElement";
-import { getTypedElementById } from "./util/getTypedElementById";
+} from "../../util/constants";
+import { ElementTag } from "../../types";
+import { getDataURLFromFile } from "../../util/files";
+import { createElement } from "./createElement";
+import { getTypedElementById } from "./getTypedElementById";
 
 export async function insertFavicon(file: File) {
   const oldElement = document.querySelector(FAVICON_QUERY_SELECTOR);

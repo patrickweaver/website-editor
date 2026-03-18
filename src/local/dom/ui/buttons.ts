@@ -1,16 +1,23 @@
 import { EditorButtonConfig, ElementTag, EventType } from "../../types";
 import { EDIT_BUTTONS_CLASS, EditableType } from "../../util/constants";
-import { BUTTON_CANCEL, BUTTON_DELETE, BUTTON_FORMAT, BUTTON_LINK, BUTTON_SAVE } from "../../util/strings";
+import { BUTTON_CANCEL, BUTTON_DELETE, BUTTON_FORMAT, BUTTON_LINK, BUTTON_SAVE, BUTTON_UPLOAD } from "../../util/strings";
 import {
   actionCancelEdit,
   actionCreateLink,
   actionDeleteElement,
   actionOpenFormatPanel,
+  actionOpenUploadPanel,
   actionSaveChanges,
 } from "../events/actions";
 import { createElement } from "../util/createElement";
 
 const buttonConfig: EditorButtonConfig[] = [
+  {
+    label: BUTTON_CANCEL,
+    initiallyDisabled: false,
+    eventListener: actionCancelEdit,
+    editableTypes: [EditableType.IMAGE, EditableType.TEXT]
+  },
   {
     label: BUTTON_FORMAT,
     initiallyDisabled: false,
@@ -18,15 +25,15 @@ const buttonConfig: EditorButtonConfig[] = [
     editableTypes: [EditableType.IMAGE, EditableType.TEXT]
   },
   {
+    label: BUTTON_UPLOAD,
+    initiallyDisabled: false,
+    eventListener: actionOpenUploadPanel,
+    editableTypes: [EditableType.IMAGE]
+  },
+  {
     label: BUTTON_DELETE,
     initiallyDisabled: false,
     eventListener: actionDeleteElement,
-    editableTypes: [EditableType.IMAGE, EditableType.TEXT]
-  },
-  {
-    label: BUTTON_CANCEL,
-    initiallyDisabled: false,
-    eventListener: actionCancelEdit,
     editableTypes: [EditableType.IMAGE, EditableType.TEXT]
   },
   {

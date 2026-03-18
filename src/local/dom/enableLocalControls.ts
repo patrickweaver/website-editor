@@ -7,7 +7,7 @@ import { EventType, InsertPosition } from "../types";
 import { showAlert } from "./util/alert";
 import { addListenerById } from "./events/addListenerById";
 import { onClickNewContentButton } from "./events/onClickNewContentButton";
-import { getLocalControls } from "./getLocalControls";
+import { getLocalControls } from "./ui/getLocalControls";
 import { createElement } from "./util/createElement";
 import { insertElementToDOM } from "./util/insertElementToDOM";
 

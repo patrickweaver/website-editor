@@ -1,8 +1,9 @@
 
-import { AlignOptions, TextAlignCssValues } from "../../types";
-import { DATA_ORIGINAL_CSS, DATA_ORIGINAL_HTML } from "../../util/constants";
+import { AlignOptions, FlexAlignCssValues, TextAlignCssValues } from "../../types";
+import { CURRENTLY_EDITING_UPLOAD_ID, CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID, DATA_ORIGINAL_CSS, DATA_ORIGINAL_HTML, DATA_ORIGINAL_SRC, EditableType } from "../../util/constants";
+import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { CONFIRM_DELETE } from "../../util/strings";
-import { openFormattingPanel } from "../ui/toolbar";
+import { openFormattingPanel, openUploadPanel } from "../ui/toolbar";
 import { getCurrentlyEditingElement, getCurrentlyEditingToolbar, getEditableType } from "../ui/util";
 import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import { showAlert } from "../util/alert";
@@ -21,22 +22,34 @@ function exitEditMode(element: HTMLElement) {
   element.removeAttribute("id");
   element.removeAttribute("contentEditable");
   element.removeAttribute(DATA_ORIGINAL_HTML);
-  element.removeAttribute(DATA_ORIGINAL_CSS)
+  element.removeAttribute(DATA_ORIGINAL_CSS);
+  element.removeAttribute(DATA_ORIGINAL_SRC);
   const toolbar = getCurrentlyEditingToolbar();
   toolbar?.remove();
 }
 
 export function cancelEditAction() {
   const currentlyEditing = getCurrentlyEditingElement();
+
   if (currentlyEditing) {
-    const originalHtmlEscaped =
-      currentlyEditing.getAttribute(DATA_ORIGINAL_HTML);
-    if (originalHtmlEscaped) {
-      const originalHtmlUnescaped = decodeURIComponent(originalHtmlEscaped);
-      currentlyEditing.innerHTML = originalHtmlUnescaped;
-    } else {
-      currentlyEditing.innerHTML +=
-        "<br>Error loading original content, please restore from backup.";
+    const editableType = getEditableType();
+    if (editableType === EditableType.TEXT) {
+      const originalHtmlEscaped =
+        currentlyEditing.getAttribute(DATA_ORIGINAL_HTML);
+      if (originalHtmlEscaped) {
+        const originalHtmlUnescaped = decodeURIComponent(originalHtmlEscaped);
+        currentlyEditing.innerHTML = originalHtmlUnescaped;
+      } else {
+        currentlyEditing.innerHTML +=
+          "<br>Error loading original content, please restore from backup.";
+      }
+    }
+    if (editableType === EditableType.IMAGE && (currentlyEditing instanceof HTMLImageElement)) {
+      const originalSrc = currentlyEditing.getAttribute(DATA_ORIGINAL_SRC);
+      if (originalSrc) {
+        currentlyEditing.src = originalSrc;
+      }
+
     }
     const originalCssEscaped = currentlyEditing.getAttribute(DATA_ORIGINAL_CSS);
     if (originalCssEscaped) {
@@ -77,20 +90,76 @@ export async function actionOpenFormatPanel(_event: Event) {
   openFormattingPanel(editableType)
 }
 
-export async function actionUpdateTextAlign(event: Event) {
+export async function actionOpenUploadPanel(_event: Event) {
+  openUploadPanel();
+}
+
+export async function actionHandleImageUpload(event: Event) {
+  const target = event.currentTarget;
+  const id = CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID
+
   const element = getCurrentlyEditingElement();
   if (!element) {
-    showAlert("Error: Invlaid element");
-    return
+    showAlert("Error: Invalid element");
+    return;
   }
 
+  if (!(element instanceof HTMLImageElement)) {
+    showAlert("Error: Element not image.");
+    return;
+  }
+  const isInput = target instanceof HTMLInputElement;
+  if (!isInput) {
+    showAlert("Error: Invalid element.");
+    return
+  }
+  const { files } = target;
+  if (!files?.[0]) {
+    showAlert("Error: Invalid file.");
+    return;
+  }
+  const validFile = isImageFile(files[0]);
+  if (!validFile) {
+    showAlert("Error: Invalid file.");
+    return;
+  }
+  const url = await getDataURLFromFile(files[0]);
+
+  element.setAttribute("src", url);
+  const uploadPanel = document.getElementById(CURRENTLY_EDITING_UPLOAD_ID);
+  uploadPanel?.remove();
+}
+
+function handleAlignUpdate(event: Event) {
   const target = event.target;
-  if (!(target instanceof HTMLInputElement)) return;
+  if (!(target instanceof HTMLInputElement)) return null;
   const value = target?.value?.toUpperCase();
   if (
     value !== AlignOptions.LEFT &&
     value !== AlignOptions.CENTER &&
     value !== AlignOptions.RIGHT
-  ) return;
+  ) return null;
+  return value;
+}
+
+export function actionUpdateTextAlign(event: Event) {
+  const value = handleAlignUpdate(event);
+  if (!value) return;
+  const element = getCurrentlyEditingElement();
+  if (!element) {
+    showAlert("Error: Invlaid element");
+    return null
+  }
   element.style.setProperty("text-align", TextAlignCssValues[value]);
+}
+
+export function actionUpdateImageAlign(event: Event) {
+  const value = handleAlignUpdate(event);
+  if (!value) return;
+  const element = getCurrentlyEditingElement();
+  if (!element) {
+    showAlert("Error: Invlaid element");
+    return null
+  }
+  element.style.setProperty("align-self", FlexAlignCssValues[value])
 }
