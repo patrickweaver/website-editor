@@ -1,10 +1,9 @@
-import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import {
   CURRENTLY_EDITING_ID,
-  CURRENTLY_EDITING_TOOLBAR_ID,
+  DATA_ORIGINAL_CSS,
+  DATA_ORIGINAL_HTML,
   EDIT_BUTTONS_CLASS,
   EDIT_CONTAINER_CLASS,
-  EDIT_UI_CONTAINER_CLASS,
   EditableType,
   EDITOR_SUB_CONTAINER_CLASS,
   EDITOR_TYPES,
@@ -29,12 +28,11 @@ import {
   trimHTML,
 } from "../../util/stringUtils";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
-import { BUTTON_LINK, BUTTON_SAVE } from "../../util/strings";
+import { BUTTON_SAVE } from "../../util/strings";
 import { insertElementToDOM } from "../util/insertElementToDOM";
-import { updateTextCallback } from "./updateTextCallback";
 import { updateImageCallback } from "./updateImageCallback";
 import { cancelEditAction } from "./actions";
-import { getButtons } from "../ui/buttons";
+import { getToolbar } from "../ui/toolbar";
 
 export function makeElementEventListener(editableType: EditableType) {
   return function (event: Event) {
@@ -74,12 +72,6 @@ export function makeElementEventListener(editableType: EditableType) {
       }
 
       const updateButtonLabel = BUTTON_SAVE;
-
-      const updateTextButton: EditorButtonConfig = {
-        label: updateButtonLabel,
-        initiallyDisabled: false,
-        updateElement: updateTextCallback,
-      };
 
       const updateImageButton: EditorButtonConfig = {
         label: updateButtonLabel,
@@ -125,7 +117,6 @@ export function makeElementEventListener(editableType: EditableType) {
         tagPickerLabel,
         altEditor,
         altEditorLabel,
-        alignSelect,
         imagePreview,
         hrefEditor,
         hrefEditorLabel,
@@ -159,7 +150,6 @@ export function makeElementEventListener(editableType: EditableType) {
             const success = await i.updateElement({
               editorElement: editor,
               tagNameSelect: tagPicker ?? undefined,
-              alignSelectElement: alignSelect,
               altTextEditor: altEditor ?? undefined,
               hrefEditor: hrefEditor ?? undefined,
               originalElement: element,
@@ -182,7 +172,6 @@ export function makeElementEventListener(editableType: EditableType) {
       const editElementsArray = [
         [editor, editorLabel],
         [tagPickerLabel, tagPicker],
-        [alignSelect],
         [imagePreview],
         [altEditorLabel, altEditor],
         [hrefEditorLabel, hrefEditor],
@@ -220,27 +209,14 @@ export function makeElementEventListener(editableType: EditableType) {
     element.id = id;
     const originalHtml = element.innerHTML;
     const originalHtmlEscaped = encodeURIComponent(originalHtml);
-    element.setAttribute("data-original-html", originalHtmlEscaped);
+    element.setAttribute(DATA_ORIGINAL_HTML, originalHtmlEscaped);
+    const originalCss = element.style;
+    const originalCssEscaped = encodeURIComponent(JSON.stringify(originalCss));
+    element.setAttribute(DATA_ORIGINAL_CSS, originalCssEscaped)
 
-    const toolbar = createElement({
-      classList: [EDIT_UI_CONTAINER_CLASS],
-      id: CURRENTLY_EDITING_TOOLBAR_ID,
-    });
 
     const updateButtonLabel = BUTTON_SAVE;
 
-    const linkButton: EditorButtonConfig = {
-      label: BUTTON_LINK,
-      initiallyDisabled: false,
-      updateElement: async ({ editorId }: { editorId?: string }) => {
-        // TODO unnecessary check
-        if (!editorId) return undefined;
-        const elementWithSelection = document.getElementById(editorId);
-        if (!(elementWithSelection instanceof HTMLParagraphElement)) return;
-        elementWithSelection.innerHTML =
-          addLinkAroundSelection(elementWithSelection);
-      },
-    };
 
     const _updateImageButton: EditorButtonConfig = {
       label: updateButtonLabel,
@@ -263,12 +239,15 @@ export function makeElementEventListener(editableType: EditableType) {
     types[EDITOR_TYPES.HEADING] = types.text;
     types[EDITOR_TYPES.PARAGRAPH] = types.text;
 
-    const buttonsContainerElement = getButtons(editableType);
 
-    // TODO Not for new elements
-    insertElementWithinElement(toolbar, buttonsContainerElement);
 
-    console.log(element.id);
+    const toolbar = getToolbar();
+
+    if (!toolbar) {
+      showAlert("Error: Invalid element.")
+      return
+    }
+
     insertElementToDOM(element.id, toolbar, InsertPosition.AFTER_END);
 
     element.focus();

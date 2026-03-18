@@ -1,8 +1,9 @@
 
-import { AlignOptions, FlexAlignCssValues, TextAlignCssValues } from "../../types";
-import { EditableType } from "../../util/constants";
+import { AlignOptions, TextAlignCssValues } from "../../types";
+import { DATA_ORIGINAL_CSS, DATA_ORIGINAL_HTML } from "../../util/constants";
 import { CONFIRM_DELETE } from "../../util/strings";
-import { getCurrentlyEditingElement, getCurrentlyEditingToolbar, openFormattingPanel } from "../ui/toolbar";
+import { openFormattingPanel } from "../ui/toolbar";
+import { getCurrentlyEditingElement, getCurrentlyEditingToolbar, getEditableType } from "../ui/util";
 import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import { showAlert } from "../util/alert";
 
@@ -19,6 +20,8 @@ export async function actionDeleteElement(_event: Event) {
 function exitEditMode(element: HTMLElement) {
   element.removeAttribute("id");
   element.removeAttribute("contentEditable");
+  element.removeAttribute(DATA_ORIGINAL_HTML);
+  element.removeAttribute(DATA_ORIGINAL_CSS)
   const toolbar = getCurrentlyEditingToolbar();
   toolbar?.remove();
 }
@@ -27,13 +30,20 @@ export function cancelEditAction() {
   const currentlyEditing = getCurrentlyEditingElement();
   if (currentlyEditing) {
     const originalHtmlEscaped =
-      currentlyEditing.getAttribute("data-original-html");
+      currentlyEditing.getAttribute(DATA_ORIGINAL_HTML);
     if (originalHtmlEscaped) {
       const originalHtmlUnescaped = decodeURIComponent(originalHtmlEscaped);
       currentlyEditing.innerHTML = originalHtmlUnescaped;
     } else {
       currentlyEditing.innerHTML +=
         "<br>Error loading original content, please restore from backup.";
+    }
+    const originalCssEscaped = currentlyEditing.getAttribute(DATA_ORIGINAL_CSS);
+    if (originalCssEscaped) {
+      const originalCssUnescaped = decodeURIComponent(originalCssEscaped);
+      currentlyEditing.style = originalCssUnescaped;
+    } else {
+      showAlert(`Error restoring CSS for ${currentlyEditing.tagName} element.`)
     }
     exitEditMode(currentlyEditing);
     return true;
@@ -59,17 +69,7 @@ export async function actionCreateLink(_event: Event) {
 }
 
 export async function actionOpenFormatPanel(_event: Event) {
-  let editableType: EditableType | null = null;
-  const element = getCurrentlyEditingElement();
-  if (!element) {
-    showAlert("Error: Invalid element")
-    return
-  }
-  if (element instanceof HTMLParagraphElement || element instanceof HTMLHeadingElement) {
-    editableType = EditableType.TEXT
-  } else if (element instanceof HTMLImageElement) {
-    editableType = EditableType.IMAGE
-  }
+  let editableType = getEditableType();
   if (!editableType) {
     showAlert("Error: Invalid element")
     return

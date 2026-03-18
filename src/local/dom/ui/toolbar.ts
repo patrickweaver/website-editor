@@ -1,19 +1,32 @@
 import { InsertPosition } from "../../types";
 import {
-    CURRENTLY_EDITING_ID,
     CURRENTLY_EDITING_TOOLBAR_ID,
+    EDIT_UI_CONTAINER_CLASS,
     EditableType,
 } from "../../util/constants";
 import { showAlert } from "../util/alert";
+import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
+import { getButtons } from "./buttons";
 import { getAlignmentWidget, getFormattingPanel } from "./formatting";
+import { getCurrentlyEditingToolbar, getEditableType } from "./util";
 
-export function getCurrentlyEditingElement() {
-    return document.getElementById(CURRENTLY_EDITING_ID);
-}
+export function getToolbar() {
+    const toolbar = createElement({
+        classList: [EDIT_UI_CONTAINER_CLASS],
+        id: CURRENTLY_EDITING_TOOLBAR_ID,
+    });
+    const editableType = getEditableType();
+    if (!editableType) {
+        showAlert("Error: Invalid element.");
+        return;
+    }
+    const buttonsContainerElement = getButtons(editableType);
 
-export function getCurrentlyEditingToolbar() {
-    return document.getElementById(CURRENTLY_EDITING_TOOLBAR_ID);
+    // TODO Not for new elements
+    insertElementWithinElement(toolbar, buttonsContainerElement);
+
+    return toolbar
 }
 
 export function openFormattingPanel(editableType: EditableType) {

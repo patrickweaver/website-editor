@@ -161,14 +161,12 @@ export type Editor = {
   altEditorLabel: HTMLLabelElement | null;
   hrefEditor: HTMLInputElement | null;
   hrefEditorLabel: HTMLLabelElement | null;
-  alignSelect: HTMLFieldSetElement;
   imagePreview: HTMLElement | null;
 };
 
 export type EditorButtonUpdateArgs = {
   editorElement?: HTMLHeadingElement | HTMLParagraphElement | HTMLInputElement;
   tagNameSelect?: HTMLSelectElement;
-  alignSelectElement: HTMLFieldSetElement;
   altTextEditor?: HTMLInputElement;
   hrefEditor?: HTMLInputElement;
   originalElement?:

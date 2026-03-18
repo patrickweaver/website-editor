@@ -1,6 +1,5 @@
-import { EDIT_CLASS, EDIT_UI_CONTAINER_CLASS } from "../../util/constants";
+import { EDIT_CLASS } from "../../util/constants";
 import {
-  AlignOptions,
   Editor,
   EditorTypes,
   EventType,
@@ -12,7 +11,6 @@ import { createEditorLabel } from "./createEditorLabel";
 import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 import { showAlert } from "./alert";
-import { DEPRECATED_createAlignmentWidget } from "./DEPRECATED_createAlignmentWidget";
 
 const headingElements = [
   ElementTag.H1,
@@ -28,7 +26,6 @@ export function createTextEditor({
   confirmButtonLabel,
   content,
   tagName,
-  style,
 }: {
   id: string;
   confirmButtonLabel: string;
@@ -57,25 +54,6 @@ export function createTextEditor({
   editElement.contentEditable = "true";
   editElement.addEventListener(EventType.INPUT, editorChangeListener);
 
-  // TODO move UI to container
-  const _uiContainer = createElement({
-    tag: ElementTag.DIV,
-    id: `${id}-ui-container`,
-    classList: [EDIT_CLASS, EDIT_UI_CONTAINER_CLASS],
-  });
-
-  const currentTextAlign = style.textAlign || AlignOptions.DEFAULT;
-  const editAlignElement = DEPRECATED_createAlignmentWidget(
-    id,
-    editorChangeListener,
-    currentTextAlign,
-  );
-  if (!editAlignElement) {
-    showAlert("Failed to create alignment widget");
-    return null;
-  }
-  // insertElementWithinElement(uiContainer, editAlignElement);
-
   const editElementLabel = createEditorLabel(
     id,
     isHeading ? EditorTypes.HEADING : EditorTypes.PARAGRAPH,
@@ -83,13 +61,11 @@ export function createTextEditor({
   const editorObject: {
     editor: HTMLParagraphElement | HTMLHeadingElement;
     editorLabel: HTMLLabelElement;
-    alignSelect: HTMLFieldSetElement;
     tagPicker?: HTMLSelectElement;
     tagPickerLabel?: HTMLLabelElement;
   } = {
     editor: editElement,
     editorLabel: editElementLabel,
-    alignSelect: editAlignElement,
   };
 
   if (isHeading) {

@@ -1,11 +1,12 @@
 import { AlignOptions, EditorTypes, ElementTag, EventType, InsertPosition } from "../../types";
 import { CURRENTLY_EDITING_FORMATTING_ID, EDIT_CLASS, INPUT_TYPES } from "../../util/constants";
+import { getUniqueId } from "../../util/random";
 import { ALIGNMENT_LABELS, EDITOR_LABELS } from "../../util/strings";
 import { actionUpdateTextAlign } from "../events/actions";
 import { createEditorLabel } from "../util/createEditorLabel";
 import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
-import { getCurrentlyEditingElement, getCurrentlyEditingToolbar } from "./toolbar";
+import { getCurrentlyEditingElement } from "./util";
 
 export function getFormattingPanel() {
     const formattingPanel = createElement({
@@ -49,6 +50,7 @@ export function getAlignmentWidget(
         const valueLower = value.toLowerCase();
         const input = createElement({
             tag: ElementTag.INPUT,
+            id: getUniqueId(),
             type: INPUT_TYPES.RADIO,
             name: editAlignElement.id,
             value: valueLower,
