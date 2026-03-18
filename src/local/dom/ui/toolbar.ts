@@ -2,11 +2,11 @@ import { InsertPosition } from "../../types";
 import {
     CURRENTLY_EDITING_TOOLBAR_ID,
     EDIT_UI_CONTAINER_CLASS,
-    EditableType,
 } from "../../util/constants";
 import { showAlert } from "../util/alert";
 import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
+import { getAltTextPanel, getAltTextWidget } from "./attributes";
 import { getButtons } from "./buttons";
 import { getAlignmentWidget, getFormattingPanel, getUploadPanel, getUploadWidget } from "./formatting";
 import { getCurrentlyEditingToolbar, getEditableType } from "./util";
@@ -29,14 +29,13 @@ export function getToolbar() {
     return toolbar
 }
 
-export function openFormattingPanel(editableType: EditableType) {
+export function openFormattingPanel() {
     const toolbar = getCurrentlyEditingToolbar()
     if (!toolbar) {
         showAlert("Error: Can't open formatting panel.")
         return
     }
     const formattingPanel = getFormattingPanel();
-
     const alignmentWidget = getAlignmentWidget();
     if (!alignmentWidget) {
         showAlert("Error: Can't open formatting panel.");
@@ -53,11 +52,26 @@ export function openUploadPanel() {
         showAlert("Error: Can't open upload panel.")
         return
     }
-    const uploadPanel = getUploadPanel();
+    const panel = getUploadPanel();
+    const widget = getUploadWidget();
 
-    const uploadWidget = getUploadWidget();
+    insertElementWithinElement(panel, widget, InsertPosition.AFTER_BEGIN)
+    insertElementWithinElement(toolbar, panel, InsertPosition.AFTER_BEGIN);
+}
 
-    insertElementWithinElement(uploadPanel, uploadWidget, InsertPosition.AFTER_BEGIN)
-    insertElementWithinElement(toolbar, uploadPanel, InsertPosition.AFTER_BEGIN);
+export function openAltTextPanel() {
+    const toolbar = getCurrentlyEditingToolbar()
+    if (!toolbar) {
+        showAlert("Error: Can't open alt text panel.")
+        return
+    }
+    const panel = getAltTextPanel();
+    const widget = getAltTextWidget();
+    if (!widget) {
+        showAlert("Error: can't open alt text panel.")
+        return;
+    }
 
+    insertElementWithinElement(panel, widget, InsertPosition.AFTER_BEGIN)
+    insertElementWithinElement(toolbar, panel, InsertPosition.AFTER_BEGIN);
 }

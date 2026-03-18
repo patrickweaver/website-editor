@@ -185,11 +185,6 @@ export type ImageEditorButtonUpdateCallback = (
 
 export type EditorButtonConfig = {
   label: string;
-  initiallyDisabled: boolean;
-  // TODO remove this
-  updateElement?:
-  | TextEditorButtonUpdateCallback
-  | ImageEditorButtonUpdateCallback;
-  eventListener?: (event: Event) => void;
-  editableTypes?: EditableType[],
+  eventListener: (event: Event) => void;
+  editableTypes: EditableType[],
 };

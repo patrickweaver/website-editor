@@ -17,15 +17,6 @@ export function getFormattingPanel() {
     return formattingPanel
 }
 
-export function getUploadPanel() {
-    const uploadPanel = createElement({
-        tag: ElementTag.DIV,
-        id: CURRENTLY_EDITING_UPLOAD_ID
-    })
-
-    return uploadPanel
-}
-
 export function getAlignmentWidget(
 ) {
 
@@ -102,6 +93,15 @@ export function getAlignmentWidget(
     return editAlignElement;
 }
 
+export function getUploadPanel() {
+    const uploadPanel = createElement({
+        tag: ElementTag.DIV,
+        id: CURRENTLY_EDITING_UPLOAD_ID
+    })
+
+    return uploadPanel
+}
+
 export function getUploadWidget() {
     const container = createElement({
         tag: ElementTag.DIV
@@ -115,18 +115,6 @@ export function getUploadWidget() {
     imagePicker.addEventListener(EventType.CHANGE, actionHandleImageUpload);
 
     const imagePickerLabel = createLabel(id, EditorTypes.IMAGE);
-
-    // const altEditor = createElement({
-    //     tag: ElementTag.INPUT,
-    //     type: INPUT_TYPES.TEXT,
-    //     id: `alt-text-${id}`,
-    //     value: altTextContent ?? "",
-    // });
-    // altEditor.addEventListener(EventType.INPUT, editorChangeListener);
-    // const altEditorLabel = createLabel(
-    //     altEditor.id,
-    //     EditorTypes.IMAGE_ALT_TEXT,
-    // );
 
     insertElementWithinElement(container, imagePickerLabel, InsertPosition.BEFORE_END);
     insertElementWithinElement(container, imagePicker, InsertPosition.BEFORE_END);

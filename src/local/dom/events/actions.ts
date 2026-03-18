@@ -1,9 +1,9 @@
 
 import { AlignOptions, FlexAlignCssValues, TextAlignCssValues } from "../../types";
-import { CURRENTLY_EDITING_UPLOAD_ID, CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID, DATA_ORIGINAL_CSS, DATA_ORIGINAL_HTML, DATA_ORIGINAL_SRC, EditableType } from "../../util/constants";
+import { CURRENTLY_EDITING_UPLOAD_ID, DATA_ORIGINAL_ALT, DATA_ORIGINAL_CSS, DATA_ORIGINAL_HTML, DATA_ORIGINAL_SRC, EditableType } from "../../util/constants";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { CONFIRM_DELETE } from "../../util/strings";
-import { openFormattingPanel, openUploadPanel } from "../ui/toolbar";
+import { openAltTextPanel, openFormattingPanel, openUploadPanel } from "../ui/toolbar";
 import { getCurrentlyEditingElement, getCurrentlyEditingToolbar, getEditableType } from "../ui/util";
 import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import { showAlert } from "../util/alert";
@@ -24,6 +24,7 @@ function exitEditMode(element: HTMLElement) {
   element.removeAttribute(DATA_ORIGINAL_HTML);
   element.removeAttribute(DATA_ORIGINAL_CSS);
   element.removeAttribute(DATA_ORIGINAL_SRC);
+  element.removeAttribute(DATA_ORIGINAL_ALT);
   const toolbar = getCurrentlyEditingToolbar();
   toolbar?.remove();
 }
@@ -48,6 +49,12 @@ export function cancelEditAction() {
       const originalSrc = currentlyEditing.getAttribute(DATA_ORIGINAL_SRC);
       if (originalSrc) {
         currentlyEditing.src = originalSrc;
+      }
+      const originalAlt = currentlyEditing?.getAttribute(DATA_ORIGINAL_ALT);
+      if (originalAlt) {
+        currentlyEditing.alt = originalAlt
+      } else {
+        currentlyEditing.removeAttribute("alt");
       }
 
     }
@@ -82,21 +89,19 @@ export async function actionCreateLink(_event: Event) {
 }
 
 export async function actionOpenFormatPanel(_event: Event) {
-  let editableType = getEditableType();
-  if (!editableType) {
-    showAlert("Error: Invalid element")
-    return
-  }
-  openFormattingPanel(editableType)
+  openFormattingPanel()
 }
 
 export async function actionOpenUploadPanel(_event: Event) {
   openUploadPanel();
 }
 
+export async function actionOpenAltTextPanel(_evnet: Event) {
+  openAltTextPanel();
+}
+
 export async function actionHandleImageUpload(event: Event) {
   const target = event.currentTarget;
-  const id = CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID
 
   const element = getCurrentlyEditingElement();
   if (!element) {
@@ -128,6 +133,19 @@ export async function actionHandleImageUpload(event: Event) {
   element.setAttribute("src", url);
   const uploadPanel = document.getElementById(CURRENTLY_EDITING_UPLOAD_ID);
   uploadPanel?.remove();
+}
+
+export function actionHandleAltTextUpdate(event: Event) {
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement)) return null;
+  const value = target?.value ?? "";
+
+  const element = getCurrentlyEditingElement();
+  if (!element || !(element instanceof HTMLImageElement)) {
+    showAlert("Invalid element.");
+    return;
+  }
+  element.alt = value;
 }
 
 function handleAlignUpdate(event: Event) {

@@ -1,5 +1,6 @@
 import {
   CURRENTLY_EDITING_ID,
+  DATA_ORIGINAL_ALT,
   DATA_ORIGINAL_CSS,
   DATA_ORIGINAL_HTML,
   DATA_ORIGINAL_SRC,
@@ -45,6 +46,8 @@ export function makeElementEventListener() {
     if (editableType === EditableType.IMAGE && element instanceof HTMLImageElement) {
       const originalSrc = element.src;
       element.setAttribute(DATA_ORIGINAL_SRC, originalSrc);
+      const originalAlt = element.alt;
+      element.setAttribute(DATA_ORIGINAL_ALT, originalAlt);
     }
 
     const originalCss = element.style;

@@ -6,8 +6,9 @@ export const ALIGNMENT_LABELS = {
 };
 export const BUTTON_CANCEL = "Cancel";
 export const BUTTON_DELETE = "Delete";
-export const BUTTON_FORMAT = "Format";
 export const BUTTON_UPLOAD = "Upload";
+export const BUTTON_ALT_TEXT = "Alt Text";
+export const BUTTON_FORMAT = "Format";
 export const BUTTON_LINK = "Create Link";
 export const BUTTON_ADD_HEADING = "Heading";
 export const BUTTON_ADD_PARAGRAPH = "Paragraph";
