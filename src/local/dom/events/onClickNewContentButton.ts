@@ -3,7 +3,6 @@ import {
   ADD_ITEM_HEADING_ID,
   ADD_ITEM_IMAGE_ID,
   ADD_ITEM_PARAGRAPH_ID,
-  EDITOR_TYPES,
   END_OF_DOC_ID,
   LOCAL_CONTROLS_ID,
   NEW_CONTENT_MODAL_ID,
@@ -21,7 +20,6 @@ import {
   BUTTON_ADD_PARAGRAPH,
   BUTTON_CANCEL,
   NEW_CONTENT_HEADER,
-  PLACEHOLDER_TEXT,
 } from "../../util/strings";
 import { createElement } from "../util/createElement";
 import { insertElementToDOM } from "../util/insertElementToDOM";

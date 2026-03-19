@@ -25,6 +25,7 @@ import {
   getCurrentlyEditingToolbar,
   getEditableType,
 } from "../ui/util";
+import { addLinkAroundElement } from "../util/addLinkAroundElement";
 import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import { showAlert } from "../util/alert";
 
@@ -122,9 +123,13 @@ export async function actionSaveChanges(_event: Event) {
 
 export async function actionCreateLink(_event: Event) {
   const element = getCurrentlyEditingElement();
-  const isParagraph = element instanceof HTMLParagraphElement;
-  if (!isParagraph) return;
-  element.innerHTML = addLinkAroundSelection(element);
+  const isImage = element instanceof HTMLImageElement;
+  if (!(element instanceof HTMLElement)) return;
+  if (isImage) {
+    addLinkAroundElement(element);
+  } else {
+    element.innerHTML = addLinkAroundSelection(element);
+  }
 }
 
 function closePanels(current: string) {

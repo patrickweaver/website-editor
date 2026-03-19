@@ -6,9 +6,8 @@ import {
 } from "../../util/strings";
 import { ElementTag } from "../../types";
 
-export function addLinkAroundSelection(selectableInput: HTMLParagraphElement) {
+export function addLinkAroundSelection(selectableInput: HTMLElement) {
   const currentHtml = selectableInput.innerHTML;
-
   const selection = window.getSelection();
 
   const selectionEmpty =
