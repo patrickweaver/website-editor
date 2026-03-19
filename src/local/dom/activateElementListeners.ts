@@ -1,5 +1,5 @@
 import { ElementTag, EventType } from "../types";
-import { makeElementEventListener } from "./events/makeElementEventListener";
+import { getElementEventListener } from "./events/getElementEventListener";
 
 const textElementTags = [
   ElementTag.H1,
@@ -18,9 +18,6 @@ export function activateElementListeners() {
   const imageElements = document.querySelectorAll(ElementTag.IMG);
 
   [...textElements, ...imageElements].forEach((element) => {
-    element.addEventListener(
-      EventType.CLICK,
-      makeElementEventListener(),
-    )
-  })
+    element.addEventListener(EventType.CLICK, getElementEventListener());
+  });
 }

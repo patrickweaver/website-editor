@@ -26,7 +26,8 @@ import { insertElementToDOM } from "../util/insertElementToDOM";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { scrollToElement } from "../util/scrollToElement";
 import { addListenerById } from "./addListenerById";
-import { makeElementEventListener } from "./makeElementEventListener";
+import { getElementEventListener } from "./getElementEventListener";
+import { activateEditor } from "./activateEditor";
 
 export function onClickNewContentButton() {
   const newContentModal = getNewContentModal();
@@ -102,23 +103,22 @@ function addNewTextElementEditor(type: EditorTypes = EditorTypes.PARAGRAPH) {
   const tag = type === EditorTypes.HEADING ? ElementTag.H2 : ElementTag.P;
   const innerHTML = "";
   const newElement = createElement({ tag, innerHTML });
-  addNewEditorCleanup(newElement, makeElementEventListener());
+  addNewEditorCleanup(newElement, () => activateEditor(newElement));
+  newElement.addEventListener(EventType.CLICK, getElementEventListener());
 }
 
 function addNewImageEditor() {
   const tag = ElementTag.IMG;
   const newElement = createElement({ tag });
-  addNewEditorCleanup(newElement, makeElementEventListener());
+  addNewEditorCleanup(newElement, () => activateEditor(newElement));
+  newElement.addEventListener(EventType.CLICK, getElementEventListener());
 }
 
 function addNewEditorCleanup(
   newElement: HTMLElement,
-  editCallback: (event: Event) => void,
+  editCallback: () => void,
 ) {
   insertElementToDOM(END_OF_DOC_ID, newElement, InsertPosition.BEFORE_BEGIN);
   scrollToElement(newElement.id);
-  // TODO this is maybe broken
-  const fakeEvent = new Event("click");
-  Object.defineProperty(fakeEvent, "currentTarget", { value: newElement });
-  editCallback(fakeEvent);
+  editCallback();
 }
