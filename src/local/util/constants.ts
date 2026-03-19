@@ -54,11 +54,13 @@ export const COLOR_PICKER_CLASS = "color-picker";
 export const SAVE_CHANGES_ID = "save-changes";
 export const CURRENTLY_EDITING_ID = "currently-editing";
 export const CURRENTLY_EDITING_TOOLBAR_ID = "currently-editing-toolbar";
-export const CURRENTLY_EDITING_FORMATTING_ID = "currently-editing-formatting"
-export const CURRENTLY_EDITING_UPLOAD_ID = "currently-editing-upload"
-export const CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID = "currently-editing-upload-image-input";
+export const CURRENTLY_EDITING_FORMATTING_ID = "currently-editing-formatting";
+export const CURRENTLY_EDITING_UPLOAD_ID = "currently-editing-upload";
+export const CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID =
+  "currently-editing-upload-image-input";
 export const CURRENTLY_EDITING_ALT_TEXT_ID = "currently-editing-alt-text";
-export const CURRENTLY_EDITING_ALT_TEXT_INPUT_ID = "currently-editing-alt-text-input";
+export const CURRENTLY_EDITING_ALT_TEXT_INPUT_ID =
+  "currently-editing-alt-text-input";
 export const DATA_ORIGINAL_HTML = "data-original-html";
 export const DATA_ORIGINAL_CSS = "data-original-css";
 export const DATA_ORIGINAL_SRC = "data-original-src";
@@ -98,7 +100,7 @@ export enum EditableType {
 export const EDITABLE_STYLE_PROPERTIES = {
   TEXT_ALIGN: "text-align",
   ALIGN_SELF: "align-self",
-}
+};
 
 export enum INPUT_TYPES {
   TEXT = "text",
@@ -168,17 +170,22 @@ export const OPTIONS = {
   ],
 };
 
-export const FlexAlignCssKeys: { [key: string]: "LEFT" | "CENTER" | "RIGHT" | "DEFAULT" } = {
-  "flex-start": "LEFT",
-  center: "CENTER",
-  "flex-end": "RIGHT",
-  default: "DEFAULT",
-}
+export const FlexAlignCssKeys: {
+  [key: string]: AlignOptions;
+} = {
+  "flex-start": AlignOptions.LEFT,
+  center: AlignOptions.CENTER,
+  "flex-end": AlignOptions.RIGHT,
+  default: AlignOptions.DEFAULT,
+};
 
-export const TextAlignCssKeys: { [key: string]: "LEFT" | "CENTER" | "RIGHT" } = {
-  left: "LEFT",
-  center: "CENTER",
-  right: "RIGHT",
-}
+export const TextAlignCssKeys: {
+  [key: string]: AlignOptions;
+} = {
+  left: AlignOptions.LEFT,
+  center: AlignOptions.CENTER,
+  right: AlignOptions.RIGHT,
+  auto: AlignOptions.DEFAULT,
+};
 
 export const ALERT_ANIMATION_DELAY = 250;

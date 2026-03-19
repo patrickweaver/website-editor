@@ -1,10 +1,30 @@
-
-import { AlignOptions, FlexAlignCssValues, TextAlignCssValues } from "../../types";
-import { CURRENTLY_EDITING_ALT_TEXT_ID, CURRENTLY_EDITING_FORMATTING_ID, CURRENTLY_EDITING_UPLOAD_ID, DATA_ORIGINAL_ALT, DATA_ORIGINAL_CSS, DATA_ORIGINAL_HTML, DATA_ORIGINAL_SRC, EditableType } from "../../util/constants";
+import {
+  AlignOptions,
+  FlexAlignCssValues,
+  TextAlignCssValues,
+} from "../../types";
+import {
+  CURRENTLY_EDITING_ALT_TEXT_ID,
+  CURRENTLY_EDITING_FORMATTING_ID,
+  CURRENTLY_EDITING_UPLOAD_ID,
+  DATA_ORIGINAL_ALT,
+  DATA_ORIGINAL_CSS,
+  DATA_ORIGINAL_HTML,
+  DATA_ORIGINAL_SRC,
+  EditableType,
+} from "../../util/constants";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { CONFIRM_DELETE } from "../../util/strings";
-import { openAltTextPanel, openFormattingPanel, openUploadPanel } from "../ui/toolbar";
-import { getCurrentlyEditingElement, getCurrentlyEditingToolbar, getEditableType } from "../ui/util";
+import {
+  openAltTextPanel,
+  openFormattingPanel,
+  openUploadPanel,
+} from "../ui/toolbar";
+import {
+  getCurrentlyEditingElement,
+  getCurrentlyEditingToolbar,
+  getEditableType,
+} from "../ui/util";
 import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import { showAlert } from "../util/alert";
 
@@ -45,25 +65,27 @@ export function cancelEditAction() {
           "<br>Error loading original content, please restore from backup.";
       }
     }
-    if (editableType === EditableType.IMAGE && (currentlyEditing instanceof HTMLImageElement)) {
+    if (
+      editableType === EditableType.IMAGE &&
+      currentlyEditing instanceof HTMLImageElement
+    ) {
       const originalSrc = currentlyEditing.getAttribute(DATA_ORIGINAL_SRC);
       if (originalSrc) {
         currentlyEditing.src = originalSrc;
       }
       const originalAlt = currentlyEditing?.getAttribute(DATA_ORIGINAL_ALT);
       if (originalAlt) {
-        currentlyEditing.alt = originalAlt
+        currentlyEditing.alt = originalAlt;
       } else {
         currentlyEditing.removeAttribute("alt");
       }
-
     }
     const originalCssEscaped = currentlyEditing.getAttribute(DATA_ORIGINAL_CSS);
     if (originalCssEscaped) {
       const originalCssUnescaped = decodeURIComponent(originalCssEscaped);
       currentlyEditing.style = originalCssUnescaped;
     } else {
-      showAlert(`Error restoring CSS for ${currentlyEditing.tagName} element.`)
+      showAlert(`Error restoring CSS for ${currentlyEditing.tagName} element.`);
     }
     exitEditMode(currentlyEditing);
     return true;
@@ -89,18 +111,22 @@ export async function actionCreateLink(_event: Event) {
 }
 
 function closePanels(current: string) {
-  const panelIds = [CURRENTLY_EDITING_ALT_TEXT_ID, CURRENTLY_EDITING_FORMATTING_ID, CURRENTLY_EDITING_UPLOAD_ID];
-  panelIds.forEach(id => {
+  const panelIds = [
+    CURRENTLY_EDITING_ALT_TEXT_ID,
+    CURRENTLY_EDITING_FORMATTING_ID,
+    CURRENTLY_EDITING_UPLOAD_ID,
+  ];
+  panelIds.forEach((id) => {
     if (id !== current) {
       const panel = document.getElementById(id);
       panel?.remove();
     }
-  })
+  });
 }
 
 export async function actionOpenFormatPanel(_event: Event) {
   closePanels(CURRENTLY_EDITING_FORMATTING_ID);
-  openFormattingPanel()
+  openFormattingPanel();
 }
 
 export async function actionOpenUploadPanel(_event: Event) {
@@ -129,7 +155,7 @@ export async function actionHandleImageUpload(event: Event) {
   const isInput = target instanceof HTMLInputElement;
   if (!isInput) {
     showAlert("Error: Invalid element.");
-    return
+    return;
   }
   const { files } = target;
   if (!files?.[0]) {
@@ -165,12 +191,12 @@ function handleAlignUpdate(event: Event) {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return null;
   const value = target?.value?.toUpperCase();
-  console.log({ value })
   if (
     value !== AlignOptions.LEFT &&
     value !== AlignOptions.CENTER &&
     value !== AlignOptions.RIGHT
-  ) return null;
+  )
+    return null;
   return value;
 }
 
@@ -180,19 +206,18 @@ export function actionUpdateTextAlign(event: Event) {
   const element = getCurrentlyEditingElement();
   if (!element) {
     showAlert("Error: Invlaid element");
-    return null
+    return null;
   }
   element.style.setProperty("text-align", TextAlignCssValues[value]);
 }
 
 export function actionUpdateImageAlign(event: Event) {
   const value = handleAlignUpdate(event);
-  console.log({ value })
   if (!value) return;
   const element = getCurrentlyEditingElement();
   if (!element) {
     showAlert("Error: Invlaid element");
-    return null
+    return null;
   }
-  element.style.setProperty("align-self", FlexAlignCssValues[value])
+  element.style.setProperty("align-self", FlexAlignCssValues[value]);
 }
