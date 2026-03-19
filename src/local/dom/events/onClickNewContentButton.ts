@@ -26,7 +26,7 @@ import { insertElementToDOM } from "../util/insertElementToDOM";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { scrollToElement } from "../util/scrollToElement";
 import { addListenerById } from "./addListenerById";
-import { getElementEventListener } from "./getElementEventListener";
+import { getElementEventListener } from "./getEventListener";
 import { activateEditor } from "./activateEditor";
 
 export function onClickNewContentButton() {

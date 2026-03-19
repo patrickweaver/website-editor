@@ -1,5 +1,8 @@
 import { ElementTag, EventType } from "../types";
-import { getElementEventListener } from "./events/getElementEventListener";
+import {
+  getAnchorEventListener,
+  getElementEventListener,
+} from "./events/getEventListener";
 
 const textElementTags = [
   ElementTag.H1,
@@ -16,8 +19,15 @@ const textElementsSelector = textElementTags.join(", ");
 export function activateElementListeners() {
   const textElements = document.querySelectorAll(textElementsSelector);
   const imageElements = document.querySelectorAll(ElementTag.IMG);
+  const anchorElements = document.querySelectorAll(ElementTag.A);
 
   [...textElements, ...imageElements].forEach((element) => {
     element.addEventListener(EventType.CLICK, getElementEventListener());
+  });
+
+  anchorElements.forEach((element) => {
+    element.addEventListener(EventType.CLICK, getAnchorEventListener(), {
+      capture: true,
+    });
   });
 }

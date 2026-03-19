@@ -1,6 +1,7 @@
-import { ElementTag, InsertPosition } from "../../types";
+import { ElementTag, EventType, InsertPosition } from "../../types";
 import { CURRENTLY_EDITING_ID } from "../../util/constants";
 import { ERROR_NO_URL, PROMPT_LINK_URL } from "../../util/strings";
+import { getAnchorEventListener } from "../events/getEventListener";
 import { createElement } from "./createElement";
 import { insertElementToDOM } from "./insertElementToDOM";
 import { insertElementWithinElement } from "./insertElementWithinElement";
@@ -23,6 +24,9 @@ export function addLinkAroundElement(element: HTMLElement) {
     tag: ElementTag.A,
     href,
   });
+  anchor.target = "_blank";
+  const listener = getAnchorEventListener();
+  anchor.addEventListener(EventType.CLICK, listener, { capture: true });
 
   insertElementToDOM(CURRENTLY_EDITING_ID, anchor, InsertPosition.BEFORE_BEGIN);
   insertElementWithinElement(anchor, element);

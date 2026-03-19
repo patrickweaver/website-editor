@@ -243,3 +243,29 @@ export function actionUpdateImageAlign(event: Event) {
   }
   element.style.setProperty("align-self", FlexAlignCssValues[value]);
 }
+
+export function getActionOpenLink(
+  anchor: HTMLAnchorElement,
+  _relatedElement: HTMLHeadingElement | HTMLParagraphElement | HTMLImageElement,
+  _relatedElementCallback: (element: HTMLElement) => void,
+  linkToolbar: HTMLDivElement,
+): (event: Event) => void {
+  return (event: Event) => {
+    event.stopPropagation();
+    window.open(anchor.href, anchor.target || "_self");
+    linkToolbar.remove();
+  };
+}
+
+export function getActionOpenEditor(
+  _anchor: HTMLAnchorElement,
+  relatedElement: HTMLHeadingElement | HTMLParagraphElement | HTMLImageElement,
+  relatedElementCallback: (element: HTMLElement) => void,
+  linkToolbar: HTMLDivElement,
+): (event: Event) => void {
+  return (event: Event) => {
+    event.stopPropagation();
+    relatedElementCallback(relatedElement);
+    linkToolbar.remove();
+  };
+}

@@ -170,9 +170,9 @@ export type EditorButtonUpdateArgs = {
   altTextEditor?: HTMLInputElement;
   hrefEditor?: HTMLInputElement;
   originalElement?:
-  | HTMLParagraphElement
-  | HTMLHeadingElement
-  | HTMLImageElement;
+    | HTMLParagraphElement
+    | HTMLHeadingElement
+    | HTMLImageElement;
   editorId?: string;
 };
 
@@ -187,5 +187,18 @@ export type ImageEditorButtonUpdateCallback = (
 export type EditorButtonConfig = {
   label: string;
   eventListener: (event: Event) => void;
-  editableTypes: EditableType[],
+  editableTypes: EditableType[];
+};
+
+export type LinkButtonConfig = {
+  label: string;
+  getEventListener: (
+    anchor: HTMLAnchorElement,
+    relatedElement:
+      | HTMLHeadingElement
+      | HTMLParagraphElement
+      | HTMLImageElement,
+    relatedElementCallback: (element: HTMLElement) => void,
+    linkToolbar: HTMLDivElement,
+  ) => (event: Event) => void;
 };
