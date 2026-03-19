@@ -115,6 +115,10 @@ img {
   border: 2px solid lawngreen;
 }
 
+#currently-editing {
+  padding: 2px;
+}
+
 label.edit,
 input.edit,
 fieldset.edit {

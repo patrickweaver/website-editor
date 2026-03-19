@@ -102,15 +102,15 @@ function getNewContentModal() {
 
 function addNewTextElementEditor(type: EditorTypes = EditorTypes.PARAGRAPH) {
   const tag = type === EditorTypes.HEADING ? ElementTag.H2 : ElementTag.P;
-  const innerHTML = PLACEHOLDER_TEXT;
+  const innerHTML = "";
   const newElement = createElement({ tag, innerHTML });
-  addNewEditorCleanup(newElement, makeElementEventListener(EDITOR_TYPES.TEXT));
+  addNewEditorCleanup(newElement, makeElementEventListener());
 }
 
 function addNewImageEditor() {
   const tag = ElementTag.IMG;
   const newElement = createElement({ tag });
-  addNewEditorCleanup(newElement, makeElementEventListener(EDITOR_TYPES.IMAGE));
+  addNewEditorCleanup(newElement, makeElementEventListener());
 }
 
 function addNewEditorCleanup(

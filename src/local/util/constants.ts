@@ -82,16 +82,6 @@ export const NEW_CONTENT_MODAL_ID = "new-content-modal";
 export const NEW_CONTENT_MODAL_WRAPPER_ID = "new-content-modal-wrapper";
 export const NOTE_CLASS = "note";
 
-export const EDITOR_TYPES = {
-  TEXT: "text",
-  HEADING: "heading",
-  HEADING_LEVEL: "heading-level",
-  ALIGN: "align",
-  PARAGRAPH: "paragraph",
-  IMAGE: "image",
-  IMAGE_ALT_TEXT: "image-alt",
-};
-
 export enum EditableType {
   TEXT = "text",
   IMAGE = "image",

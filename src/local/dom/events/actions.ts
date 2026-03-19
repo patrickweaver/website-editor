@@ -39,14 +39,24 @@ export async function actionDeleteElement(_event: Event) {
 }
 
 function exitEditMode(element: HTMLElement) {
+  const toolbar = getCurrentlyEditingToolbar();
+  toolbar?.remove();
+  const editableType = getEditableType();
+  const isImage =
+    editableType === EditableType.IMAGE && element instanceof HTMLImageElement;
+  const trimmedInnerHtml = element?.innerHTML
+    .replace(/<br\s*\/?>/gi, "")
+    .trim();
+  if ((isImage && !element.src) || !trimmedInnerHtml) {
+    element.remove();
+    return;
+  }
   element.removeAttribute("id");
   element.removeAttribute("contentEditable");
   element.removeAttribute(DATA_ORIGINAL_HTML);
   element.removeAttribute(DATA_ORIGINAL_CSS);
   element.removeAttribute(DATA_ORIGINAL_SRC);
   element.removeAttribute(DATA_ORIGINAL_ALT);
-  const toolbar = getCurrentlyEditingToolbar();
-  toolbar?.remove();
 }
 
 export function cancelEditAction() {
@@ -60,15 +70,12 @@ export function cancelEditAction() {
       if (originalHtmlEscaped) {
         const originalHtmlUnescaped = decodeURIComponent(originalHtmlEscaped);
         currentlyEditing.innerHTML = originalHtmlUnescaped;
-      } else {
-        currentlyEditing.innerHTML +=
-          "<br>Error loading original content, please restore from backup.";
       }
     }
-    if (
+    const isImage =
       editableType === EditableType.IMAGE &&
-      currentlyEditing instanceof HTMLImageElement
-    ) {
+      currentlyEditing instanceof HTMLImageElement;
+    if (isImage) {
       const originalSrc = currentlyEditing.getAttribute(DATA_ORIGINAL_SRC);
       if (originalSrc) {
         currentlyEditing.src = originalSrc;
