@@ -47,7 +47,8 @@ function exitEditMode(element: HTMLElement) {
   const trimmedInnerHtml = element?.innerHTML
     .replace(/<br\s*\/?>/gi, "")
     .trim();
-  if ((isImage && !element.src) || !trimmedInnerHtml) {
+
+  if ((isImage && !element.src) || (!isImage && !trimmedInnerHtml)) {
     element.remove();
     return;
   }
