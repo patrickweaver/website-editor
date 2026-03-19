@@ -83,7 +83,16 @@ export function cancelEditAction() {
     const originalCssEscaped = currentlyEditing.getAttribute(DATA_ORIGINAL_CSS);
     if (originalCssEscaped) {
       const originalCssUnescaped = decodeURIComponent(originalCssEscaped);
-      currentlyEditing.style = originalCssUnescaped;
+      const originalCssParsed = JSON.parse(originalCssUnescaped);
+      const keys = Object.keys(originalCssParsed);
+      for (const prop of keys) {
+        const value = originalCssParsed[prop];
+        if (value === "") {
+          currentlyEditing.style.removeProperty(prop);
+          continue;
+        }
+        currentlyEditing.style.setProperty(prop, value);
+      }
     } else {
       showAlert(`Error restoring CSS for ${currentlyEditing.tagName} element.`);
     }
