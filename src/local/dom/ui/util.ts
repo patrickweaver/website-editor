@@ -1,5 +1,6 @@
 import {
   CURRENTLY_EDITING_ID,
+  CURRENTLY_EDITING_LINK_HANDLER_ID,
   CURRENTLY_EDITING_TOOLBAR_ID,
   EditableType,
 } from "../../util/constants";
@@ -10,6 +11,10 @@ export function getCurrentlyEditingElement() {
 
 export function getCurrentlyEditingToolbar() {
   return document.getElementById(CURRENTLY_EDITING_TOOLBAR_ID);
+}
+
+export function getCurrentlyEditingLinkHandler() {
+  return document.getElementById(CURRENTLY_EDITING_LINK_HANDLER_ID);
 }
 
 export function getEditableType() {

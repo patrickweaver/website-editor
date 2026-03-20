@@ -22,6 +22,7 @@ import {
 } from "../ui/toolbar";
 import {
   getCurrentlyEditingElement,
+  getCurrentlyEditingLinkHandler,
   getCurrentlyEditingToolbar,
   getEditableType,
 } from "../ui/util";
@@ -39,9 +40,12 @@ export async function actionDeleteElement(_event: Event) {
   currentlyEditing.remove();
 }
 
-function exitEditMode(element: HTMLElement) {
+function exitEditMode(element: HTMLElement | null) {
+  const linkHandler = getCurrentlyEditingLinkHandler();
+  linkHandler?.remove();
   const toolbar = getCurrentlyEditingToolbar();
   toolbar?.remove();
+  if (!element) return;
   const editableType = getEditableType();
   const isImage =
     editableType === EditableType.IMAGE && element instanceof HTMLImageElement;
@@ -62,53 +66,56 @@ function exitEditMode(element: HTMLElement) {
 }
 
 export function cancelEditAction() {
+  const currentlyEditingLinkHandler = getCurrentlyEditingLinkHandler();
   const currentlyEditing = getCurrentlyEditingElement();
-
-  if (currentlyEditing) {
-    const editableType = getEditableType();
-    if (editableType === EditableType.TEXT) {
-      const originalHtmlEscaped =
-        currentlyEditing.getAttribute(DATA_ORIGINAL_HTML);
-      if (originalHtmlEscaped) {
-        const originalHtmlUnescaped = decodeURIComponent(originalHtmlEscaped);
-        currentlyEditing.innerHTML = originalHtmlUnescaped;
-      }
-    }
-    const isImage =
-      editableType === EditableType.IMAGE &&
-      currentlyEditing instanceof HTMLImageElement;
-    if (isImage) {
-      const originalSrc = currentlyEditing.getAttribute(DATA_ORIGINAL_SRC);
-      if (originalSrc) {
-        currentlyEditing.src = originalSrc;
-      }
-      const originalAlt = currentlyEditing?.getAttribute(DATA_ORIGINAL_ALT);
-      if (originalAlt) {
-        currentlyEditing.alt = originalAlt;
-      } else {
-        currentlyEditing.removeAttribute("alt");
-      }
-    }
-    const originalCssEscaped = currentlyEditing.getAttribute(DATA_ORIGINAL_CSS);
-    if (originalCssEscaped) {
-      const originalCssUnescaped = decodeURIComponent(originalCssEscaped);
-      const originalCssParsed = JSON.parse(originalCssUnescaped);
-      const keys = Object.keys(originalCssParsed);
-      for (const prop of keys) {
-        const value = originalCssParsed[prop];
-        if (value === "") {
-          currentlyEditing.style.removeProperty(prop);
-          continue;
-        }
-        currentlyEditing.style.setProperty(prop, value);
-      }
-    } else {
-      showAlert(`Error restoring CSS for ${currentlyEditing.tagName} element.`);
-    }
-    exitEditMode(currentlyEditing);
-    return true;
+  if (!currentlyEditing) {
+    if (!currentlyEditingLinkHandler) return false;
+    exitEditMode(null);
+    return;
   }
-  return false;
+
+  const editableType = getEditableType();
+  if (editableType === EditableType.TEXT) {
+    const originalHtmlEscaped =
+      currentlyEditing.getAttribute(DATA_ORIGINAL_HTML);
+    if (originalHtmlEscaped) {
+      const originalHtmlUnescaped = decodeURIComponent(originalHtmlEscaped);
+      currentlyEditing.innerHTML = originalHtmlUnescaped;
+    }
+  }
+  const isImage =
+    editableType === EditableType.IMAGE &&
+    currentlyEditing instanceof HTMLImageElement;
+  if (isImage) {
+    const originalSrc = currentlyEditing.getAttribute(DATA_ORIGINAL_SRC);
+    if (originalSrc) {
+      currentlyEditing.src = originalSrc;
+    }
+    const originalAlt = currentlyEditing?.getAttribute(DATA_ORIGINAL_ALT);
+    if (originalAlt) {
+      currentlyEditing.alt = originalAlt;
+    } else {
+      currentlyEditing.removeAttribute("alt");
+    }
+  }
+  const originalCssEscaped = currentlyEditing.getAttribute(DATA_ORIGINAL_CSS);
+  if (originalCssEscaped) {
+    const originalCssUnescaped = decodeURIComponent(originalCssEscaped);
+    const originalCssParsed = JSON.parse(originalCssUnescaped);
+    const keys = Object.keys(originalCssParsed);
+    for (const prop of keys) {
+      const value = originalCssParsed[prop];
+      if (value === "") {
+        currentlyEditing.style.removeProperty(prop);
+        continue;
+      }
+      currentlyEditing.style.setProperty(prop, value);
+    }
+  } else {
+    showAlert(`Error restoring CSS for ${currentlyEditing.tagName} element.`);
+  }
+  exitEditMode(currentlyEditing);
+  return true;
 }
 
 export async function actionCancelEdit(_event: Event) {

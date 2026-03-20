@@ -10,25 +10,13 @@ import {
 import { InsertPosition } from "../../types";
 import { showAlert } from "../util/alert";
 import { insertElementToDOM } from "../util/insertElementToDOM";
-import { cancelEditAction } from "./actions";
 import { getToolbar } from "../ui/toolbar";
 import { getEditableType } from "../ui/util";
+import { validateElementForEditing } from "../util/validateElementForEditing";
 
 export function activateEditor(element: HTMLElement) {
-  const isValidEditableElement =
-    element instanceof HTMLHeadingElement ||
-    element instanceof HTMLParagraphElement ||
-    element instanceof HTMLImageElement;
-  if (!isValidEditableElement) {
-    showAlert("Invalid element for editor");
-    return;
-  }
-
-  if (element.id === CURRENTLY_EDITING_ID) {
-    return;
-  }
-
-  cancelEditAction();
+  const valid = validateElementForEditing(element);
+  if (!valid) return;
   element.id = CURRENTLY_EDITING_ID;
 
   const editableType = getEditableType();

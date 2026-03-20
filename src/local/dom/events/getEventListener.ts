@@ -2,6 +2,7 @@ import { ElementTag, InsertPosition } from "../../types";
 import { getLinkHandler } from "../ui/linkHandler";
 import { showAlert } from "../util/alert";
 import { insertElementNextToElement } from "../util/insertElementNextToElement";
+import { validateElementForEditing } from "../util/validateElementForEditing";
 import { activateEditor } from "./activateEditor";
 
 export function getElementEventListener() {
@@ -32,6 +33,7 @@ export function getAnchorEventListener() {
       anchor.closest(ElementTag.P) ??
       anchor.querySelector(ElementTag.IMG);
     if (!relatedElement) return;
+    validateElementForEditing(relatedElement);
     const element = event.currentTarget;
     if (!(element instanceof HTMLAnchorElement)) return;
 
