@@ -15,6 +15,7 @@ import {
 } from "../../util/constants";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
 import { CONFIRM_DELETE } from "../../util/strings";
+import { activateAnchorListeners } from "../activateListeners";
 import {
   openAltTextPanel,
   openFormattingPanel,
@@ -81,6 +82,7 @@ export function cancelEditAction() {
     if (originalHtmlEscaped) {
       const originalHtmlUnescaped = decodeURIComponent(originalHtmlEscaped);
       currentlyEditing.innerHTML = originalHtmlUnescaped;
+      activateAnchorListeners(currentlyEditing);
     }
   }
   const isImage =

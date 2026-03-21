@@ -19,12 +19,16 @@ const textElementsSelector = textElementTags.join(", ");
 export function activateElementListeners() {
   const textElements = document.querySelectorAll(textElementsSelector);
   const imageElements = document.querySelectorAll(ElementTag.IMG);
-  const anchorElements = document.querySelectorAll(ElementTag.A);
 
   [...textElements, ...imageElements].forEach((element) => {
     element.addEventListener(EventType.CLICK, getElementEventListener());
   });
+}
 
+export function activateAnchorListeners(
+  parent: HTMLElement | Document = document,
+) {
+  const anchorElements = parent.querySelectorAll(ElementTag.A);
   anchorElements.forEach((element) => {
     element.addEventListener(EventType.CLICK, getAnchorEventListener(), {
       capture: true,

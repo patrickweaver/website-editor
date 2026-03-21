@@ -1,4 +1,7 @@
-import { activateElementListeners } from "./dom/activateElementListeners";
+import {
+  activateAnchorListeners,
+  activateElementListeners,
+} from "./dom/activateListeners";
 import { activatePageListeners } from "./dom/activatePageListeners";
 import { enableLocalControls } from "./dom/enableLocalControls";
 
@@ -8,6 +11,7 @@ export function localEditingMode() {
 
   boilerplateSetup();
   activateElementListeners();
+  activateAnchorListeners();
   enableLocalControls();
   activatePageListeners();
 }
