@@ -90,6 +90,7 @@ textarea {
 img {
   display: block;
   margin: 1rem 0;
+  max-width: Calc(100vw - 4rem);
 }
 
 .color-picker {
