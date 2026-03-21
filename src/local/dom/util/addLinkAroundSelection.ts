@@ -1,10 +1,9 @@
 import {
   ERROR_INVALID_SELECTION,
   ERROR_NO_SELECTION,
-  ERROR_NO_URL,
-  PROMPT_LINK_URL,
 } from "../../util/strings";
 import { ElementTag } from "../../types";
+import { promptForHref } from "./promptForHref";
 
 export function addLinkAroundSelection(selectableInput: HTMLElement) {
   const currentHtml = selectableInput.innerHTML;
@@ -41,11 +40,8 @@ export function addLinkAroundSelection(selectableInput: HTMLElement) {
   const fragment = range.extractContents();
   stripNestedAnchors(fragment);
 
-  const href = window.prompt(PROMPT_LINK_URL);
-  if (!href) {
-    alert(ERROR_NO_URL);
-    return currentHtml;
-  }
+  let href = promptForHref();
+  if (!href) return currentHtml;
 
   const anchor = document.createElement(ElementTag.A);
   anchor.href = href;
