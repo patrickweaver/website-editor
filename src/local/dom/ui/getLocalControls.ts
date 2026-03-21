@@ -8,7 +8,7 @@ import {
   CURRENT_FAVICON_PREVIEW_ID,
   CURRENT_SOCIAL_IMAGE_PREVIEW_ID,
   EDIT_BUTTONS_CLASS,
-  FULL_WIDTH_CHECKBOX_ID,
+  FULL_WIDTH_RADIO_ID,
   INPUT_BELOW_LABEL_CLASS,
   INPUT_TYPES,
   LOCAL_CONTROLS_ID,
@@ -41,7 +41,7 @@ import { addControlsSection } from "../controls/addControlsSection";
 import { createElement } from "../util/createElement";
 import { getCurrentStyle } from "../util/getCurrentStyle";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
-import { addControlsAlignmentInput } from "../controls/addControlsAlignmentInput";
+import { addControlsRadioInput } from "../controls/addControlsRadioInput";
 import { makeImagePreview } from "../util/makeImagePreview";
 import { getFigureWithCaption } from "../util/getFigureWithCaption";
 import { getCurrentFaviconURL } from "../util/getCurrentFaviconUrl";
@@ -57,7 +57,7 @@ import {
   LC_BODY_ALIGNMENT_SUBHEADER,
   LC_BODY_WIDTH_SUBHEADER,
   LC_BODY_WIDTH_FIXED_LABEL,
-  LC_BODY_WIDTH_FULL_LABEL,
+  LC_BODY_WIDTH_LABEL,
   LC_TEXT_ALIGNMENT_LEGEND,
   LC_TEXT_ALIGNMENT_SUBHEADER,
   LC_TEXT_STYLE_SUBHEADER,
@@ -187,10 +187,15 @@ export function getLocalControls(): HTMLElement {
   const bodyWidthEditor = addControlsSection(
     LC_BODY_WIDTH_SUBHEADER,
     [
-      ...addControlsInput(
-        FULL_WIDTH_CHECKBOX_ID,
-        INPUT_TYPES.CHECKBOX,
-        LC_BODY_WIDTH_FULL_LABEL,
+      // ...addControlsInput(
+      //   FULL_WIDTH_RADIO_ID,
+      //   INPUT_TYPES.RADIO,
+      //   LC_BODY_WIDTH_LABEL,
+      // ),
+      ...addControlsRadioInput(
+        FULL_WIDTH_RADIO_ID,
+        LC_BODY_WIDTH_LABEL,
+        OPTIONS.LC_BODY_WIDTH_OPTIONS,
       ),
       bodyWidthFixedEditor,
     ],
@@ -200,7 +205,7 @@ export function getLocalControls(): HTMLElement {
   const bodyAlignmentEditor = addControlsSection(
     LC_BODY_ALIGNMENT_SUBHEADER,
     [
-      ...addControlsAlignmentInput(
+      ...addControlsRadioInput(
         UPDATE_BODY_ALIGN_ID,
         LC_BODY_ALIGNMENT_LEGEND,
         OPTIONS.LC_BODY_ALIGNMENT_OPTIONS,
@@ -216,7 +221,7 @@ export function getLocalControls(): HTMLElement {
 
   const textAlignmentEditor = addControlsSection(
     LC_TEXT_ALIGNMENT_SUBHEADER,
-    addControlsAlignmentInput(
+    addControlsRadioInput(
       UPDATE_TEXT_ALIGN_ID,
       LC_TEXT_ALIGNMENT_LEGEND,
       OPTIONS.LC_UPDATE_TEXT_ALIGN_OPTIONS,
@@ -291,7 +296,7 @@ export function getLocalControls(): HTMLElement {
         CURRENT_SOCIAL_IMAGE_PREVIEW_ID,
         currentSocialImageURL ?? "",
         currentSocialImageAlt ??
-        (currentSocialImageURL ? "" : MISSING_SOCIAL_IMAGE_ALT),
+          (currentSocialImageURL ? "" : MISSING_SOCIAL_IMAGE_ALT),
       ),
       ...addControlsInput(
         UPDATE_SOCIAL_IMAGE_ID,

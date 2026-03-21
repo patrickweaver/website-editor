@@ -1,5 +1,5 @@
 import { AlignOptions } from "../types";
-import { ALIGNMENT_LABELS } from "./strings";
+import { ALIGNMENT_LABELS, BODY_WIDTH_LABELS } from "./strings";
 
 export const HTML_ELEMENT_ID = "html-element";
 export const PAGE_TITLE_INPUT_ID = "edit-page-title";
@@ -35,7 +35,7 @@ export const UPDATE_SOCIAL_IMAGE_ID = "update-social-image";
 export const UPDATE_SOCIAL_IMAGE_ALT_ID = "update-social-image-alt";
 export const UPDATE_BACKGROUND_COLOR_ID = "update-background-color";
 export const UPDATE_TEXT_COLOR_ID = "update-text-color";
-export const FULL_WIDTH_CHECKBOX_ID = "update-full-width";
+export const FULL_WIDTH_RADIO_ID = "update-width-toggle";
 export const WIDTH_SLIDER_CONTAINER_ID = "update-body-width-container";
 export const BODY_WIDTH_RANGE_INPUT_ID = "update-body-width-range";
 export const BODY_WIDTH_NUMBER_INPUT_ID = "body-width-number-input";
@@ -43,6 +43,7 @@ export const WIDTH_SLIDER_DATALIST_ID = "body-width-tickmarks";
 export const UPDATE_BODY_ALIGN_CONTAINER_ID = "update-body-align-container";
 export const UPDATE_BODY_ALIGN_ID = "update-body-align";
 export const UPDATE_BODY_ALIGN_OPTION_NAME = "body-align";
+export const BODY_WIDTH_OPTION_NAME = "body-width";
 export const UPDATE_TEXT_ALIGN_ID = "update-text-align";
 export const UPDATE_TEXT_ALIGN_OPTION_NAME = "text-align";
 export const UPDATE_TEXT_SIZE_ID = "update-text-size";
@@ -93,6 +94,11 @@ export const EDITABLE_STYLE_PROPERTIES = {
   ALIGN_SELF: "align-self",
 };
 
+export const BODY_WIDTH_OPTIONS = {
+  FULL: "FULL",
+  FIXED: "FIXED",
+};
+
 export enum INPUT_TYPES {
   TEXT = "text",
   TEXTAREA = "textarea",
@@ -114,6 +120,22 @@ export const SETTINGS = {
 };
 
 export const OPTIONS = {
+  LC_BODY_WIDTH_OPTIONS: [
+    {
+      id: "full-width",
+      name: BODY_WIDTH_OPTION_NAME,
+      value: BODY_WIDTH_OPTIONS.FULL,
+      checked: false,
+      labelText: BODY_WIDTH_LABELS.FULL,
+    },
+    {
+      id: "fixed-width",
+      name: BODY_WIDTH_OPTION_NAME,
+      value: BODY_WIDTH_OPTIONS.FIXED,
+      checked: true,
+      labelText: BODY_WIDTH_LABELS.FIXED,
+    },
+  ],
   LC_BODY_ALIGNMENT_OPTIONS: [
     {
       id: "body-left",

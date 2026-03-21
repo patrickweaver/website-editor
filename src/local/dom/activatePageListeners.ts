@@ -1,5 +1,5 @@
 import {
-  FULL_WIDTH_CHECKBOX_ID,
+  FULL_WIDTH_RADIO_ID,
   HTML_ELEMENT_ID,
   PAGE_DESC_ID,
   PAGE_DESC_INPUT_ID,
@@ -39,12 +39,12 @@ import { handleUpdateBodyAlignment } from "./events/handleUpdateBodyAlignment";
 import { handleUpdateBodyTextAlign } from "./events/handleUpdateBodyTextAlign";
 import { handleUpdateBodyTextSize } from "./events/handleUpdateBodyTextSize";
 import { handleUpdateFavicon } from "./events/handleUpdateFavicon";
-import { handleUpdateFullWidth } from "./events/handleUpdateFullWidth";
+import { handleUpdateBodyWidthType } from "./events/handleUpdateBodyWidthType";
 import {
   handleUpdateSocialImageAlt,
   handleUpdateSocialImageSrc,
 } from "./events/handleUpdateSocialImage";
-import { handleUpdateWidth } from "./events/handleUpdateWidth";
+import { handleUpdateBodyWidth } from "./events/handleUpdateBodyWidth";
 
 export function activatePageListeners() {
   const listeners = [
@@ -57,17 +57,17 @@ export function activatePageListeners() {
       eventHandler: getHandleGlobalStyleChange(CSSProperties.COLOR),
     },
     {
-      id: FULL_WIDTH_CHECKBOX_ID,
-      eventHandler: handleUpdateFullWidth,
+      id: FULL_WIDTH_RADIO_ID,
+      eventHandler: handleUpdateBodyWidthType,
     },
     {
       id: BODY_WIDTH_NUMBER_INPUT_ID,
-      eventHandler: handleUpdateWidth,
+      eventHandler: handleUpdateBodyWidth,
       type: EventType.INPUT,
     },
     {
       id: BODY_WIDTH_RANGE_INPUT_ID,
-      eventHandler: handleUpdateWidth,
+      eventHandler: handleUpdateBodyWidth,
       type: EventType.INPUT,
     },
     {

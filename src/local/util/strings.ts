@@ -4,6 +4,10 @@ export const ALIGNMENT_LABELS = {
   RIGHT: "Right",
   DEFAULT: "Default",
 };
+export const BODY_WIDTH_LABELS = {
+  FULL: "Full width",
+  FIXED: "Fixed width",
+};
 export const BUTTON_CANCEL = "Cancel";
 export const BUTTON_DELETE = "Delete";
 export const BUTTON_UPLOAD = "Upload";
@@ -46,7 +50,7 @@ export const LC_BODY_ALIGNMENT_RIGHT_MESSAGE =
 export const LC_BODY_ALIGNMENT_SUBHEADER = "Body Alignment";
 export const LC_BODY_WIDTH_SUBHEADER = "Body Width";
 export const LC_BODY_WIDTH_FIXED_LABEL = "Fixed Body Width (px): ";
-export const LC_BODY_WIDTH_FULL_LABEL = "Use Full Window Width";
+export const LC_BODY_WIDTH_LABEL = "Window Width";
 export const LC_CONTENT_SUBHEADER = "Add Content";
 export const LC_CONTENT_BUTTON = "Add Item";
 export const LC_CURRENT_FAVICON_CAPTION = "Current Favicon:";

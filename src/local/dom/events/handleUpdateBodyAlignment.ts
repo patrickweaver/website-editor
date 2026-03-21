@@ -10,7 +10,6 @@ export function handleUpdateBodyAlignment(_event: Event) {
   OPTIONS.LC_BODY_ALIGNMENT_OPTIONS.forEach((option) => {
     if (value === option.value) {
       Object.entries(option.style).forEach(([k, v]) => {
-        document;
         document.body.style.setProperty(k, v);
       });
     }

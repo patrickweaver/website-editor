@@ -4,7 +4,7 @@ import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { addControlsInput } from "./addControlsInput";
 
-export function addControlsAlignmentInput(
+export function addControlsRadioInput(
   fieldsetId: string,
   legendText: string,
   options: {

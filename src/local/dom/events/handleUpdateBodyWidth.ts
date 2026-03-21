@@ -5,7 +5,7 @@ import {
   SETTINGS,
 } from "../../util/constants";
 
-export function handleUpdateWidth(event: Event) {
+export function handleUpdateBodyWidth(event: Event) {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return;
   let value = parseInt(target.value);
