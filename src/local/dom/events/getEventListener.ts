@@ -1,5 +1,6 @@
 import { ElementTag, InsertPosition } from "../../types";
 import { getLinkHandler } from "../ui/linkHandler";
+import { getCurrentlyEditingToolbar } from "../ui/util";
 import { showAlert } from "../util/alert";
 import { insertElementNextToElement } from "../util/insertElementNextToElement";
 import { validateElementForEditing } from "../util/validateElementForEditing";
@@ -16,9 +17,13 @@ export function getElementEventListener() {
 export function getAnchorEventListener() {
   return function (event: Event) {
     event.preventDefault();
-    event.stopPropagation();
     const anchor = event.currentTarget;
     if (!anchor || !(anchor instanceof HTMLAnchorElement)) return;
+    const editingToolbar = getCurrentlyEditingToolbar();
+    if (anchor.contains(editingToolbar)) {
+      return;
+    }
+    event.stopPropagation();
     const relatedElement:
       | HTMLHeadingElement
       | HTMLParagraphElement
