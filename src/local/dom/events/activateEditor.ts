@@ -23,32 +23,17 @@ export function activateEditor(element: HTMLElement) {
 
   if (editableType === EditableType.TEXT) {
     element.contentEditable = "true";
-
-    const originalHtml = element.innerHTML;
-    const originalHtmlEscaped = encodeURIComponent(originalHtml);
-    element.setAttribute(DATA_ORIGINAL_HTML, originalHtmlEscaped);
+    saveInnerHtml(element);
   }
 
   if (
     editableType === EditableType.IMAGE &&
     element instanceof HTMLImageElement
   ) {
-    const originalSrc = element.src;
-    element.setAttribute(DATA_ORIGINAL_SRC, originalSrc);
-    const originalAlt = element.alt;
-    element.setAttribute(DATA_ORIGINAL_ALT, originalAlt);
+    saveImageAttributes(element);
   }
 
-  const editableProperties = Object.values(EDITABLE_STYLE_PROPERTIES);
-  const originalCss = editableProperties.reduce<
-    Record<string, string | undefined>
-  >((acc, property) => {
-    const v = element.style.getPropertyValue(property);
-    acc[property] = v ?? undefined;
-    return acc;
-  }, {});
-  const originalCssEscaped = encodeURIComponent(JSON.stringify(originalCss));
-  element.setAttribute(DATA_ORIGINAL_CSS, originalCssEscaped);
+  saveCss(element);
 
   const toolbar = getToolbar();
 
@@ -66,4 +51,33 @@ export function activateEditor(element: HTMLElement) {
   insertElementNextToElement(domReference, toolbar, InsertPosition.AFTER_END);
 
   element.focus();
+}
+
+function saveInnerHtml(element: HTMLElement) {
+  const originalHtml = element.innerHTML;
+  const originalHtmlEscaped = encodeURIComponent(originalHtml);
+  element.setAttribute(DATA_ORIGINAL_HTML, originalHtmlEscaped);
+}
+
+function saveImageAttributes(element: HTMLImageElement) {
+  const originalSrc = element.src;
+  element.setAttribute(DATA_ORIGINAL_SRC, originalSrc);
+  const originalAlt = element.alt;
+  element.setAttribute(DATA_ORIGINAL_ALT, originalAlt);
+}
+
+function saveCss(element: HTMLElement) {
+  const editableProperties = Object.values(EDITABLE_STYLE_PROPERTIES);
+  const originalCss = editableProperties.reduce<
+    Record<string, string | undefined>
+  >((acc, property) => {
+    const v = element.style.getPropertyValue(property);
+    acc[property] = v ?? undefined;
+    return acc;
+  }, {});
+  const originalCssEscaped = encodeURIComponent(JSON.stringify(originalCss));
+  element.setAttribute(DATA_ORIGINAL_CSS, originalCssEscaped);
+  if (element?.parentElement instanceof HTMLAnchorElement) {
+    saveCss(element.parentElement);
+  }
 }

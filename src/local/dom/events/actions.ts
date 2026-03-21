@@ -77,30 +77,43 @@ export function cancelEditAction() {
 
   const editableType = getEditableType();
   if (editableType === EditableType.TEXT) {
-    const originalHtmlEscaped =
-      currentlyEditing.getAttribute(DATA_ORIGINAL_HTML);
-    if (originalHtmlEscaped) {
-      const originalHtmlUnescaped = decodeURIComponent(originalHtmlEscaped);
-      currentlyEditing.innerHTML = originalHtmlUnescaped;
-      activateAnchorListeners(currentlyEditing);
-    }
+    restoreInnerHtml(currentlyEditing);
   }
   const isImage =
     editableType === EditableType.IMAGE &&
     currentlyEditing instanceof HTMLImageElement;
   if (isImage) {
-    const originalSrc = currentlyEditing.getAttribute(DATA_ORIGINAL_SRC);
-    if (originalSrc) {
-      currentlyEditing.src = originalSrc;
-    }
-    const originalAlt = currentlyEditing?.getAttribute(DATA_ORIGINAL_ALT);
-    if (originalAlt) {
-      currentlyEditing.alt = originalAlt;
-    } else {
-      currentlyEditing.removeAttribute("alt");
-    }
+    restoreImageAttributes(currentlyEditing);
   }
-  const originalCssEscaped = currentlyEditing.getAttribute(DATA_ORIGINAL_CSS);
+  restoreCss(currentlyEditing);
+  exitEditMode(currentlyEditing);
+  return true;
+}
+
+function restoreInnerHtml(element: HTMLElement) {
+  const originalHtmlEscaped = element.getAttribute(DATA_ORIGINAL_HTML);
+  if (originalHtmlEscaped) {
+    const originalHtmlUnescaped = decodeURIComponent(originalHtmlEscaped);
+    element.innerHTML = originalHtmlUnescaped;
+    activateAnchorListeners(element);
+  }
+}
+
+function restoreImageAttributes(element: HTMLImageElement) {
+  const originalSrc = element.getAttribute(DATA_ORIGINAL_SRC);
+  if (originalSrc) {
+    element.src = originalSrc;
+  }
+  const originalAlt = element?.getAttribute(DATA_ORIGINAL_ALT);
+  if (originalAlt) {
+    element.alt = originalAlt;
+  } else {
+    element.removeAttribute("alt");
+  }
+}
+
+function restoreCss(element: HTMLElement) {
+  const originalCssEscaped = element.getAttribute(DATA_ORIGINAL_CSS);
   if (originalCssEscaped) {
     const originalCssUnescaped = decodeURIComponent(originalCssEscaped);
     const originalCssParsed = JSON.parse(originalCssUnescaped);
@@ -108,16 +121,17 @@ export function cancelEditAction() {
     for (const prop of keys) {
       const value = originalCssParsed[prop];
       if (value === "") {
-        currentlyEditing.style.removeProperty(prop);
+        element.style.removeProperty(prop);
         continue;
       }
-      currentlyEditing.style.setProperty(prop, value);
+      element.style.setProperty(prop, value);
     }
   } else {
-    showAlert(`Error restoring CSS for ${currentlyEditing.tagName} element.`);
+    showAlert(`Error restoring CSS for ${element.tagName} element.`);
   }
-  exitEditMode(currentlyEditing);
-  return true;
+  if (element?.parentElement instanceof HTMLAnchorElement) {
+    restoreCss(element.parentElement);
+  }
 }
 
 export async function actionCancelEdit(_event: Event) {
@@ -250,7 +264,11 @@ export function actionUpdateImageAlign(event: Event) {
     showAlert("Error: Invlaid element");
     return null;
   }
-  element.style.setProperty("align-self", FlexAlignCssValues[value]);
+  let wrapperElement = element;
+  if (element.parentElement instanceof HTMLAnchorElement) {
+    wrapperElement = element.parentElement;
+  }
+  wrapperElement.style.setProperty("align-self", FlexAlignCssValues[value]);
 }
 
 export function getActionOpenLink(
