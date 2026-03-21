@@ -1,7 +1,6 @@
 import { ElementTag, InsertPosition } from "../../types";
 import { getLinkHandler } from "../ui/linkHandler";
 import { getCurrentlyEditingToolbar } from "../ui/util";
-import { showAlert } from "../util/alert";
 import { insertElementNextToElement } from "../util/insertElementNextToElement";
 import { validateElementForEditing } from "../util/validateElementForEditing";
 import { activateEditor } from "./activateEditor";
@@ -44,7 +43,6 @@ export function getAnchorEventListener() {
 
     const linkToolbar = getLinkHandler(anchor, relatedElement);
     if (!linkToolbar) {
-      showAlert("Error: Invalid link.");
       return;
     }
 
