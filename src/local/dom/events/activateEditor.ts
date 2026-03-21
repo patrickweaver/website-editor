@@ -9,10 +9,10 @@ import {
 } from "../../util/constants";
 import { InsertPosition } from "../../types";
 import { showAlert } from "../util/alert";
-import { insertElementToDOM } from "../util/insertElementToDOM";
 import { getToolbar } from "../ui/toolbar";
 import { getEditableType } from "../ui/util";
 import { validateElementForEditing } from "../util/validateElementForEditing";
+import { insertElementNextToElement } from "../util/insertElementNextToElement";
 
 export function activateEditor(element: HTMLElement) {
   const valid = validateElementForEditing(element);
@@ -57,7 +57,13 @@ export function activateEditor(element: HTMLElement) {
     return;
   }
 
-  insertElementToDOM(element.id, toolbar, InsertPosition.AFTER_END);
+  let domReference = element;
+  const isAnchorContent = element.parentElement instanceof HTMLAnchorElement;
+  if (isAnchorContent) {
+    domReference = element.parentElement;
+  }
+
+  insertElementNextToElement(domReference, toolbar, InsertPosition.AFTER_END);
 
   element.focus();
 }
