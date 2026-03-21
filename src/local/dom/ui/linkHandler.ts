@@ -1,6 +1,5 @@
 import { ElementTag } from "../../types";
 import {
-  CURRENTLY_EDITING_ID,
   CURRENTLY_EDITING_LINK_HANDLER_ID,
   EDIT_UI_CONTAINER_CLASS,
 } from "../../util/constants";
