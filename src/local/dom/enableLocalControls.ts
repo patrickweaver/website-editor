@@ -28,4 +28,10 @@ export function enableLocalControls() {
   document.body.classList.add("local-controls-enabled");
 
   showAlert("Test alert");
+
+  window.addEventListener("beforeunload", function (e) {
+    if (this.window.location.hostname !== "localhost") {
+      e.preventDefault();
+    }
+  });
 }
