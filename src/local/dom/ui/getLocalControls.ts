@@ -128,6 +128,7 @@ export function getLocalControls(): HTMLElement {
       INPUT_TYPES.COLOR,
       LC_COLOR_LABEL,
       getCurrentStyle(CSSProperties.BACKGROUND_COLOR),
+      [COLOR_PICKER_CLASS],
     ),
   );
 
