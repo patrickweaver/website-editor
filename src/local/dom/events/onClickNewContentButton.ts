@@ -3,8 +3,9 @@ import {
   ADD_ITEM_HEADING_ID,
   ADD_ITEM_IMAGE_ID,
   ADD_ITEM_PARAGRAPH_ID,
+  CURRENTLY_EDITING_ID,
   END_OF_DOC_ID,
-  LOCAL_CONTROLS_ID,
+  LOCAL_CONTROLS_CONTAINER_ID,
   NEW_CONTENT_MODAL_ID,
   NEW_CONTENT_MODAL_WRAPPER_ID,
 } from "../../util/constants";
@@ -29,10 +30,10 @@ import { addListenerById } from "./addListenerById";
 import { getElementEventListener } from "./getEventListener";
 import { activateEditor } from "./activateEditor";
 
-export function onClickNewContentButton() {
+export function onClickNewContentButton(_event: Event) {
   const newContentModal = getNewContentModal();
   insertElementToDOM(
-    LOCAL_CONTROLS_ID,
+    LOCAL_CONTROLS_CONTAINER_ID,
     newContentModal,
     InsertPosition.BEFORE_END,
   );
@@ -119,6 +120,6 @@ function addNewEditorCleanup(
   editCallback: () => void,
 ) {
   insertElementToDOM(END_OF_DOC_ID, newElement, InsertPosition.BEFORE_BEGIN);
-  scrollToElement(newElement.id);
+  scrollToElement(CURRENTLY_EDITING_ID);
   editCallback();
 }

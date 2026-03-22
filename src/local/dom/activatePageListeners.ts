@@ -21,6 +21,11 @@ import {
   BODY_WIDTH_RANGE_INPUT_ID,
   BODY_WIDTH_NUMBER_INPUT_ID,
   UPDATE_SOCIAL_IMAGE_ALT_ID,
+  SAVE_CHANGES_MINIMIZED_ID,
+  ADD_ITEM_ID,
+  ADD_ITEM_MINIMIZED_ID,
+  MINIMIZE_BUTTON_ID,
+  UNMINIMIZE_BUTTON_ID,
 } from "../util/constants";
 import {
   CSSProperties,
@@ -45,9 +50,35 @@ import {
   handleUpdateSocialImageSrc,
 } from "./events/handleUpdateSocialImage";
 import { handleUpdateBodyWidth } from "./events/handleUpdateBodyWidth";
+import { onClickNewContentButton } from "./events/onClickNewContentButton";
+import { handleMinimize } from "./events/handleMinimize";
 
 export function activatePageListeners() {
-  const listeners = [
+  const listeners: {
+    id: string;
+    eventHandler: (event: Event) => void;
+    type?: EventType;
+  }[] = [
+    {
+      id: MINIMIZE_BUTTON_ID,
+      eventHandler: handleMinimize,
+      type: EventType.CLICK,
+    },
+    {
+      id: UNMINIMIZE_BUTTON_ID,
+      eventHandler: handleMinimize,
+      type: EventType.CLICK,
+    },
+    {
+      id: ADD_ITEM_ID,
+      eventHandler: onClickNewContentButton,
+      type: EventType.CLICK,
+    },
+    {
+      id: ADD_ITEM_MINIMIZED_ID,
+      eventHandler: onClickNewContentButton,
+      type: EventType.CLICK,
+    },
     {
       id: UPDATE_BACKGROUND_COLOR_ID,
       eventHandler: getHandleGlobalStyleChange(CSSProperties.BACKGROUND_COLOR),
@@ -98,6 +129,11 @@ export function activatePageListeners() {
     },
     {
       id: SAVE_CHANGES_ID,
+      eventHandler: handleSaveChanges,
+      type: EventType.CLICK,
+    },
+    {
+      id: SAVE_CHANGES_MINIMIZED_ID,
       eventHandler: handleSaveChanges,
       type: EventType.CLICK,
     },

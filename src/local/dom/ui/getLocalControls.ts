@@ -34,8 +34,18 @@ import {
   BODY_WIDTH_NUMBER_INPUT_ID,
   STATE_ELEMENT_ID,
   UPDATE_SOCIAL_IMAGE_ALT_ID,
+  LOCAL_CONTROLS_MINIMIZED_ID,
+  ADD_ITEM_MINIMIZED_ID,
+  MINIMIZE_BUTTON_ID,
+  UNMINIMIZE_BUTTON_ID,
+  SAVE_CHANGES_MINIMIZED_ID,
 } from "../../util/constants";
-import { CSSProperties, IMAGE_PREVIEW, ElementTag } from "../../types";
+import {
+  CSSProperties,
+  IMAGE_PREVIEW,
+  ElementTag,
+  EventType,
+} from "../../types";
 import { addControlsInput } from "../controls/addControlsInput";
 import { addControlsSection } from "../controls/addControlsSection";
 import { createElement } from "../util/createElement";
@@ -85,10 +95,18 @@ import {
   MISSING_SOCIAL_IMAGE_ALT,
   LC_TEXT_SIZE_LABEL,
   LC_SOCIAL_IMAGE_ALT_INPUT_LABEL,
+  LC_MINIMIZE_BUTTON_TEXT,
+  LC_EXPAND_BUTTON_TEXT,
 } from "../../util/strings";
 import { GLOBALS } from "../../../globals";
 
 export function getLocalControls(): HTMLElement {
+  const minimizeButton = createElement({
+    id: MINIMIZE_BUTTON_ID,
+    tag: ElementTag.BUTTON,
+    innerHTML: LC_MINIMIZE_BUTTON_TEXT,
+  });
+
   const addContent = addControlsSection(LC_CONTENT_SUBHEADER, [
     createElement({
       id: ADD_ITEM_ID,
@@ -330,6 +348,7 @@ export function getLocalControls(): HTMLElement {
 
   const wrapper = createElement({ id: LOCAL_CONTROLS_ID });
   const children = [
+    minimizeButton,
     createElement({ id: STATE_ELEMENT_ID, tag: ElementTag.H3 }),
     createElement({ id: ALERT_LIST }),
     createElement({ tag: ElementTag.H2, innerHTML: LC_HEADER }),
@@ -363,5 +382,33 @@ export function getLocalControls(): HTMLElement {
     }
   }, 1000);
 
+  return wrapper;
+}
+
+export function getMinimizedLocalControls(): HTMLElement {
+  const minimizeButton = createElement({
+    id: UNMINIMIZE_BUTTON_ID,
+    tag: ElementTag.BUTTON,
+    innerHTML: LC_EXPAND_BUTTON_TEXT,
+  });
+
+  const addContentButton = createElement({
+    id: ADD_ITEM_MINIMIZED_ID,
+    tag: ElementTag.BUTTON,
+    innerHTML: LC_CONTENT_BUTTON,
+  });
+
+  const saveChangesButton = createElement({
+    tag: ElementTag.BUTTON,
+    id: SAVE_CHANGES_MINIMIZED_ID,
+    innerHTML: LC_SAVE_CHANGES_BUTTON_LABEL,
+  });
+
+  const wrapper = createElement({ id: LOCAL_CONTROLS_MINIMIZED_ID });
+  const children = [minimizeButton, addContentButton, saveChangesButton];
+  children.forEach((element) => {
+    insertElementWithinElement(wrapper, element);
+  });
+  wrapper.style.setProperty("display", "none");
   return wrapper;
 }

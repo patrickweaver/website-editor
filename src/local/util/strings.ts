@@ -40,6 +40,8 @@ export const EDITOR_LABELS = {
 };
 export const FAVICON_PREVIEW_CAPTION = "New favicon preview:";
 export const IMAGE_PREVIEW_CAPTION = "Image preview:";
+export const LC_MINIMIZE_BUTTON_TEXT = "Close Metadata Area";
+export const LC_EXPAND_BUTTON_TEXT = "Open Metadata Area";
 export const LC_BG_COLOR_SUBHEADER = "Background Color";
 export const LC_TEXT_COLOR_SUBHEADER = "Text Color";
 export const LC_COLOR_LABEL = "Select a color";

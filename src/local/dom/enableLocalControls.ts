@@ -1,15 +1,13 @@
-import {
-  ADD_ITEM_ID,
-  END_OF_DOC_ID,
-  LOCAL_CONTROLS_CONTAINER_ID,
-} from "../util/constants";
-import { EventType, InsertPosition } from "../types";
+import { END_OF_DOC_ID, LOCAL_CONTROLS_CONTAINER_ID } from "../util/constants";
+import { InsertPosition } from "../types";
 import { showAlert } from "./util/alert";
-import { addListenerById } from "./events/addListenerById";
-import { onClickNewContentButton } from "./events/onClickNewContentButton";
-import { getLocalControls } from "./ui/getLocalControls";
+import {
+  getLocalControls,
+  getMinimizedLocalControls,
+} from "./ui/getLocalControls";
 import { createElement } from "./util/createElement";
 import { insertElementToDOM } from "./util/insertElementToDOM";
+import { isDevEnv } from "../util/isDevEnv";
 
 export function enableLocalControls() {
   const localControlsContainer = createElement({
@@ -22,15 +20,18 @@ export function enableLocalControls() {
   );
 
   const localControls = getLocalControls();
+  const localControlsMinimized = getMinimizedLocalControls();
   insertElementToDOM(LOCAL_CONTROLS_CONTAINER_ID, localControls);
-  addListenerById(ADD_ITEM_ID, onClickNewContentButton, EventType.CLICK);
+  insertElementToDOM(LOCAL_CONTROLS_CONTAINER_ID, localControlsMinimized);
 
   document.body.classList.add("local-controls-enabled");
 
-  showAlert("Test alert");
+  const devEnv = isDevEnv();
+
+  if (devEnv) showAlert("Test alert");
 
   window.addEventListener("beforeunload", function (e) {
-    if (this.window.location.hostname !== "localhost") {
+    if (!devEnv) {
       e.preventDefault();
     }
   });
