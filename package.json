@@ -8,12 +8,21 @@
   "scripts": {
     "dev": "vite --config ./src/vite.config.ts",
     "build": "vite build --config ./src/vite.config.ts && rm -rf dist/assets",
-    "preview": "vite preview --config ./src/vite.config.ts"
+    "preview": "vite preview --config ./src/vite.config.ts",
+    "test": "jest"
   },
   "type": "module",
   "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.14.1",
+    "@types/wicg-file-system-access": "^2023.10.5",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
     "prettier": "^3.5.3",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.8.3",
     "vite": "^6.2.6",
     "vite-plugin-singlefile": "^2.2.0"
@@ -27,8 +36,5 @@
   "bugs": {
     "url": "https://github.com/patrickweaver/website-editor/issues"
   },
-  "homepage": "https://github.com/patrickweaver/website-editor#readme",
-  "dependencies": {
-    "@types/wicg-file-system-access": "^2023.10.5"
-  }
+  "homepage": "https://github.com/patrickweaver/website-editor#readme"
 }
