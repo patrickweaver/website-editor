@@ -19,6 +19,8 @@ export function handleSaveChanges(_event: Event) {
     element?.remove();
   });
 
+  document.body.removeAttribute("class");
+
   const fullHtml = document.documentElement.outerHTML;
   const doctype = document.doctype
     ? `<!DOCTYPE ${[

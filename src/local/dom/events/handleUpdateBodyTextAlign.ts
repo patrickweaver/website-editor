@@ -1,9 +1,9 @@
-import { GLOBALS } from "../../../globals";
 import {
   FlexAlignCssValues,
   TextAlignCssValues,
   AlignOptions,
 } from "../../types";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 
 export function handleUpdateBodyTextAlign(event: Event) {
   const target = event.target;
@@ -17,5 +17,5 @@ export function handleUpdateBodyTextAlign(event: Event) {
     return;
   document.body.style.setProperty("text-align", TextAlignCssValues[value]);
   document.body.style.setProperty("align-items", FlexAlignCssValues[value]);
-  GLOBALS.EDITING_STATE_DIRTY = true;
+  setUnsavedChanges();
 }

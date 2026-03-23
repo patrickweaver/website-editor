@@ -58,6 +58,22 @@ body.local-controls-enabled::-webkit-scrollbar-track-piece:start {
   background: transparent;
 }
 
+body.unsaved-changes {
+  /* 2rem is default */
+  margin-top: Calc(2rem + 25px);
+}
+
+#unsaved-changes-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 100%;
+  background-color: var(--note-bg);
+  text-align: center;
+color: var(--lc-color);
+}
+
 input,
 textarea {
   font-size: 1rem;

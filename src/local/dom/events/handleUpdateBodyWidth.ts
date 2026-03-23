@@ -1,9 +1,9 @@
-import { GLOBALS } from "../../../globals";
 import {
   BODY_WIDTH_NUMBER_INPUT_ID,
   BODY_WIDTH_RANGE_INPUT_ID,
   SETTINGS,
 } from "../../util/constants";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 
 export function handleUpdateBodyWidth(event: Event) {
   const target = event.target;
@@ -27,5 +27,5 @@ export function handleUpdateBodyWidth(event: Event) {
   document.body.style.setProperty("width", valueString);
   numberInput.value = String(value);
   rangeInput.value = String(value);
-  GLOBALS.EDITING_STATE_DIRTY = true;
+  setUnsavedChanges();
 }

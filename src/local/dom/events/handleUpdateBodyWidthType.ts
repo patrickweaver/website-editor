@@ -1,4 +1,3 @@
-import { GLOBALS } from "../../../globals";
 import {
   UPDATE_BODY_ALIGN_ID,
   WIDTH_SLIDER_CONTAINER_ID,
@@ -6,6 +5,7 @@ import {
   BODY_WIDTH_NUMBER_INPUT_ID,
   BODY_WIDTH_OPTIONS,
 } from "../../util/constants";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 import { handleUpdateBodyAlignment } from "./handleUpdateBodyAlignment";
 
 export function handleUpdateBodyWidthType(event: Event) {
@@ -42,5 +42,5 @@ export function handleUpdateBodyWidthType(event: Event) {
     handleUpdateBodyAlignment(event);
   }
 
-  GLOBALS.EDITING_STATE_DIRTY = true;
+  setUnsavedChanges();
 }

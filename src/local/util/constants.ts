@@ -14,6 +14,7 @@ export const PAGE_OG_IMAGE_ID = "og-image";
 export const PAGE_OG_IMAGE_ALT_ID = "og-image-alt";
 export const PAGE_LANG_INPUT_ID = "edit-page-language";
 export const STATE_ELEMENT_ID = "editor-state";
+export const UNSAVED_CHANGES_BANNER_ID = "unsaved-changes-banner";
 export const MINIMIZE_BUTTON_ID = "minimize-lc";
 export const UNMINIMIZE_BUTTON_ID = "unminimize-lc";
 export const ADD_ITEM_ID = "add-item";

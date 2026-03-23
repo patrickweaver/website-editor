@@ -1,4 +1,4 @@
-import { GLOBALS } from "../../../globals";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 
 export function handleUpdateBodyTextSize(event: Event) {
   const target = event.target;
@@ -6,5 +6,5 @@ export function handleUpdateBodyTextSize(event: Event) {
   const value = parseInt(target.value);
   if (isNaN(value)) return;
   document.body.style.setProperty("font-size", `${value}%`);
-  GLOBALS.EDITING_STATE_DIRTY = true;
+  setUnsavedChanges();
 }

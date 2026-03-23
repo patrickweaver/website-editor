@@ -1,4 +1,3 @@
-import { GLOBALS } from "../../../globals";
 import {
   CURRENT_FAVICON_PREVIEW_ID,
   FAVICON_QUERY_SELECTOR,
@@ -7,6 +6,7 @@ import { ElementTag } from "../../types";
 import { getDataURLFromFile } from "../../util/files";
 import { createElement } from "./createElement";
 import { getTypedElementById } from "./getTypedElementById";
+import { setUnsavedChanges } from "./setUnsavedChanges";
 
 export async function insertFavicon(file: File) {
   const oldElement = document.querySelector(FAVICON_QUERY_SELECTOR);
@@ -22,5 +22,5 @@ export async function insertFavicon(file: File) {
   if (!faviconPreviewElement) return;
   faviconPreviewElement.src = dataUrl;
   document.getElementsByTagName("head")?.[0]?.appendChild(newElement);
-  GLOBALS.EDITING_STATE_DIRTY = true;
+  setUnsavedChanges();
 }

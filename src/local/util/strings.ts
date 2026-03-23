@@ -41,6 +41,8 @@ export const EDITOR_LABELS = {
 };
 export const FAVICON_PREVIEW_CAPTION = "New favicon preview:";
 export const IMAGE_PREVIEW_CAPTION = "Image preview:";
+export const LC_UNSAVED_CHANGES_BANNER =
+  "Unsaved changes, make sure to save your file after completing edits.";
 export const LC_MINIMIZE_BUTTON_TEXT = "Close Metadata Area";
 export const LC_EXPAND_BUTTON_TEXT = "Open Metadata Area";
 export const LC_BG_COLOR_SUBHEADER = "Background Color";

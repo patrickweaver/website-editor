@@ -1,5 +1,5 @@
-import { GLOBALS } from "../../../globals";
 import { EventType, MetaProperty } from "../../types";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 
 export function addListenerToMetaEditor(
   editorId: string,
@@ -29,7 +29,7 @@ export function addListenerToMetaEditor(
       if (!(element instanceof HTMLMetaElement)) return;
       element[property] = newValue;
     });
-    GLOBALS.EDITING_STATE_DIRTY = true;
+    setUnsavedChanges();
   };
 
   editor.addEventListener(EventType.INPUT, onUpdateMetaProperty);

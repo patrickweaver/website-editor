@@ -36,6 +36,7 @@ import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import { showAlert } from "../util/alert";
 import { createElement } from "../util/createElement";
 import { insertElementNextToElement } from "../util/insertElementNextToElement";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 import { getElementEventListener } from "./getEventListener";
 
 export async function actionDeleteElement(_event: Event) {
@@ -168,6 +169,7 @@ export async function actionSaveChanges(_event: Event) {
   const element = getCurrentlyEditingElement();
   if (!element) return;
   exitEditMode(element);
+  setUnsavedChanges();
 }
 
 export async function actionCreateLink(_event: Event) {

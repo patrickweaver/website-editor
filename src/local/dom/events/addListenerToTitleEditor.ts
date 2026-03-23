@@ -1,5 +1,5 @@
-import { GLOBALS } from "../../../globals";
 import { EventType, TitleProperty } from "../../types";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 
 export function addListenerToTitleEditor(
   editorId: string,
@@ -30,7 +30,7 @@ export function addListenerToTitleEditor(
       if (!(element instanceof HTMLTitleElement)) return;
       element[property] = newValue;
     });
-    GLOBALS.EDITING_STATE_DIRTY = true;
+    setUnsavedChanges();
   };
 
   editor.addEventListener(EventType.INPUT, onUpdateTitleProperty);

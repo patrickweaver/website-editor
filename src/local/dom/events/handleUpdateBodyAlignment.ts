@@ -1,5 +1,5 @@
-import { GLOBALS } from "../../../globals";
 import { OPTIONS } from "../../util/constants";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 
 export function handleUpdateBodyAlignment(_event: Event) {
   const selectedAlignmentElement = document.querySelector(
@@ -21,5 +21,5 @@ export function handleUpdateBodyAlignment(_event: Event) {
   //   document.body.style.margin = "2rem auto";
   // }
 
-  GLOBALS.EDITING_STATE_DIRTY = true;
+  setUnsavedChanges();
 }

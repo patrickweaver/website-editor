@@ -1,5 +1,5 @@
-import { GLOBALS } from "../../../globals";
 import { EventType, HtmlProperty } from "../../types";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 
 export function addListenerToHtmlElementEditor(
   editorId: string,
@@ -19,7 +19,7 @@ export function addListenerToHtmlElementEditor(
   const onUpdateHtmlProperty = (_event: Event) => {
     const newValue = editor.value;
     element[property] = newValue;
-    GLOBALS.EDITING_STATE_DIRTY = true;
+    setUnsavedChanges();
   };
 
   editor.addEventListener(EventType.INPUT, onUpdateHtmlProperty);

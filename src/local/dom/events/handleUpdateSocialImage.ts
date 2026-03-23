@@ -11,10 +11,10 @@ import {
   InsertPosition,
   MetaProperty,
 } from "../../types";
-import { GLOBALS } from "../../../globals";
 import { createElement } from "../util/createElement";
 import { insertElementToDOM } from "../util/insertElementToDOM";
 import { getUniqueId } from "../../util/random";
+import { setUnsavedChanges } from "../util/setUnsavedChanges";
 
 function handleUpdateSocialImageProperty(
   event: Event,
@@ -79,7 +79,7 @@ function handleUpdateSocialImageProperty(
       }
     }
   });
-  GLOBALS.EDITING_STATE_DIRTY = true;
+  setUnsavedChanges();
 }
 
 export function handleUpdateSocialImageSrc(event: Event) {

@@ -93,7 +93,6 @@ import {
   LC_MINIMIZE_BUTTON_TEXT,
   LC_EXPAND_BUTTON_TEXT,
 } from "../../util/strings";
-import { GLOBALS } from "../../../globals";
 
 export function getLocalControls(): HTMLElement {
   const minimizeButton = createElement({
@@ -367,15 +366,6 @@ export function getLocalControls(): HTMLElement {
   children.forEach((element) => {
     insertElementWithinElement(wrapper, element);
   });
-
-  const stateTimer = setInterval(() => {
-    if (GLOBALS.EDITING_STATE_DIRTY) {
-      const stateElement = document.getElementById(STATE_ELEMENT_ID);
-      if (!stateElement) return;
-      stateElement.innerHTML = "Unsaved changes";
-      clearInterval(stateTimer);
-    }
-  }, 1000);
 
   return wrapper;
 }
