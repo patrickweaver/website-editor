@@ -1,6 +1,9 @@
 import {
   AlignOptions,
+  ElementTag,
+  EventType,
   FlexAlignCssValues,
+  InsertPosition,
   TextAlignCssValues,
 } from "../../types";
 import {
@@ -11,6 +14,7 @@ import {
   DATA_ORIGINAL_CSS,
   DATA_ORIGINAL_HTML,
   DATA_ORIGINAL_SRC,
+  DATA_ORIGINAL_TAG_NAME,
   EditableType,
 } from "../../util/constants";
 import { getDataURLFromFile, isImageFile } from "../../util/files";
@@ -30,6 +34,9 @@ import {
 import { addLinkAroundElement } from "../util/addLinkAroundElement";
 import { addLinkAroundSelection } from "../util/addLinkAroundSelection";
 import { showAlert } from "../util/alert";
+import { createElement } from "../util/createElement";
+import { insertElementNextToElement } from "../util/insertElementNextToElement";
+import { getElementEventListener } from "./getEventListener";
 
 export async function actionDeleteElement(_event: Event) {
   const result = window.confirm(CONFIRM_DELETE);
@@ -86,8 +93,28 @@ export function cancelEditAction() {
     restoreImageAttributes(currentlyEditing);
   }
   restoreCss(currentlyEditing);
+
+  // Must be last
+  restoreTagName(currentlyEditing);
+
   exitEditMode(currentlyEditing);
   return true;
+}
+
+function restoreTagName(element: HTMLElement) {
+  const originalTagName = element.getAttribute(DATA_ORIGINAL_TAG_NAME);
+  if (element.tagName === originalTagName) return;
+  console.log(element, originalTagName);
+  if (
+    originalTagName !== ElementTag.H1 &&
+    originalTagName !== ElementTag.H2 &&
+    originalTagName !== ElementTag.H3 &&
+    originalTagName !== ElementTag.H4 &&
+    originalTagName !== ElementTag.H5 &&
+    originalTagName !== ElementTag.H6
+  )
+    return;
+  updateTagName(element, originalTagName);
 }
 
 function restoreInnerHtml(element: HTMLElement) {
@@ -245,30 +272,57 @@ function handleAlignUpdate(event: Event) {
   return value;
 }
 
-export function actionUpdateTextAlign(event: Event) {
+function handleHeadingLevelUpdate(event: Event) {
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement)) return null;
+  const value = target?.value?.toLowerCase();
+  if (
+    value !== ElementTag.H1 &&
+    value !== ElementTag.H2 &&
+    value !== ElementTag.H3 &&
+    value !== ElementTag.H4 &&
+    value !== ElementTag.H5 &&
+    value !== ElementTag.H6
+  )
+    return null;
+  return value;
+}
+
+export function actionUpdateTextAlign(event: Event): void {
   const value = handleAlignUpdate(event);
   if (!value) return;
   const element = getCurrentlyEditingElement();
   if (!element) {
     showAlert("Error: Invlaid element");
-    return null;
+    return;
   }
   element.style.setProperty("text-align", TextAlignCssValues[value]);
 }
 
-export function actionUpdateImageAlign(event: Event) {
+export function actionUpdateImageAlign(event: Event): void {
   const value = handleAlignUpdate(event);
   if (!value) return;
   const element = getCurrentlyEditingElement();
   if (!element) {
-    showAlert("Error: Invlaid element");
-    return null;
+    showAlert("Error: Invalid element");
+    return;
   }
   let wrapperElement = element;
   if (element.parentElement instanceof HTMLAnchorElement) {
     wrapperElement = element.parentElement;
   }
   wrapperElement.style.setProperty("align-self", FlexAlignCssValues[value]);
+}
+
+export function actionUpdateHeadingLevel(event: Event): void {
+  const value = handleHeadingLevelUpdate(event);
+  if (!value) return;
+  const element = getCurrentlyEditingElement();
+  if (!element) {
+    showAlert("Error: Invalid element.");
+    return;
+  }
+  updateTagName(element, value);
 }
 
 export function getActionOpenLink(
@@ -295,4 +349,20 @@ export function getActionOpenEditor(
     relatedElementCallback(relatedElement);
     linkToolbar.remove();
   };
+}
+
+function updateTagName(element: HTMLElement, newTagName: ElementTag) {
+  const replacement = createElement({
+    tag: newTagName,
+  });
+  for (const attribute of element.attributes) {
+    replacement.setAttribute(attribute.name, attribute.value);
+  }
+
+  while (element.firstChild) {
+    replacement.appendChild(element.firstChild);
+  }
+  insertElementNextToElement(element, replacement, InsertPosition.AFTER_END);
+  element.remove();
+  replacement.addEventListener(EventType.CLICK, getElementEventListener());
 }

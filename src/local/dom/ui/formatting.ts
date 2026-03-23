@@ -2,7 +2,6 @@ import {
   AlignOptions,
   EditorTypes,
   ElementTag,
-  EventType,
   InsertPosition,
   TextAlignCssValues,
 } from "../../types";
@@ -10,19 +9,19 @@ import {
   CURRENTLY_EDITING_FORMATTING_ID,
   EditableType,
   FlexAlignCssKeys,
-  INPUT_TYPES,
   TextAlignCssKeys,
 } from "../../util/constants";
-import { getUniqueId } from "../../util/random";
 import { ALIGNMENT_LABELS, EDITOR_LABELS } from "../../util/strings";
 import {
+  actionUpdateHeadingLevel,
   actionUpdateImageAlign,
   actionUpdateTextAlign,
 } from "../events/actions";
-import { createLabel } from "../util/createLabel";
 import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { getCurrentlyEditingElement, getEditableType } from "./util";
+import { showAlert } from "../util/alert";
+import { createFieldset } from "../util/createFieldset";
 
 export function getFormattingPanel() {
   const formattingPanel = createElement({
@@ -30,10 +29,30 @@ export function getFormattingPanel() {
     id: CURRENTLY_EDITING_FORMATTING_ID,
   });
 
+  const alignmentWidget = getAlignmentWidget();
+  if (!alignmentWidget) {
+    showAlert("Error: Can't open formatting panel.");
+    return formattingPanel;
+  }
+  insertElementWithinElement(
+    formattingPanel,
+    alignmentWidget,
+    InsertPosition.AFTER_BEGIN,
+  );
+
+  const headingTypeWidget = getHeadingTypeWidget();
+  if (headingTypeWidget) {
+    insertElementWithinElement(
+      formattingPanel,
+      headingTypeWidget,
+      InsertPosition.AFTER_BEGIN,
+    );
+  }
+
   return formattingPanel;
 }
 
-export function getAlignmentWidget() {
+function getAlignmentWidget() {
   const currentlyEditing = getCurrentlyEditingElement();
   const isImage = currentlyEditing instanceof HTMLImageElement;
 
@@ -47,60 +66,10 @@ export function getAlignmentWidget() {
     current = TextAlignCssKeys?.[textAlign] ?? AlignOptions.DEFAULT;
   }
 
-  const editAlignElement = createElement({
-    tag: ElementTag.FIELDSET,
-    id: getUniqueId(),
-  });
-
-  const alignLegend = createElement({
-    tag: ElementTag.LEGEND,
-    innerHTML: EDITOR_LABELS[EditorTypes.ALIGN],
-  });
-  insertElementWithinElement(
-    editAlignElement,
-    alignLegend,
-    InsertPosition.BEFORE_END,
-  );
-  const alignOptions = [
-    AlignOptions.RIGHT,
-    AlignOptions.CENTER,
-    AlignOptions.LEFT,
-    AlignOptions.DEFAULT,
-  ];
-  let foundCurrent = false;
-  alignOptions.forEach((value) => {
-    const container = createElement({ id: "cont", giveUniqueId: true });
-    if (
-      value !== AlignOptions.RIGHT &&
-      value !== AlignOptions.CENTER &&
-      value !== AlignOptions.LEFT &&
-      value !== AlignOptions.DEFAULT
-    )
-      return;
-    const input = createElement({
-      tag: ElementTag.INPUT,
-      id: getUniqueId(),
-      type: INPUT_TYPES.RADIO,
-      name: editAlignElement.id,
-      value: value,
-    });
-    if (!foundCurrent && current === value) {
-      input.checked = true;
-      foundCurrent = true;
-    }
-    const label = createLabel(
-      input.id,
-      EditorTypes.OPTION,
-      ALIGNMENT_LABELS[value],
-    );
-    insertElementWithinElement(container, label, InsertPosition.AFTER_BEGIN);
-    insertElementWithinElement(container, input, InsertPosition.AFTER_BEGIN);
-    insertElementWithinElement(
-      editAlignElement,
-      container,
-      InsertPosition.AFTER_BEGIN,
-    );
-  });
+  const alignOptions = Object.values(AlignOptions).map((i) => ({
+    value: i,
+    label: ALIGNMENT_LABELS[i],
+  }));
 
   const editableType = getEditableType();
 
@@ -112,13 +81,38 @@ export function getAlignmentWidget() {
     listener = actionUpdateImageAlign;
   }
   if (!listener) return;
-  editAlignElement.addEventListener(EventType.CHANGE, listener);
 
-  if (!foundCurrent) {
-    const input = editAlignElement.children[0].children[0];
-    if (!(input instanceof HTMLInputElement)) return null;
-    input.checked = true;
-  }
+  const editAlignElement = createFieldset({
+    legendText: EDITOR_LABELS[EditorTypes.ALIGN],
+    options: alignOptions,
+    current,
+    listener,
+  });
 
   return editAlignElement;
+}
+
+function getHeadingTypeWidget() {
+  const currentlyEditing = getCurrentlyEditingElement();
+  const isHeading = currentlyEditing instanceof HTMLHeadingElement;
+  if (!isHeading) return;
+
+  const headerTags = [
+    ElementTag.H1,
+    ElementTag.H2,
+    ElementTag.H3,
+    ElementTag.H4,
+    ElementTag.H5,
+    ElementTag.H6,
+  ];
+  const options = headerTags.map((i) => ({ value: i, label: i.toUpperCase() }));
+
+  const editHeadingTypeElement = createFieldset({
+    legendText: EDITOR_LABELS[EditorTypes.HEADING_LEVEL],
+    options,
+    current: currentlyEditing.tagName.toLowerCase(),
+    listener: actionUpdateHeadingLevel,
+  });
+
+  return editHeadingTypeElement;
 }

@@ -3,7 +3,7 @@ import { insertElementWithinElement } from "./insertElementWithinElement";
 import { ElementTag } from "../../types";
 import { PLACEHOLDER_CLASS } from "../../util/constants";
 
-export function getFigureWithCaption(
+export function createFigureWithCaption(
   figureId: string,
   captionText: string,
   imageId: string,

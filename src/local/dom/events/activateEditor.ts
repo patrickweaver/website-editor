@@ -4,6 +4,7 @@ import {
   DATA_ORIGINAL_CSS,
   DATA_ORIGINAL_HTML,
   DATA_ORIGINAL_SRC,
+  DATA_ORIGINAL_TAG_NAME,
   EDITABLE_STYLE_PROPERTIES,
   EditableType,
 } from "../../util/constants";
@@ -20,6 +21,9 @@ export function activateEditor(element: HTMLElement) {
   element.id = CURRENTLY_EDITING_ID;
 
   const editableType = getEditableType();
+
+  const originalTagName = element.tagName.toLowerCase();
+  element.setAttribute(DATA_ORIGINAL_TAG_NAME, originalTagName);
 
   if (editableType === EditableType.TEXT) {
     element.contentEditable = "true";

@@ -67,6 +67,7 @@ export const CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID =
 export const CURRENTLY_EDITING_ALT_TEXT_ID = "currently-editing-alt-text";
 export const CURRENTLY_EDITING_ALT_TEXT_INPUT_ID =
   "currently-editing-alt-text-input";
+export const DATA_ORIGINAL_TAG_NAME = "data-original-tag-name";
 export const DATA_ORIGINAL_HTML = "data-original-html";
 export const DATA_ORIGINAL_CSS = "data-original-css";
 export const DATA_ORIGINAL_SRC = "data-original-src";

@@ -47,8 +47,8 @@ import { createElement } from "../util/createElement";
 import { getCurrentStyle } from "../util/getCurrentStyle";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { addControlsRadioInput } from "../controls/addControlsRadioInput";
-import { makeImagePreview } from "../util/makeImagePreview";
-import { getFigureWithCaption } from "../util/getFigureWithCaption";
+import { createImagePreview } from "../util/createImagePreview";
+import { createFigureWithCaption } from "../util/createFigureWithCaption";
 import { getCurrentFaviconURL } from "../util/getCurrentFaviconUrl";
 import { getCurrentSocialImage } from "../util/getCurrentSocialImage";
 import {
@@ -256,7 +256,7 @@ export function getLocalControls(): HTMLElement {
     ...textSizeControls,
   ]);
 
-  const faviconImagePreview = makeImagePreview(
+  const faviconImagePreview = createImagePreview(
     UPDATE_FAVICON_ID,
     IMAGE_PREVIEW.FAVICON,
   );
@@ -281,7 +281,7 @@ export function getLocalControls(): HTMLElement {
   const faviconEditor = addControlsSection(
     LC_FAVICON_SUBHEADER,
     [
-      getFigureWithCaption(
+      createFigureWithCaption(
         CURRENT_FAVICON_PREVIEW_FIGURE_ID,
         LC_CURRENT_FAVICON_CAPTION,
         CURRENT_FAVICON_PREVIEW_ID,
@@ -304,7 +304,7 @@ export function getLocalControls(): HTMLElement {
   const socialImageEditor = addControlsSection(
     LC_SOCIAL_IMAGE_SUBHEADER,
     [
-      getFigureWithCaption(
+      createFigureWithCaption(
         SOCIAL_IMAGE_PREVIEW_FIGURE_ID,
         LC_SOCIAL_IMAGE_LABEL,
         CURRENT_SOCIAL_IMAGE_PREVIEW_ID,

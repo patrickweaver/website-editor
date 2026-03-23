@@ -17,7 +17,7 @@ const captions = {
   [IMAGE_PREVIEW.FAVICON]: FAVICON_PREVIEW_CAPTION,
 };
 
-export function makeImagePreview(
+export function createImagePreview(
   id: string,
   type: IMAGE_PREVIEW = IMAGE_PREVIEW.IMAGE,
 ) {

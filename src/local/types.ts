@@ -30,14 +30,6 @@ export enum ElementTag {
   UL = "ul",
 }
 
-export type HeaderTag =
-  | ElementTag.H1
-  | ElementTag.H2
-  | ElementTag.H3
-  | ElementTag.H4
-  | ElementTag.H5
-  | ElementTag.H6;
-
 export type ElementTagToType = {
   [ElementTag.A]: HTMLAnchorElement;
   [ElementTag.BUTTON]: HTMLButtonElement;

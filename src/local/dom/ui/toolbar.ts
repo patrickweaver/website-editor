@@ -8,7 +8,7 @@ import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { getAltTextPanel, getAltTextWidget } from "./attributes";
 import { getEditorButtons } from "./buttons";
-import { getAlignmentWidget, getFormattingPanel } from "./formatting";
+import { getFormattingPanel } from "./formatting";
 import { getUploadPanel, getUploadWidget } from "./upload";
 import { getCurrentlyEditingToolbar, getEditableType } from "./util";
 
@@ -35,17 +35,7 @@ export function openFormattingPanel() {
     return;
   }
   const formattingPanel = getFormattingPanel();
-  const alignmentWidget = getAlignmentWidget();
-  if (!alignmentWidget) {
-    showAlert("Error: Can't open formatting panel.");
-    return;
-  }
 
-  insertElementWithinElement(
-    formattingPanel,
-    alignmentWidget,
-    InsertPosition.AFTER_BEGIN,
-  );
   insertElementWithinElement(
     toolbar,
     formattingPanel,

@@ -229,8 +229,8 @@ fieldset.edit {
   display: inline-block;
 }
 
-#local-controls fieldset label {
-  margin-left: 0.25rem;
+fieldset label {
+  margin-left: 0.5rem;
   margin-right: 0.25rem;
 }
 
