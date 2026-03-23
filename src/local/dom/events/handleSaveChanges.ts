@@ -1,13 +1,13 @@
+import { localEditingMode } from "../..";
 import {
   CURRENTLY_EDITING_LINK_HANDLER_ID,
   CURRENTLY_EDITING_TOOLBAR_ID,
   LOCAL_CONTROLS_CONTAINER_ID,
 } from "../../util/constants";
 import { saveFile } from "../../util/files";
+import { showAlert } from "../util/alert";
 
 export function handleSaveChanges(_event: Event) {
-  console.log("Save changes!");
-
   const uiIds = [
     LOCAL_CONTROLS_CONTAINER_ID,
     CURRENTLY_EDITING_LINK_HANDLER_ID,
@@ -30,7 +30,13 @@ export function handleSaveChanges(_event: Event) {
         .join(" ")}>`
     : "";
 
-  saveFile(`${doctype}${fullHtml}`);
-
-  // TODO
+  saveFile(`${doctype}${fullHtml}`)
+    .catch((error) => {
+      if (error?.name !== "AbortError") {
+        showAlert(error);
+      }
+    })
+    .finally(() => {
+      localEditingMode();
+    });
 }
