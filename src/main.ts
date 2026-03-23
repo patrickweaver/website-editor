@@ -1,9 +1,8 @@
-import './style.css'
-import { localEditingMode } from './local'
+import "./style.css";
+import { localEditingMode } from "./local";
+import { isDevEnv } from "./local/util/isDevEnv";
 
 /* Check for local file */
-const env: string = process.env.NODE_ENV ?? ''
-const isLocal: boolean =
-  window.location.protocol === 'file:' ||
-  env.slice(0, 3).toLowerCase() === 'dev'
-if (isLocal) localEditingMode()
+const isLocal: boolean = window.location.protocol === "file:" || isDevEnv();
+
+if (isLocal) localEditingMode();
