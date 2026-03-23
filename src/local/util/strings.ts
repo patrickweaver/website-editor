@@ -85,7 +85,6 @@ export const LC_TEXT_ALIGNMENT_SUBHEADER = "Text Alignment";
 export const LC_TEXT_SIZE_LABEL = "Font Size (%)";
 export const LC_TEXT_STYLE_SUBHEADER = "Text Style";
 export const LC_UPDATE_FAVICON_LABEL = "Update Favicon";
-export const PLACEHOLDER_TEXT = "Your text here";
 export const PROMPT_LINK_URL = "URL:";
 export const MISSING_SOCIAL_IMAGE_ALT = "Social Image is not set.";
 export const NEW_CONTENT_HEADER = "Add New Content";
