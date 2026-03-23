@@ -5,7 +5,6 @@ import {
   InsertPosition,
 } from "../../types";
 import {
-  CURRENTLY_EDITING_UPLOAD_ID,
   CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID,
   INPUT_TYPES,
 } from "../../util/constants";
@@ -13,15 +12,6 @@ import { actionHandleImageUpload } from "../events/actions";
 import { createElement } from "../util/createElement";
 import { createLabel } from "../util/createLabel";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
-
-export function getUploadPanel() {
-  const uploadPanel = createElement({
-    tag: ElementTag.DIV,
-    id: CURRENTLY_EDITING_UPLOAD_ID,
-  });
-
-  return uploadPanel;
-}
 
 export function getUploadWidget() {
   const container = createElement({

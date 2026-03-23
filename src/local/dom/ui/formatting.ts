@@ -17,17 +17,14 @@ import {
   actionUpdateImageAlign,
   actionUpdateTextAlign,
 } from "../events/actions";
-import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { getCurrentlyEditingElement, getEditableType } from "./util";
 import { showAlert } from "../util/alert";
 import { createFieldset } from "../util/createFieldset";
+import { getSubpanel } from "./subpanel";
 
 export function getFormattingPanel() {
-  const formattingPanel = createElement({
-    tag: ElementTag.DIV,
-    id: CURRENTLY_EDITING_FORMATTING_ID,
-  });
+  const formattingPanel = getSubpanel(CURRENTLY_EDITING_FORMATTING_ID);
 
   const alignmentWidget = getAlignmentWidget();
   if (!alignmentWidget) {

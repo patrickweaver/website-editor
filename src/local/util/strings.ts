@@ -21,6 +21,7 @@ export const BUTTON_ADD_PARAGRAPH = "Paragraph";
 export const BUTTON_ADD_IMAGE = "Image";
 export const BUTTON_SAVE = "Save";
 export const BUTTON_UPDATE = "Update";
+export const BUTTON_CLOSE_SUBPANEL = "Close";
 export const CONFIRM_DELETE = "Are you sure you want to delete this element?";
 export const ERROR_IMAGE_ONLY = "Error: Please choose an image file";
 export const ERROR_NO_IMAGE = "Error: No image found";

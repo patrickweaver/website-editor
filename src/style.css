@@ -108,11 +108,12 @@ img {
 }
 
 .edit-ui-container {
+  /* TODO */
   border: 2px solid aqua;
 }
 
-#currently-editing-formatting,
-#currently-editing-upload {
+.editor-sub-container {
+  /* TODO */
   border: 2px solid lawngreen;
 }
 

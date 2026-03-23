@@ -1,15 +1,19 @@
 import { InsertPosition } from "../../types";
 import {
+  CURRENTLY_EDITING_ALT_TEXT_ID,
+  CURRENTLY_EDITING_FORMATTING_ID,
   CURRENTLY_EDITING_TOOLBAR_ID,
+  CURRENTLY_EDITING_UPLOAD_ID,
   EDIT_UI_CONTAINER_CLASS,
 } from "../../util/constants";
 import { showAlert } from "../util/alert";
 import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
-import { getAltTextPanel, getAltTextWidget } from "./attributes";
+import { getAltTextWidget } from "./attributes";
 import { getEditorButtons } from "./buttons";
 import { getFormattingPanel } from "./formatting";
-import { getUploadPanel, getUploadWidget } from "./upload";
+import { getSubpanel } from "./subpanel";
+import { getUploadWidget } from "./upload";
 import { getCurrentlyEditingToolbar, getEditableType } from "./util";
 
 export function getToolbar() {
@@ -29,6 +33,8 @@ export function getToolbar() {
 }
 
 export function openFormattingPanel() {
+  const existing = document.getElementById(CURRENTLY_EDITING_FORMATTING_ID);
+  if (existing) return;
   const toolbar = getCurrentlyEditingToolbar();
   if (!toolbar) {
     showAlert("Error: Can't open formatting panel.");
@@ -44,12 +50,14 @@ export function openFormattingPanel() {
 }
 
 export function openUploadPanel() {
+  const existing = document.getElementById(CURRENTLY_EDITING_UPLOAD_ID);
+  if (existing) return;
   const toolbar = getCurrentlyEditingToolbar();
   if (!toolbar) {
     showAlert("Error: Can't open upload panel.");
     return;
   }
-  const panel = getUploadPanel();
+  const panel = getSubpanel(CURRENTLY_EDITING_UPLOAD_ID);
   const widget = getUploadWidget();
 
   insertElementWithinElement(panel, widget, InsertPosition.AFTER_BEGIN);
@@ -57,12 +65,14 @@ export function openUploadPanel() {
 }
 
 export function openAltTextPanel() {
+  const existing = document.getElementById(CURRENTLY_EDITING_ALT_TEXT_ID);
+  if (existing) return;
   const toolbar = getCurrentlyEditingToolbar();
   if (!toolbar) {
     showAlert("Error: Can't open alt text panel.");
     return;
   }
-  const panel = getAltTextPanel();
+  const panel = getSubpanel(CURRENTLY_EDITING_ALT_TEXT_ID);
   const widget = getAltTextWidget();
   if (!widget) {
     showAlert("Error: can't open alt text panel.");
