@@ -73,7 +73,7 @@ function exitEditMode(element: HTMLElement | null) {
   element.removeAttribute(DATA_ORIGINAL_ALT);
 }
 
-export function cancelEditAction() {
+export function cancelEdit() {
   const currentlyEditingLinkHandler = getCurrentlyEditingLinkHandler();
   const currentlyEditing = getCurrentlyEditingElement();
   if (!currentlyEditing) {
@@ -94,17 +94,16 @@ export function cancelEditAction() {
   }
   restoreCss(currentlyEditing);
 
-  // Must be last
-  restoreTagName(currentlyEditing);
+  // Must be last, replace variable because tag is possibly updated
+  const currentlyEditingReplaced = restoreTagName(currentlyEditing);
 
-  exitEditMode(currentlyEditing);
+  exitEditMode(currentlyEditingReplaced);
   return true;
 }
 
-function restoreTagName(element: HTMLElement) {
+function restoreTagName(element: HTMLElement): HTMLElement {
   const originalTagName = element.getAttribute(DATA_ORIGINAL_TAG_NAME);
-  if (element.tagName === originalTagName) return;
-  console.log(element, originalTagName);
+  if (element.tagName.toLowerCase() === originalTagName) return element;
   if (
     originalTagName !== ElementTag.H1 &&
     originalTagName !== ElementTag.H2 &&
@@ -113,8 +112,8 @@ function restoreTagName(element: HTMLElement) {
     originalTagName !== ElementTag.H5 &&
     originalTagName !== ElementTag.H6
   )
-    return;
-  updateTagName(element, originalTagName);
+    return element;
+  return updateTagName(element, originalTagName);
 }
 
 function restoreInnerHtml(element: HTMLElement) {
@@ -162,7 +161,7 @@ function restoreCss(element: HTMLElement) {
 }
 
 export async function actionCancelEdit(_event: Event) {
-  cancelEditAction();
+  cancelEdit();
 }
 
 export async function actionSaveChanges(_event: Event) {
@@ -351,7 +350,10 @@ export function getActionOpenEditor(
   };
 }
 
-function updateTagName(element: HTMLElement, newTagName: ElementTag) {
+function updateTagName(
+  element: HTMLElement,
+  newTagName: ElementTag,
+): HTMLElement {
   const replacement = createElement({
     tag: newTagName,
   });
@@ -365,4 +367,5 @@ function updateTagName(element: HTMLElement, newTagName: ElementTag) {
   insertElementNextToElement(element, replacement, InsertPosition.AFTER_END);
   element.remove();
   replacement.addEventListener(EventType.CLICK, getElementEventListener());
+  return replacement;
 }

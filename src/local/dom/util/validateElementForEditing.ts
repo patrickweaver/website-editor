@@ -1,5 +1,5 @@
 import { CURRENTLY_EDITING_ID } from "../../util/constants";
-import { cancelEditAction } from "../events/actions";
+import { cancelEdit } from "../events/actions";
 import { showAlert } from "./alert";
 
 export function validateElementForEditing(element: HTMLElement) {
@@ -16,6 +16,6 @@ export function validateElementForEditing(element: HTMLElement) {
     return false;
   }
 
-  cancelEditAction();
+  cancelEdit();
   return true;
 }
