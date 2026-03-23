@@ -4,7 +4,13 @@ import {
   EventType,
   LinkButtonConfig,
 } from "../../types";
-import { EDIT_BUTTONS_CLASS, EditableType } from "../../util/constants";
+import {
+  EDIT_BUTTONS_CLASS,
+  DESTRUCTIVE_BUTTON_CLASS,
+  SAVE_BUTTON_CLASS,
+  NON_DESTRUCTIVE_BUTTON_CLASS,
+  EditableType,
+} from "../../util/constants";
 import {
   BUTTON_ALT_TEXT,
   BUTTON_CANCEL,
@@ -34,11 +40,13 @@ const editorEditorButtonConfig: EditorButtonConfig[] = [
     label: BUTTON_CANCEL,
     eventListener: actionCancelEdit,
     editableTypes: [EditableType.IMAGE, EditableType.TEXT],
+    className: NON_DESTRUCTIVE_BUTTON_CLASS,
   },
   {
     label: BUTTON_DELETE,
     eventListener: actionDeleteElement,
     editableTypes: [EditableType.IMAGE, EditableType.TEXT],
+    className: DESTRUCTIVE_BUTTON_CLASS,
   },
   {
     label: BUTTON_FORMAT,
@@ -64,6 +72,7 @@ const editorEditorButtonConfig: EditorButtonConfig[] = [
     label: BUTTON_SAVE,
     eventListener: actionSaveChanges,
     editableTypes: [EditableType.IMAGE, EditableType.TEXT],
+    className: SAVE_BUTTON_CLASS,
   },
 ];
 
@@ -76,10 +85,11 @@ export function getEditorButtons(editableType: EditableType): HTMLDivElement {
   const buttons = editorEditorButtonConfig.filter((i) =>
     i.editableTypes?.includes(editableType),
   );
-  for (const { label, eventListener } of buttons) {
+  for (const { label, eventListener, className } of buttons) {
     const buttonElement = createElement({
       tag: ElementTag.BUTTON,
       innerHTML: label,
+      classList: className ? [className] : undefined,
     });
     buttonElement.addEventListener(EventType.CLICK, eventListener);
     buttonsContainerElement.appendChild(buttonElement);

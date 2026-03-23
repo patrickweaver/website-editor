@@ -1,7 +1,7 @@
 import { createElement } from "./createElement";
 import { insertElementWithinElement } from "./insertElementWithinElement";
 import { ElementTag } from "../../types";
-import { PLACEHOLDER_CLASS } from "../../util/constants";
+import { IMAGE_PLACEHOLDER_CLASS } from "../../util/constants";
 
 export function createFigureWithCaption(
   figureId: string,
@@ -28,7 +28,7 @@ export function createFigureWithCaption(
   } else {
     imageOrPlaceholder = createElement({
       tag: ElementTag.DIV,
-      classList: [PLACEHOLDER_CLASS],
+      classList: [IMAGE_PLACEHOLDER_CLASS],
       id: imageId,
       innerHTML: "No image",
     });

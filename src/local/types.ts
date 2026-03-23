@@ -180,6 +180,7 @@ export type EditorButtonConfig = {
   label: string;
   eventListener: (event: Event) => void;
   editableTypes: EditableType[];
+  className?: string;
 };
 
 export type LinkButtonConfig = {

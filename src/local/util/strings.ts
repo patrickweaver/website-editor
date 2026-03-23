@@ -43,8 +43,8 @@ export const FAVICON_PREVIEW_CAPTION = "New favicon preview:";
 export const IMAGE_PREVIEW_CAPTION = "Image preview:";
 export const LC_UNSAVED_CHANGES_BANNER =
   "Unsaved changes, make sure to save your file after completing edits.";
-export const LC_MINIMIZE_BUTTON_TEXT = "Close Metadata Area";
-export const LC_EXPAND_BUTTON_TEXT = "Open Metadata Area";
+export const LC_MINIMIZE_BUTTON_TEXT = "Minimize Metadata Area";
+export const LC_EXPAND_BUTTON_TEXT = "Expand Metadata Area";
 export const LC_BG_COLOR_SUBHEADER = "Background Color";
 export const LC_TEXT_COLOR_SUBHEADER = "Text Color";
 export const LC_COLOR_LABEL = "Select a color";
@@ -88,3 +88,7 @@ export const LC_UPDATE_FAVICON_LABEL = "Update Favicon";
 export const PROMPT_LINK_URL = "URL:";
 export const MISSING_SOCIAL_IMAGE_ALT = "Social Image is not set.";
 export const NEW_CONTENT_HEADER = "Add New Content";
+
+// Alerts
+export const ALERT_PHONE_SCREEN_SIZE =
+  "It looks like you might be using a phone sized screen. I have done limited testing on phones and you will need to store the <code>index.html</code> file on your phone’s filesystem to save it.";

@@ -6,7 +6,7 @@ import { insertElementWithinElement } from "../util/insertElementWithinElement";
 export function addControlsSection(
   headerText: string,
   children: HTMLElement[],
-  headerTag: ElementTag = ElementTag.H3,
+  headerTag: ElementTag = ElementTag.H4,
   id: string | null = null,
 ) {
   const section = createElement({

@@ -8,6 +8,7 @@ import {
   LOCAL_CONTROLS_CONTAINER_ID,
   NEW_CONTENT_MODAL_ID,
   NEW_CONTENT_MODAL_WRAPPER_ID,
+  NON_DESTRUCTIVE_BUTTON_CLASS,
 } from "../../util/constants";
 import {
   EditorTypes,
@@ -92,6 +93,7 @@ function getNewContentModal() {
     tag: ElementTag.BUTTON,
     id: ADD_ITEM_CANCEL_BUTTON_ID,
     innerHTML: BUTTON_CANCEL,
+    classList: [NON_DESTRUCTIVE_BUTTON_CLASS],
   });
   insertElementWithinElement(modal, heading);
   insertElementWithinElement(modal, list);

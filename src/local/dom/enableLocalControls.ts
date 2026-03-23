@@ -8,6 +8,7 @@ import {
 import { createElement } from "./util/createElement";
 import { insertElementToDOM } from "./util/insertElementToDOM";
 import { isDevEnv } from "../util/isDevEnv";
+import { ALERT_PHONE_SCREEN_SIZE } from "../util/strings";
 
 export function enableLocalControls() {
   const localControlsContainer = createElement({
@@ -29,6 +30,10 @@ export function enableLocalControls() {
   const devEnv = isDevEnv();
 
   if (devEnv) showAlert("Test alert");
+
+  if (window.screen.width < 900) {
+    showAlert(ALERT_PHONE_SCREEN_SIZE);
+  }
 
   window.addEventListener("beforeunload", function (e) {
     if (!devEnv) {

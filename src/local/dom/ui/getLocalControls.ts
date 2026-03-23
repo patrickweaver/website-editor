@@ -32,7 +32,6 @@ import {
   WIDTH_SLIDER_DATALIST_ID,
   BODY_WIDTH_RANGE_INPUT_ID,
   BODY_WIDTH_NUMBER_INPUT_ID,
-  STATE_ELEMENT_ID,
   UPDATE_SOCIAL_IMAGE_ALT_ID,
   LOCAL_CONTROLS_MINIMIZED_ID,
   ADD_ITEM_MINIMIZED_ID,
@@ -343,7 +342,6 @@ export function getLocalControls(): HTMLElement {
   const wrapper = createElement({ id: LOCAL_CONTROLS_ID });
   const children = [
     minimizeButton,
-    createElement({ id: STATE_ELEMENT_ID, tag: ElementTag.H3 }),
     createElement({ id: ALERT_LIST }),
     createElement({ tag: ElementTag.H2, innerHTML: LC_HEADER }),
     createElement({ tag: ElementTag.P, innerHTML: LC_INSTRUCTIONS }),

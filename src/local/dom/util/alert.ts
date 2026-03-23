@@ -21,11 +21,11 @@ export function showAlert(message: string) {
     const now = new Date();
     const alertHeader = createElement({
       tag: ElementTag.H3,
-      innerHTML: `Alert (${now.toLocaleTimeString()} - id: ${alert.id.split("-").reverse()[0]})`,
+      innerHTML: `Alert (${now.toLocaleTimeString()})`,
     });
     const alertMessage = createElement({
       tag: ElementTag.P,
-      innerHTML: `Error -- ${message}`,
+      innerHTML: `${message}`,
     });
     const alertCloseButton = createElement({
       tag: ElementTag.BUTTON,

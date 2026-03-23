@@ -3,9 +3,10 @@
   --warning-highlight-a: #ff0000;
   --warning-bg-b: #ffafaf;
   --warning-highlight-b: #ff2f2f;
-  --lc-bg: #dfdfe8;
+  --lc-bg: rgba(245, 245, 240, 0.9);
   --lc-bg-2: #f8f8ff;
   --lc-bg-3: #f4f4f4;
+  --loc-bg-4: rgba(250, 250, 245, 0.95);
   --lc-color: #000000;
   --lc-border-3: #2f2f2f;
   --modal-shadow-bg: #4f4f4fdf;
@@ -71,7 +72,7 @@ body.unsaved-changes {
   width: 100%;
   background-color: var(--note-bg);
   text-align: center;
-color: var(--lc-color);
+  color: var(--lc-color);
 }
 
 input,
@@ -80,6 +81,7 @@ textarea {
   line-height: 1.2rem;
   padding: 0.5rem;
   margin: 0.25rem 0;
+  border-radius: 0.5rem;
 }
 
 p,
@@ -114,55 +116,65 @@ img {
   padding: 2px;
 }
 
-.edit-container {
-  display: block;
-  width: 100%;
-}
-
-.edit-container select {
-  display: block;
-}
-
 .edit-ui-container {
   /* TODO */
-  border: 2px solid aqua;
+  background-color: rgba(250, 250, 230, 0.4);
+  width: 100%;
+  border-radius: 20px;
+  padding: 0 0.5rem;
+  margin-left: -1rem;
 }
 
 .editor-sub-container {
-  /* TODO */
-  border: 2px solid lawngreen;
+  text-align: center;
+}
+
+.edit-buttons {
+  line-height: 3rem;
+  margin: 0 0.5rem 0.5rem;
+  display: inline-block;
 }
 
 #currently-editing {
-  padding: 2px;
+  padding: 1rem;
+  margin-left: -1rem;
+  /* border: 2px dashed var(--edit-element-highlight); */
+  background-color: rgba(250, 250, 230, 0.4);
+  border-radius: 4px;
 }
 
-label.edit,
-input.edit,
-fieldset.edit {
+.edit-ui-container label,
+.edit-ui-container input,
+.edit-ui-container fieldset {
   width: Calc(100% - 1rem);
 }
 
-fieldset.edit>div {
+.edit-ui-container fieldset > div {
   line-height: 1.5rem;
   display: inline-block;
   margin-right: 1rem;
 }
 
-fieldset.edit>div>label {
+.edit-ui-container fieldset > div > label {
   margin: 0 5px;
 }
 
-select.edit {
+.edit-ui-container select {
   padding: 0.25rem;
   min-width: 4rem;
 }
 
-label.edit,
-input.edit,
-select.edit,
-fieldset.edit {
+.edit-ui-container label,
+.edit-ui-container input,
+.edit-ui-container select,
+.edit-ui-container fieldset {
   margin-bottom: 0.5rem;
+}
+
+.controls-section {
+  background-color: var(--loc-bg-4);
+  padding: 0.75rem 0.5rem 1.5rem;
+  border-radius: 1rem;
 }
 
 .controls-section label.note {
@@ -173,16 +185,16 @@ fieldset.edit {
 }
 
 #local-controls-container {
-  width: 100%;
+  width: Calc(100% + 4rem);
   margin-top: 25rem;
+  position: relative;
+  left: -2rem;
 }
 
-#local-controls, #local-controls-minimized {
+#local-controls,
+#local-controls-minimized {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100vw;
   height: 25rem;
   background-color: var(--lc-bg);
   color: var(--lc-color);
@@ -193,10 +205,11 @@ fieldset.edit {
   overflow-y: scroll;
   font-size: 16px;
   z-index: 10;
+  width: 100vw;
 }
 
 #local-controls-minimized {
-  height: 3rem;
+  height: 4rem;
 }
 
 #local-controls::-webkit-scrollbar {
@@ -215,17 +228,10 @@ fieldset.edit {
   background-color: var(--scroll-bar-bg);
 }
 
-#local-controls #editor-state {
-  font-weight: bold;
-  margin: 0.125rem 0;
-  color: var(--warning-highlight-a);
-  text-align: center;
-}
-
 .local-controls-alert {
   border: 2px solid var(--warning-highlight-a);
   background-color: var(--warning-bg-a);
-  padding: 0rem 1rem;
+  padding: 0rem 1rem 1rem;
   margin: 1rem 0;
   position: relative;
   transform: scaleY(1);
@@ -282,7 +288,6 @@ fieldset label {
 .edit-buttons button {
   margin: 0 0.25rem;
   display: inline-block;
-  font-size: 1.125rem;
 }
 
 .controls-section {
@@ -311,22 +316,6 @@ fieldset label {
   margin-bottom: 0.25rem;
 }
 
-.edit-buttons {
-  background-color: none;
-  margin: 0.5rem 0;
-  display: inline-block;
-}
-
-.edit-buttons button.delete-button {
-  border: 2px outset var(--warning-highlight-a);
-  background-color: var(--warning-bg-a);
-}
-
-.edit-buttons button.delete-button:hover {
-  border: 2px outset var(--warning-highlight-b);
-  background-color: var(--warning-bg-b);
-}
-
 .controls-section label {
   margin: 0.25rem 0;
 }
@@ -345,6 +334,7 @@ fieldset label {
   background-color: var(--lc-bg-2);
   padding: 1rem 2rem;
   width: Calc(80% - 2rem - 2rem);
+  border-radius: 1rem;
   /* 2rem is body margin */
 }
 
@@ -358,7 +348,7 @@ fieldset label {
   max-width: 150px;
 }
 
-.placeholder {
+.image-placeholder {
   border: 1px dashed var(--lc-border-3);
   background-color: var(--lc-bg-3);
   color: var(--lc-border-3);
@@ -371,4 +361,103 @@ fieldset label {
 
 .hidden {
   display: none;
+}
+
+/* https: //makeaero.com/ */
+#local-controls-container button,
+.edit-ui-container button {
+  /* OKLCH Color System for accurate colors */
+  --hue: 200;
+  --sat: 0.48;
+  --glow-intensity: 0.45;
+
+  /* Color Variables */
+  --fg: oklch(15% calc(var(--sat) * 0.5) var(--hue));
+  --bg: oklch(75% var(--sat) var(--hue) / 0.8);
+  --bg-dark: oklch(45% var(--sat) var(--hue) / 0.75);
+  --bottom-glow: radial-gradient(
+    farthest-corner at bottom center,
+    rgba(255, 255, 255, var(--glow-intensity)),
+    transparent
+  );
+
+  /* Base Styling */
+  background-color: var(--bg);
+  background:
+    var(--bottom-glow), linear-gradient(to bottom, var(--bg-dark), var(--bg));
+
+  border: 1px solid var(--bg);
+  border-radius: 9999px;
+
+  /* Shadows and Effects */
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+
+  /* Typography */
+  color: var(--fg);
+  font-family: "Arial", sans-serif;
+  font-weight: 600;
+  text-shadow: 0 2px 0.5em rgba(0, 0, 0, 0.2);
+
+  /* Layout */
+  cursor: pointer;
+  position: relative;
+  transition: all 300ms ease;
+
+  /* Prevent text selection */
+  user-select: none;
+  -webkit-user-select: none;
+
+  /* Size */
+  padding: 0.3em 1em;
+  font-size: 0.875rem;
+}
+
+#local-controls-container button.non-destructive,
+.edit-ui-container button.non-destructive {
+  --hue: 295;
+}
+
+#local-controls-container button.destructive,
+.edit-ui-container button.destructive {
+  --hue: 92;
+}
+
+#local-controls-container button.save,
+.edit-ui-container button.save {
+  --hue: 154;
+}
+
+/* Top Highlight Effect */
+#local-controls-container button::after,
+.edit-ui-container button::after {
+  content: "";
+  position: absolute;
+  top: 4%;
+  left: 0.75em;
+  width: calc(100% - 1.5em);
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.1)
+  );
+  border-radius: inherit;
+  transition: background 400ms ease;
+  pointer-events: none;
+}
+
+/* Hover State */
+#local-controls-container button:hover,
+#local-controls-container button:focus,
+.edit-ui-container button:hover,
+.edit-ui-container button:focus {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Active State */
+#local-controls-container button:active,
+.edit-ui-container button:active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transform: translateY(1px);
 }
