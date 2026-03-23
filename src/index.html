@@ -14,7 +14,7 @@
     <!-- Favicon - SVG from Emoji: https://emojicon.dev/ -->
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📓</text></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📟</text></svg>"
     />
 
     <!-- Social -->
@@ -41,53 +41,71 @@
 
   <body
     style="
-      background-color: rgb(220, 160, 220);
+      background-color: rgb(230, 245, 235);
       color: rgb(0, 0, 0);
       text-align: left;
       align-items: flex-start;
-      width: 500px;
-      /* TODO restore to 800 */
-      /* width: 800px; */
+      width: 800px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
     "
   >
-    <h1>Website</h1>
+    <h1>📟 One Pager</h1>
 
-    <h2>About Me</h2>
-
-    <p>A <a href="https://google.com">link</a> to Google.</p>
+    <h2>About</h2>
 
     <p>
-      This is my example paragraph, it has <em>some</em> nested
-      <strong>elements</strong>, but nothing
-      <strong><em>very deeply nested</em></strong
-      >. Read the <a href="https://developer.mozilla.org/en-US/">MDN Docs</a>
-      to learn about HTML.
+      One Pager is a website that can edit itself. It is a single
+      <code>index.html</code> file with some JavaScript that, when accessed
+      offline, allow editing the HTML file and saving your changes.
     </p>
 
-    <a href="https://website-editor.netlify.app/index.html" target="_blank"
-      ><img
-        src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='100' height='100'><text y='0.9em' font-size='90'>🌲</text></svg>"
-    /></a>
+    <p>
+      If you see the <strong>“Local Controls”</strong> area below then you are
+      either editing locally or viewing the demo page at
+      <a href="https://doodles.patrickweaver.net/one-pager" target="_blank"
+        >doodles.patrickweaver.net/one-pager</a
+      >.
+    </p>
+
+    <h2>How do I try it?</h2>
 
     <p>
-      You can update this website in your browser when viewing it as a local
-      file. To get started just download the index.html file here:
-      <a href="https://website-editor.netlify.app/index.html"
-        >https://website-editor.netlify.app/index.html</a
+      You just need a copy of this HTML file to get started. You can either do
+      <strong>File > Save Page As</strong>, or clicking the
+      <strong>“Save All Changes to Local File”</strong>
+      button at the very bottom of the Local Controls area.
+    </p>
+
+    <p>
+      Once you have the file on your computer, open it in a browser (I have only
+      tested in Chromium based browsers so far) using
+      <strong>File > Open File</strong>. You can click on any Heading, Paragraph
+      or Image to edit their content or formatting, or edit page-level
+      properties in the Local Controls area.
+    </p>
+
+    <h2>What can I put on a One Pager website?</h2>
+
+    <p>
+      One Pager currently supports: Headings, Paragraphs and Images. The code is
+      open source and there are
+      <a
+        href="https://github.com/patrickweaver/website-editor/issues"
+        target="_blank"
+        >issues on GitHub</a
       >
-      (Right click, "Save Link As...", then open the downloaded file in your
-      browser with File > Open File...).
+      for other features if you want to contribute.
     </p>
 
     <img
-      src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='100' height='100'><text y='0.9em' font-size='90'>📓</text></svg>"
+      src="https://doodles.patrickweaver.net/one-pager/images/globe-americas/png"
+      alt="The globe showing americas emoji as an image"
     />
 
     <h2>Version</h2>
-    <p>0.4.2</p>
+    <p>1.0.0</p>
 
     <hr id="end-of-document" style="display: none" />
     <script type="module" src="/main.js"></script>
