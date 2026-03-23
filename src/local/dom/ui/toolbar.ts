@@ -8,12 +8,8 @@ import { createElement } from "../util/createElement";
 import { insertElementWithinElement } from "../util/insertElementWithinElement";
 import { getAltTextPanel, getAltTextWidget } from "./attributes";
 import { getEditorButtons } from "./buttons";
-import {
-  getAlignmentWidget,
-  getFormattingPanel,
-  getUploadPanel,
-  getUploadWidget,
-} from "./formatting";
+import { getAlignmentWidget, getFormattingPanel } from "./formatting";
+import { getUploadPanel, getUploadWidget } from "./upload";
 import { getCurrentlyEditingToolbar, getEditableType } from "./util";
 
 export function getToolbar() {

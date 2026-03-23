@@ -40,12 +40,7 @@ import {
   UNMINIMIZE_BUTTON_ID,
   SAVE_CHANGES_MINIMIZED_ID,
 } from "../../util/constants";
-import {
-  CSSProperties,
-  IMAGE_PREVIEW,
-  ElementTag,
-  EventType,
-} from "../../types";
+import { CSSProperties, IMAGE_PREVIEW, ElementTag } from "../../types";
 import { addControlsInput } from "../controls/addControlsInput";
 import { addControlsSection } from "../controls/addControlsSection";
 import { createElement } from "../util/createElement";

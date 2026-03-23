@@ -8,8 +8,6 @@ import {
 } from "../../types";
 import {
   CURRENTLY_EDITING_FORMATTING_ID,
-  CURRENTLY_EDITING_UPLOAD_ID,
-  CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID,
   EditableType,
   FlexAlignCssKeys,
   INPUT_TYPES,
@@ -18,7 +16,6 @@ import {
 import { getUniqueId } from "../../util/random";
 import { ALIGNMENT_LABELS, EDITOR_LABELS } from "../../util/strings";
 import {
-  actionHandleImageUpload,
   actionUpdateImageAlign,
   actionUpdateTextAlign,
 } from "../events/actions";
@@ -124,37 +121,4 @@ export function getAlignmentWidget() {
   }
 
   return editAlignElement;
-}
-
-export function getUploadPanel() {
-  const uploadPanel = createElement({
-    tag: ElementTag.DIV,
-    id: CURRENTLY_EDITING_UPLOAD_ID,
-  });
-
-  return uploadPanel;
-}
-
-export function getUploadWidget() {
-  const container = createElement({
-    tag: ElementTag.DIV,
-  });
-  const id = CURRENTLY_EDITING_UPLOAD_IMAGE_INPUT_ID;
-  const imagePicker = createElement({
-    tag: ElementTag.INPUT,
-    id,
-    type: INPUT_TYPES.FILE,
-  });
-  imagePicker.addEventListener(EventType.CHANGE, actionHandleImageUpload);
-
-  const imagePickerLabel = createLabel(id, EditorTypes.IMAGE);
-
-  insertElementWithinElement(
-    container,
-    imagePickerLabel,
-    InsertPosition.BEFORE_END,
-  );
-  insertElementWithinElement(container, imagePicker, InsertPosition.BEFORE_END);
-
-  return container;
 }
