@@ -1,8 +1,7 @@
 import {
   CURRENTLY_EDITING_LINK_HANDLER_ID,
   CURRENTLY_EDITING_TOOLBAR_ID,
-  LOCAL_CONTROLS_ID,
-  LOCAL_CONTROLS_MINIMIZED_ID,
+  LOCAL_CONTROLS_CONTAINER_ID,
 } from "../../util/constants";
 import { saveFile } from "../../util/files";
 
@@ -10,8 +9,7 @@ export function handleSaveChanges(_event: Event) {
   console.log("Save changes!");
 
   const uiIds = [
-    LOCAL_CONTROLS_ID,
-    LOCAL_CONTROLS_MINIMIZED_ID,
+    LOCAL_CONTROLS_CONTAINER_ID,
     CURRENTLY_EDITING_LINK_HANDLER_ID,
     CURRENTLY_EDITING_TOOLBAR_ID,
   ];
