@@ -6,7 +6,7 @@ export function promptForHref() {
     alert(ERROR_NO_URL);
     return;
   }
-  if (href?.slice(0, 5) !== "http") {
+  if (href?.slice(0, 4) !== "http") {
     href = `http://${href}`;
   }
   return href;
