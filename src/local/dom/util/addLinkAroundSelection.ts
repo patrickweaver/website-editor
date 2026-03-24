@@ -4,6 +4,8 @@ import {
 } from "../../util/strings";
 import { ElementTag } from "../../types";
 import { promptForHref } from "./promptForHref";
+import { createElement } from "./createElement";
+import { CURRENTLY_EDITING_NEW_ANCHOR_ID } from "../../util/constants";
 
 export function addLinkAroundSelection(selectableInput: HTMLElement) {
   const currentHtml = selectableInput.innerHTML;
@@ -43,8 +45,11 @@ export function addLinkAroundSelection(selectableInput: HTMLElement) {
   let href = promptForHref();
   if (!href) return currentHtml;
 
-  const anchor = document.createElement(ElementTag.A);
-  anchor.href = href;
+  const anchor = createElement({
+    tag: ElementTag.A,
+    href,
+    id: CURRENTLY_EDITING_NEW_ANCHOR_ID,
+  });
   anchor.target = "_blank";
   anchor.appendChild(fragment);
 
@@ -55,6 +60,7 @@ export function addLinkAroundSelection(selectableInput: HTMLElement) {
   const newRange = document.createRange();
   newRange.selectNodeContents(anchor);
   selection.addRange(newRange);
+
   return selectableInput.innerHTML;
 }
 

@@ -2,6 +2,7 @@ import { EditableType } from "./util/constants";
 
 export enum ElementTag {
   A = "a",
+  BR = "br",
   BUTTON = "button",
   DATALIST = "datalist",
   DIV = "div",
@@ -32,6 +33,7 @@ export enum ElementTag {
 
 export type ElementTagToType = {
   [ElementTag.A]: HTMLAnchorElement;
+  [ElementTag.BR]: HTMLBRElement;
   [ElementTag.BUTTON]: HTMLButtonElement;
   [ElementTag.DATALIST]: HTMLDataListElement;
   [ElementTag.DIV]: HTMLDivElement;

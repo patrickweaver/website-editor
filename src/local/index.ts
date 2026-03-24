@@ -4,6 +4,8 @@ import {
 } from "./dom/activateListeners";
 import { activatePageListeners } from "./dom/activatePageListeners";
 import { enableLocalControls } from "./dom/enableLocalControls";
+import { createElement } from "./dom/util/createElement";
+import { ElementTag } from "./types";
 
 /* JavaScript enabling editing only runs locally */
 export function localEditingMode() {
@@ -28,7 +30,7 @@ function boilerplateSetup() {
       const range = selection.getRangeAt(0);
       range.deleteContents();
 
-      const br = document.createElement("br");
+      const br = createElement({ tag: ElementTag.BR });
       range.insertNode(br);
 
       // Move cursor after the <br>

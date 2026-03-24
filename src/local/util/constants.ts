@@ -57,6 +57,7 @@ export const SAVE_CHANGES_ID = "save-changes";
 export const SAVE_CHANGES_MINIMIZED_ID = "save-changes-minimized";
 export const CURRENTLY_EDITING_ID = "currently-editing";
 export const CURRENTLY_EDITING_LINK_HANDLER_ID = "currently-editing-link";
+export const CURRENTLY_EDITING_NEW_ANCHOR_ID = "new-anchor";
 export const CURRENTLY_EDITING_TOOLBAR_ID = "currently-editing-toolbar";
 export const CURRENTLY_EDITING_FORMATTING_ID = "currently-editing-formatting";
 export const CURRENTLY_EDITING_UPLOAD_ID = "currently-editing-upload";

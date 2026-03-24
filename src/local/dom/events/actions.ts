@@ -9,6 +9,7 @@ import {
 import {
   CURRENTLY_EDITING_ALT_TEXT_ID,
   CURRENTLY_EDITING_FORMATTING_ID,
+  CURRENTLY_EDITING_NEW_ANCHOR_ID,
   CURRENTLY_EDITING_UPLOAD_ID,
   DATA_ORIGINAL_ALT,
   DATA_ORIGINAL_CSS,
@@ -37,7 +38,10 @@ import { showAlert } from "../util/alert";
 import { createElement } from "../util/createElement";
 import { insertElementNextToElement } from "../util/insertElementNextToElement";
 import { setUnsavedChanges } from "../util/setUnsavedChanges";
-import { getElementEventListener } from "./getEventListener";
+import {
+  getAnchorEventListener,
+  getElementEventListener,
+} from "./getEventListener";
 
 export async function actionDeleteElement(_event: Event) {
   const result = window.confirm(CONFIRM_DELETE);
@@ -180,6 +184,10 @@ export async function actionCreateLink(_event: Event) {
     addLinkAroundElement(element);
   } else {
     element.innerHTML = addLinkAroundSelection(element);
+    const anchor = document.getElementById(CURRENTLY_EDITING_NEW_ANCHOR_ID);
+    if (!anchor) return;
+    const listener = getAnchorEventListener();
+    anchor.addEventListener(EventType.CLICK, listener, { capture: true });
   }
 }
 
