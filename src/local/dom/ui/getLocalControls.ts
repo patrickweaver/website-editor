@@ -314,6 +314,7 @@ export function getLocalControls(): HTMLElement {
         UPDATE_SOCIAL_IMAGE_ID,
         INPUT_TYPES.TEXT,
         LC_SOCIAL_IMAGE_INPUT_LABEL,
+        currentSocialImageURL,
       ),
       createElement({
         tag: ElementTag.LABEL,
@@ -321,11 +322,11 @@ export function getLocalControls(): HTMLElement {
         classList: [NOTE_CLASS],
         innerHTML: LC_SOCIAL_IMAGE_INPUT_BELOW_LABEL,
       }),
-      // TODO this is not activated
       ...addControlsInput(
         UPDATE_SOCIAL_IMAGE_ALT_ID,
         INPUT_TYPES.TEXT,
         LC_SOCIAL_IMAGE_ALT_INPUT_LABEL,
+        currentSocialImageAlt,
       ),
     ],
     ElementTag.H4,
