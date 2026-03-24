@@ -1,17 +1,14 @@
 :root {
   --warning-bg-a: #ffbfbf;
   --warning-highlight-a: #ff0000;
-  --warning-bg-b: #ffafaf;
-  --warning-highlight-b: #ff2f2f;
   --lc-bg: rgba(245, 245, 240, 0.9);
   --lc-bg-2: #f8f8ff;
   --lc-bg-3: #f4f4f4;
-  --loc-bg-4: rgba(250, 250, 245, 0.95);
+  --lc-bg-4: rgba(250, 250, 245, 0.95);
+  --lc-bg-5: rgba(250, 250, 230, 0.6);
   --lc-color: #000000;
-  --lc-border-3: #2f2f2f;
+  --lc-border: #717067;
   --modal-shadow-bg: #4f4f4fdf;
-  --new-element-highlight: #00ffff;
-  --edit-element-highlight: #ffff00;
   --note-border: #ffe8b8;
   --note-bg: #fffce8;
   --scroll-bar: #9f9f9f;
@@ -117,8 +114,7 @@ img {
 }
 
 .edit-ui-container {
-  /* TODO */
-  background-color: rgba(250, 250, 230, 0.4);
+  background-color: var(--lc-bg-5);
   width: 100%;
   border-radius: 20px;
   padding: 0 0.5rem;
@@ -138,8 +134,7 @@ img {
 #currently-editing {
   padding: 1rem;
   margin-left: -1rem;
-  /* border: 2px dashed var(--edit-element-highlight); */
-  background-color: rgba(250, 250, 230, 0.4);
+  background-color: var(--lc-bg-5);
   border-radius: 4px;
 }
 
@@ -171,19 +166,6 @@ img {
   margin-bottom: 0.5rem;
 }
 
-.controls-section {
-  background-color: var(--loc-bg-4);
-  padding: 0.75rem 0.5rem 1.5rem;
-  border-radius: 1rem;
-}
-
-.controls-section label.note {
-  border: 1px solid var(--note-border);
-  background-color: var(--note-bg);
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-}
-
 #local-controls-container {
   width: Calc(100% + 4rem);
   margin-top: 25rem;
@@ -195,17 +177,18 @@ img {
 #local-controls-minimized {
   position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
   height: 25rem;
   background-color: var(--lc-bg);
   color: var(--lc-color);
   text-align: left;
   margin: 1rem 0 0 0;
   padding: 0.5rem 1rem;
-  outline: 1px dashed var(--lc-border-3);
+  outline: 1px dashed var(--lc-border);
   overflow-y: scroll;
   font-size: 16px;
   z-index: 10;
-  width: 100vw;
 }
 
 #local-controls-minimized {
@@ -252,11 +235,6 @@ img {
   display: inline-block;
 }
 
-fieldset label {
-  margin-left: 0.5rem;
-  margin-right: 0.25rem;
-}
-
 #local-controls figure {
   margin: 0 0 1rem;
 }
@@ -291,8 +269,19 @@ fieldset label {
 }
 
 .controls-section {
+  background-color: var(--lc-bg-4);
+  padding: 0 0.5rem 1rem;
+  border-radius: 1rem;
   width: 100%;
   margin: 0.5em 0 2rem;
+  border: 2px solid var(--lc-border);
+}
+
+.controls-section label.note {
+  border: 1px solid var(--note-border);
+  background-color: var(--note-bg);
+  padding: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .controls-section label,
@@ -308,16 +297,16 @@ fieldset label {
   margin: 0.5rem 0 1rem;
 }
 
+.controls-section label {
+  margin: 0.25rem 0.5rem;
+}
+
 .controls-section .below-label {
   margin: -0.5rem 0 1rem;
 }
 
 #update-favicon {
   margin-bottom: 0.25rem;
-}
-
-.controls-section label {
-  margin: 0.25rem 0;
 }
 
 #new-content-modal-wrapper {
@@ -343,15 +332,15 @@ fieldset label {
 }
 
 .image-preview {
-  border: 1px dashed var(--lc-border-3);
+  border: 1px dashed var(--lc-border);
   background-color: white;
   max-width: 150px;
 }
 
 .image-placeholder {
-  border: 1px dashed var(--lc-border-3);
+  border: 1px dashed var(--lc-border);
   background-color: var(--lc-bg-3);
-  color: var(--lc-border-3);
+  color: var(--lc-border);
   padding: 2rem;
   text-align: center;
   width: 100%;

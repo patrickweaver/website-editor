@@ -68,7 +68,7 @@ export const LC_GENERAL_PAGE_TITLE_LABEL = "Page Title";
 export const LC_GENERAL_SUBHEADER = "General";
 export const LC_HEADER = "Local Controls";
 export const LC_INSTRUCTIONS =
-  "This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on a computer.";
+  'This section of the page will only display when viewing the local version of your website by opening the <code>index.html</code> file on a computer or on the <a href="https://doodles.patrickweaver.net/one-pager/" target="_blank">demo site</a>.';
 export const LC_METADATA_SUBHEADER = "Metadata";
 export const LC_SAVE_CHANGES_BUTTON_LABEL = "Save All Changes to Local File";
 export const LC_SAVE_CHANGES_SUBHEADER = "Save Changes";

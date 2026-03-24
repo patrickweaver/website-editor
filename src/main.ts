@@ -5,6 +5,7 @@ import { isDevEnv } from "./local/util/isDevEnv";
 /* Check for local file or test environment */
 const isLocal: boolean =
   window.location.protocol === "file:" ||
+  window.location.hostname === "doodles.patrickweaver.net" ||
   isDevEnv() ||
   window.navigator.userAgent.includes("jsdom");
 
