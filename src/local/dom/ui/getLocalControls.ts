@@ -397,6 +397,7 @@ export function getMinimizedLocalControls(): HTMLElement {
     tag: ElementTag.BUTTON,
     id: SAVE_CHANGES_MINIMIZED_ID,
     innerHTML: LC_SAVE_CHANGES_BUTTON_LABEL,
+    classList: [SAVE_BUTTON_CLASS],
   });
 
   const wrapper = createElement({ id: LOCAL_CONTROLS_MINIMIZED_ID });
