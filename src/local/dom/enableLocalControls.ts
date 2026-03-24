@@ -1,4 +1,8 @@
-import { END_OF_DOC_ID, LOCAL_CONTROLS_CONTAINER_ID } from "../util/constants";
+import {
+  END_OF_DOC_ID,
+  LOCAL_CONTROLS_BODY_CLASS,
+  LOCAL_CONTROLS_CONTAINER_ID,
+} from "../util/constants";
 import { InsertPosition } from "../types";
 import { showAlert } from "./util/alert";
 import {
@@ -25,7 +29,7 @@ export function enableLocalControls() {
   insertElementToDOM(LOCAL_CONTROLS_CONTAINER_ID, localControls);
   insertElementToDOM(LOCAL_CONTROLS_CONTAINER_ID, localControlsMinimized);
 
-  document.body.classList.add("local-controls-enabled");
+  document.body.classList.add(LOCAL_CONTROLS_BODY_CLASS);
 
   const devEnv = isDevEnv();
 
