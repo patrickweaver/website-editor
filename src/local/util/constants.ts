@@ -11,6 +11,7 @@ export const PAGE_DESC_ID = "page-description";
 export const PAGE_TWITTER_DESC_ID = "twitter-description";
 export const PAGE_OG_DESC_ID = "og-description";
 export const PAGE_LANG_INPUT_ID = "edit-page-language";
+export const UNSAVED_CHANGES_BODY_CLASS = "unsaved-changes";
 export const UNSAVED_CHANGES_BANNER_ID = "unsaved-changes-banner";
 export const MINIMIZE_BUTTON_ID = "minimize-lc";
 export const UNMINIMIZE_BUTTON_ID = "unminimize-lc";
