@@ -1,10 +1,10 @@
-# Website Editor
+# One Pager
 
 This is a WYGIWYS (because what you see is the real code!) website builder that allows your web browser to be a no code editor for your website!
 
 This works without any kind of login or other authentication by only running the JavaScript that makes your website interactive and editable when you have your index.html file open locally. Download this file and open it locally in a web browser to try it out:
 
-https://website-editor.netlify.app/index.html
+https://doodles.patrickweaver.net/one-pager/
 
 ## Development
 
