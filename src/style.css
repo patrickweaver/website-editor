@@ -330,6 +330,11 @@ img {
   display: inline-block;
 }
 
+#local-controls > button {
+  display: inline-block;
+  margin: 0.25rem 10px 0.25rem 0;
+}
+
 .controls-section {
   background-color: var(--lc-bg-4);
   padding: 0 0.5rem 1rem;

@@ -38,6 +38,8 @@ import {
   MINIMIZE_BUTTON_ID,
   UNMINIMIZE_BUTTON_ID,
   SAVE_CHANGES_MINIMIZED_ID,
+  SAVE_CHANGES_TOP_ID,
+  SAVE_BUTTON_CLASS,
 } from "../../util/constants";
 import { CSSProperties, IMAGE_PREVIEW, ElementTag } from "../../types";
 import { addControlsInput } from "../controls/addControlsInput";
@@ -332,17 +334,26 @@ export function getLocalControls(): HTMLElement {
     ElementTag.H4,
   );
 
+  const saveChangesTop = createElement({
+    tag: ElementTag.BUTTON,
+    id: SAVE_CHANGES_TOP_ID,
+    innerHTML: LC_SAVE_CHANGES_BUTTON_LABEL,
+    classList: [SAVE_BUTTON_CLASS],
+  });
+
   const saveChanges = addControlsSection(LC_SAVE_CHANGES_SUBHEADER, [
     createElement({
       tag: ElementTag.BUTTON,
       id: SAVE_CHANGES_ID,
       innerHTML: LC_SAVE_CHANGES_BUTTON_LABEL,
+      classList: [SAVE_BUTTON_CLASS],
     }),
   ]);
 
   const wrapper = createElement({ id: LOCAL_CONTROLS_ID });
   const children = [
     minimizeButton,
+    saveChangesTop,
     createElement({ id: ALERT_LIST }),
     createElement({ tag: ElementTag.H2, innerHTML: LC_HEADER }),
     createElement({ tag: ElementTag.P, innerHTML: LC_INSTRUCTIONS }),

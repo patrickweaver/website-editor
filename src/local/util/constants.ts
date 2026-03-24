@@ -54,6 +54,7 @@ export const ALERT_CLASS = "alert";
 export const ALERT_REMOVED_CLASS = "alert-removed";
 export const CONTROLS_SECTION_CLASS = "controls-section";
 export const COLOR_PICKER_CLASS = "color-picker";
+export const SAVE_CHANGES_TOP_ID = "save-changes-top";
 export const SAVE_CHANGES_ID = "save-changes";
 export const SAVE_CHANGES_MINIMIZED_ID = "save-changes-minimized";
 export const CURRENTLY_EDITING_ID = "currently-editing";

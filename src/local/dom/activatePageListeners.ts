@@ -26,6 +26,7 @@ import {
   ADD_ITEM_MINIMIZED_ID,
   MINIMIZE_BUTTON_ID,
   UNMINIMIZE_BUTTON_ID,
+  SAVE_CHANGES_TOP_ID,
 } from "../util/constants";
 import {
   CSSProperties,
@@ -60,6 +61,11 @@ export function activatePageListeners() {
     eventHandler: (event: Event) => void;
     type?: EventType;
   }[] = [
+    {
+      id: SAVE_CHANGES_TOP_ID,
+      eventHandler: handleSaveChanges,
+      type: EventType.CLICK,
+    },
     {
       id: MINIMIZE_BUTTON_ID,
       eventHandler: handleMinimize,
