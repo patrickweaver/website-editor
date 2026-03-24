@@ -1,5 +1,6 @@
 import {
   AlignOptions,
+  EditableElementWithAbortController,
   ElementTag,
   EventType,
   FlexAlignCssValues,
@@ -70,6 +71,9 @@ function exitEditMode(element: HTMLElement | null) {
     element.remove();
     return;
   }
+  const editableElement = element as EditableElementWithAbortController;
+  editableElement.pasteAbortController?.abort();
+  delete editableElement.pasteAbortController;
   element.removeAttribute("id");
   element.removeAttribute("contentEditable");
   element.removeAttribute(DATA_ORIGINAL_HTML);
@@ -116,8 +120,10 @@ function restoreTagName(element: HTMLElement): HTMLElement {
     originalTagName !== ElementTag.H4 &&
     originalTagName !== ElementTag.H5 &&
     originalTagName !== ElementTag.H6
-  )
+  ) {
+    element.removeAttribute(DATA_ORIGINAL_TAG_NAME);
     return element;
+  }
   return updateTagName(element, originalTagName);
 }
 

@@ -95,6 +95,7 @@ export enum EventType {
   CHANGE = "change",
   CLICK = "click",
   INPUT = "input",
+  PASTE = "paste",
 }
 
 export enum AlignOptions {
@@ -196,4 +197,8 @@ export type LinkButtonConfig = {
     relatedElementCallback: (element: HTMLElement) => void,
     linkToolbar: HTMLDivElement,
   ) => (event: Event) => void;
+};
+
+export type EditableElementWithAbortController = HTMLElement & {
+  pasteAbortController?: AbortController;
 };
