@@ -31,6 +31,7 @@ import {
   CSSProperties,
   EventType,
   HtmlProperty,
+  MetaElementProperty,
   MetaProperty,
   TitleProperty,
 } from "../types";
@@ -145,7 +146,10 @@ export function activatePageListeners() {
     PAGE_TITLE_INPUT_ID,
     PAGE_TITLE_ID,
     TitleProperty.INNER_HTML,
-    [PAGE_OG_TITLE_ID, PAGE_TWITTER_TITLE_ID],
+    [
+      { id: PAGE_OG_TITLE_ID, property: MetaElementProperty.CONTENT },
+      { id: PAGE_TWITTER_TITLE_ID, property: MetaElementProperty.CONTENT },
+    ],
   );
 
   addListenerToMetaEditor(

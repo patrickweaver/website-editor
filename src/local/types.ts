@@ -148,6 +148,10 @@ export enum ImgElementProperty {
   STYLE = "style",
 }
 
+export enum MetaElementProperty {
+  CONTENT = "content",
+}
+
 export type Editor = {
   editor: HTMLHeadingElement | HTMLParagraphElement | HTMLInputElement;
   editorLabel: HTMLLabelElement;

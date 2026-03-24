@@ -1,11 +1,11 @@
-import { EventType, TitleProperty } from "../../types";
+import { EventType, MetaElementProperty, TitleProperty } from "../../types";
 import { setUnsavedChanges } from "../util/setUnsavedChanges";
 
 export function addListenerToTitleEditor(
   editorId: string,
   elementId: string,
   property: TitleProperty,
-  otherElementIds?: string[],
+  otherElementIds?: { id: string; property: MetaElementProperty }[],
 ) {
   const editor = document.getElementById(editorId);
   if (
@@ -21,13 +21,12 @@ export function addListenerToTitleEditor(
 
   editor.value = element[property];
 
-  // TODO could this be abstracted?
   const onUpdateTitleProperty = (_event: Event) => {
     const newValue = editor.value;
     element[property] = newValue;
-    otherElementIds?.forEach((id) => {
+    otherElementIds?.forEach(({ id, property }) => {
       const element = document.getElementById(id);
-      if (!(element instanceof HTMLTitleElement)) return;
+      if (!(element instanceof HTMLMetaElement)) return;
       element[property] = newValue;
     });
     setUnsavedChanges();
